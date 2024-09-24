@@ -1,19 +1,12 @@
-const express = require('express');
+import express from 'express';
+import teste from './routes/teste.js'
 
-const app = express();
+const app = express()
 
-// CONFIGURAÇÕES
-app.use(express.static('public'));
-app.use(express.urlencoded());
-app.use(express.json());
+app.listen(5000)
 
+app.get('/', (req, res) => {
+    res.send("<h1>TA AIA CARAIO</h1>")
+})
 
-// ROTAS
-const loginRouter = new LoginRoute();
-app.use('/login', loginRouter.router);
-
-app.listen(3000, () => {
-    console.log('Servidor iniciado');
-});
-
-//teste
+app.use('/teste', teste);

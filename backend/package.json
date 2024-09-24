@@ -1,0 +1,11 @@
+{
+  "name": "ormaq-software",
+  "version": "1.0.0",
+  "description": "Software da ORMAQ",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Itiel Cardoso Dario",
+  "license": "ISC"
+}

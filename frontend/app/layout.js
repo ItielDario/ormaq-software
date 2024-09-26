@@ -1,16 +1,4 @@
-import localFont from "next/font/local";
 import "./globals.css";
-
-const geistSans = localFont({
-  src: "./fonts/GeistVF.woff",
-  variable: "--font-geist-sans",
-  weight: "100 900",
-});
-const geistMono = localFont({
-  src: "./fonts/GeistMonoVF.woff",
-  variable: "--font-geist-mono",
-  weight: "100 900",
-});
 
 export const metadata = {
   title: "Create Next App",
@@ -23,154 +11,67 @@ export default function RootLayout({ children }) {
       <head>
         <meta charset="utf-8"/> 
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <title>Lista de Fornecedores</title>
-
+        <title>Painel Administrativo</title>
+        
+        
+        {/*FONT*/}
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
+        <link rel="preconnect" href="https://fonts.googleapis.com"/>
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"/>
+
+        {/*ICONS*/}
+        <link rel="icon" type="image/x-icon" href="/image/logo-ormaq-amarela.png"></link>
         <link href="/css/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css"/>
-        <link rel="stylesheet" href="/css/adminlte.min.css"/>
+
+        {/*CSS*/}
+        <link rel="stylesheet" href="/css/layout.css"/>
         <link rel="stylesheet" href="/css/listar.css"/>
-        <link rel="stylesheet" href="/css/print.css"/>
-        <link rel="stylesheet" href="/css/logo.css"/>
       </head>
 
+      <body className={``}>
+        <header>
+          <section className="container-header">
+            <figure>
+              <img src="/image/logo-ormaq-amarela.png"></img>
+            </figure>
 
-      <body className={`${geistSans.variable} ${geistMono.variable} hold-transition sidebar-mini layout-fixed`}>
+            <nav>
+              <ul class="itens-nav">
+                <article>
+                  <a href="/"><li class="itens"><i class="nav-icon fas fa-home"></i>Home</li></a>
+                  <a href="/maquina"><li class="itens"><i class="nav-icon fas fa-tractor"></i>Máquinas</li></a>
+                  <a href="/peca"><li class="itens"><i class="nav-icon fas fa-tools"></i>Peças</li></a>
+                  <a href="/implemento"><li class="itens"><i class="nav-icon fas fa-cogs"></i>Implementos</li></a>
+                  <a href="/locacao"><li class="itens"><i class="nav-icon fas fa-truck"></i>Locações</li></a>
+                  <a href="/manutencao"><li class="itens"><i class="nav-icon fas fa-wrench"></i>Manutenções</li></a>
+                  <a href="/relatorio"><li class="itens"><i class="nav-icon fas fa-file-alt"></i>Relatórios</li></a>
+                  <a href="/usuario"><li class="itens"><i class="nav-icon fas fa-user"></i>Usuários</li></a>
+                </article>
 
-      <div class="wrapper">
-        <nav class="main-header navbar navbar-expand navbar-green navbar-light" style="background-color:#cb8670;">
-          <ul class="navbar-nav">
-              <li class="nav-item">
-                  <a class="nav-link" style="color:white;" data-widget="pushmenu" href="#" role="button"><i class="fas fa-bars"></i></a>
-                </li>
-          </ul>
-
-          <ul class="navbar-nav ml-auto">
-          </ul>
-        </nav>
-
-        <aside class="main-sidebar sidebar-primary elevation-4" style="background-color: rgb(48, 48, 48);">
-          <div class="logo-container" style="border-bottom:1px solid #cccc;text-align: center;font-size: 24px;margin-top: 18px;">
-            <img src="/img/hotel/logo.png" alt=""/>
-          </div>
-
-          <div class="sidebar">
-            <nav class="mt-2">
-              <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <li class="nav-item menu-open">
-                  <a href="/" class="nav-link">
-                    <i class="nav-icon fas fa-home" style="color: aliceblue;"></i>
-                    <p style="color: aliceblue;">
-                      Início
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item menu-open">
-                  <a href="/adm/fornecedor" class="nav-link">
-                    <i class="nav-icon fas fa-boxes" style="color: aliceblue;"></i>
-                    <p style="color: aliceblue;">
-                      Fornecedores
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item menu-open">
-                  <a href="/adm/produto" class="nav-link">
-                    <i class="nav-icon fas fa-list" style="color: aliceblue;"></i>
-                    <p style="color: aliceblue;">
-                      Produtos
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item menu-open">
-                  <a href="/adm/compras" class="nav-link">
-                    <i class="nav-icon fas fa-clipboard-list" style="color: aliceblue;"></i>
-                    <p style="color: aliceblue;">
-                      Compras
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item menu-open">
-                  <a href="/adm/relatorio-geral" class="nav-link">
-                    <i class="nav-icon fas fa-clipboard" style="color: aliceblue;"></i>
-                    <p style="color: aliceblue;">
-                      Relatório Geral
-                    </p>
-                  </a>
-                </li>
-                <li class="nav-item menu-open">
-                  <a href="/login/logout" class="nav-link">
-                    <i class="nav-icon fas fa-users" style="color: aliceblue;"></i>
-                    <p style="color: aliceblue;">
-                      Logout
-                    </p>
-                  </a>
-                </li>
+                <article>
+                  <li class="itens logout"><i class="nav-icon fas fa-sign-out-alt"></i>Sair</li>
+                </article>
               </ul>
             </nav>
-          </div>
-        </aside>
-
-        <div class="content-wrapper">
-          <div class="content-header">
-            <div class="container-fluid">
-              <div class="row mb-2">
-                <div class="col-sm-6">
-                </div>
-                <div class="col-sm-6">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <section class="content">
-            <div class="container-fluid">
-              <div class="card shadow" style="    padding: 20px;min-height: 700px;">
-                  <header class="container">
-                    <section class="teste">
-                      <h1>Lista de fornecedores</h1>
-
-                      <div class="text-right exportButtons">
-                        <button id="exportPDF" class="btn btn-primary" style="font-weight: 400;">Exportar PDF</button>
-                        <button id="exportEXCEL" class="btn btn-primary" style="font-weight: 400;">Exportar EXCEL</button>
-                      </div>
-              
-                      <table class="table table-striped relatGeral">
-                          <thead class="table-info">
-                              <tr>
-                                  <th>CNPJ</th>
-                                  <th>Fone</th>
-                                  <th>Razão social</th>
-                                  <th class="acoes">Ações</th>
-                              </tr>
-                          </thead>
-              
-                          
-                      </table>
-              
-                      <div class="box-buttons">
-                          <a href="/adm/fornecedor/cadastrar" class="btn btn-success">Cadastrar fornecedor</a>
-                      </div>
-                    </section> 
-                  </header>
-              </div>
-            </div>
           </section>
-        </div>
+        </header>
 
-        <aside class="control-sidebar control-sidebar-dark">
-        </aside>
-      </div>
+        <main>
+          <article className="top-bar">
+            
+          </article>
 
+          <section className="container-main">
+            <section className="content-main">
+              {children}
+            </section>
+          </section>
+        </main>
 
-      <script src="/js/jquery/jquery.min.js"></script>
-      <script src="/js/bootstrap/js/bootstrap.bundle.min.js"></script>
-      <script src="/js/adminlte.min.js"></script>
-  
-      <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-      <script src="/js/logo.js"></script>
-
-      <h1>AIIIIIIIIIIII ZÉ DA MANGA</h1>
-        {children}
+        <script src="/js/bootstrap/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
       </body>
     </html>
   );

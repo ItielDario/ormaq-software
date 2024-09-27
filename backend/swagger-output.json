@@ -1,0 +1,73 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "ORMAQ Software",
+    "description": "Software da ORMAQ",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000/"
+    }
+  ],
+  "paths": {
+    "/maquina/": {
+      "get": {
+        "tags": [
+          "Máquina"
+        ],
+        "summary": "Listar todos as máquinas cadastradas",
+        "description": "Lista todas as máquinas.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "MaquinaModel": {
+        "type": "object",
+        "properties": {
+          "maqId": {
+            "type": "string",
+            "example": "0"
+          },
+          "maqNome": {
+            "type": "string",
+            "example": "Trator"
+          },
+          "maqDataAquisicao": {
+            "type": "string",
+            "example": "2024-01-01"
+          },
+          "maqTipo": {
+            "type": "string",
+            "example": "Nova"
+          },
+          "maqDescricao": {
+            "type": "string",
+            "example": "Trator de grande porte"
+          },
+          "impInativo": {
+            "type": "string",
+            "example": "N"
+          },
+          "maqHorasUso": {
+            "type": "string",
+            "example": "0"
+          },
+          "equipamentoStatusId": {
+            "type": "string",
+            "example": "1"
+          }
+        }
+      }
+    }
+  }
+}

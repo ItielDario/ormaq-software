@@ -7,7 +7,7 @@ export default function Maquina() {
   let [listaMaquinas, setlistaMaquinas] = useState([]);
   useEffect((e) => {
       carregarMaquinas();
-  }, )
+  }, [])
 
   function carregarMaquinas() {
       fetch('http://localhost:5000/maquina', {

@@ -4,7 +4,8 @@ import { useState, useRef, useEffect } from "react";
 export default function Maquina() {
   
   //funcao pra listar máquinas
-  let [listaMaquinas, setlistaMaquinas] = useState([]);
+  const [listaMaquinas, setlistaMaquinas] = useState([]);
+  
   useEffect((e) => {
       carregarMaquinas();
   }, [])
@@ -27,6 +28,12 @@ export default function Maquina() {
     <section className="content-main-children">
       <article className="title">
         <h1>Lista de Maquinas</h1>
+
+        {
+          listaMaquinas.map(maquina =>  {
+            return <div>{maquina.maqNome}</div>
+          })
+        }
       </article>
 
 

@@ -6,6 +6,7 @@ import cors from 'cors'
 
 // ROTAS
 import MaquinaRoute from './routes/maquinaRoute.js'
+import PecasRoute from './routes/pecasRoute.js'
 
 const app = express()
 app.listen(5000)
@@ -23,3 +24,6 @@ app.use('/maquina',
     // #swagger.tags = ['Maquina']
     // #swagger.description = 'Lista todas as máquinas.'
 MaquinaRoute);
+app.use('/pecas', 
+    // #swagger.tags = ['Peças']
+PecasRoute);

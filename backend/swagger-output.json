@@ -27,6 +27,23 @@
           }
         }
       }
+    },
+    "/pecas/": {
+      "get": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Listar todas as peças cadastradas",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
     }
   },
   "components": {

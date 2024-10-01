@@ -1,4 +1,5 @@
-import Database from "../utils/database.js"
+import Database from "../utils/database.js";
+import EquipamentoStatusModel from "./equipamentoStatusModel.js"; // Importando a nova model
 
 const db = new Database();
 
@@ -10,7 +11,7 @@ export default class MaquinaModel {
     #maqDescricao;
     #impInativo;
     #maqHorasUso;
-    #equipamentoStatusId;
+    #equipamentoStatus; // Agora um objeto do tipo EquipamentoStatusModel
 
     get maqId() { return this.#maqId; }
     set maqId(maqId) { this.#maqId = maqId; }
@@ -33,10 +34,10 @@ export default class MaquinaModel {
     get maqHorasUso() { return this.#maqHorasUso; }
     set maqHorasUso(maqHorasUso) { this.#maqHorasUso = maqHorasUso; }
 
-    get equipamentoStatusId() { return this.#equipamentoStatusId; }
-    set equipamentoStatusId(equipamentoStatusId) { this.#equipamentoStatusId = equipamentoStatusId; }
+    get equipamentoStatus() { return this.#equipamentoStatus; }
+    set equipamentoStatus(equipamentoStatus) { this.#equipamentoStatus = equipamentoStatus; }
 
-    constructor(maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, impInativo, maqHorasUso, equipamentoStatusId) {
+    constructor(maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, impInativo, maqHorasUso, equipamentoStatus) {
         this.#maqId = maqId;
         this.#maqNome = maqNome;
         this.#maqDataAquisicao = maqDataAquisicao;
@@ -44,7 +45,7 @@ export default class MaquinaModel {
         this.#maqDescricao = maqDescricao;
         this.#impInativo = impInativo;
         this.#maqHorasUso = maqHorasUso;
-        this.#equipamentoStatusId = equipamentoStatusId;
+        this.#equipamentoStatus = equipamentoStatus; 
     }
 
     toJSON() {
@@ -56,25 +57,48 @@ export default class MaquinaModel {
             "maqDescricao": this.#maqDescricao,
             "impInativo": this.#impInativo,
             "maqHorasUso": this.#maqHorasUso,
-            "equipamentoStatusId": this.#equipamentoStatusId
+            "equipamentoStatus": this.#equipamentoStatus
         };
     }
 
-    toMAP(rows){
-        const listaMaquinas = []
-        
+    toMAP(rows) {
+        const listaMaquinas = [];
+
         rows.forEach(maquina => {
-            listaMaquinas.push(new MaquinaModel(maquina["maqId"], maquina["maqNome"], maquina["maqDataAquisicao"], maquina["maqTipo"], maquina["maqDescricao"], maquina["impInativo"], maquina["maqHorasUso"], maquina["equipamentoStatusId"]));
+            const dataAquisicao = new Date(maquina["maqDataAquisicao"]);
+            const dataFormatada = dataAquisicao.toISOString().split('T')[0];
+
+            const equipamentoStatus = new EquipamentoStatusModel(maquina["equipamentoStatusId"], maquina["eqpStaDescricao"]);
+
+            console.log(equipamentoStatus)
+
+            listaMaquinas.push(new MaquinaModel(
+                maquina["maqId"],
+                maquina["maqNome"],
+                dataFormatada,
+                maquina["maqTipo"],
+                maquina["maqDescricao"],
+                maquina["impInativo"],
+                maquina["maqHorasUso"],
+                equipamentoStatus // Passando o objeto EquipamentoStatus
+            ));
         });
 
         return listaMaquinas;
     }
 
-    async listarMaquinas(){
-        const sql = "SELECT * FROM maquina";
+    async listarMaquinas() {
+        console.log('aaaaaaaaaaa')
+        const sql = `
+            SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqInativo, m.maqHorasUso, es.eqpStaId, es.eqpStaDescricao
+            FROM Maquina m
+            JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId`;
+
         const rows = await db.ExecutaComando(sql);
+        console.log(rows)
         const listaMaquinas = this.toMAP(rows);
-        
-        return listaMaquinas
+        console.log(listaMaquinas)
+
+        return listaMaquinas;
     }
 }

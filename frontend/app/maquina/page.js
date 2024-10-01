@@ -1,5 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from "react";
+import Link from "next/link";
+import MontaTabela from "../components/montaTabela.js";
 
 export default function Maquina() {
   
@@ -28,15 +30,15 @@ export default function Maquina() {
     <section className="content-main-children">
       <article className="title">
         <h1>Lista de Maquinas</h1>
-
-        {
-          listaMaquinas.map(maquina =>  {
-            return <div>{maquina.maqNome}</div>
-          })
-        }
       </article>
 
+      <article className="container-btn-cadastrar">
+        <Link className="btn-cadastrar" href={'/maquina/cadastrar'}>Cadastrar</Link>
+      </article>
 
+      <article className="container-table">
+        <MontaTabela listaMaquinas={listaMaquinas} cabecalhos={['Inativo', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Status', 'Ações']}></MontaTabela>
+      </article>
     </section>
   );
 }

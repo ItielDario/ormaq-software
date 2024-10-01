@@ -79,7 +79,7 @@
             "type": "string",
             "example": "0"
           },
-          "equipamentoStatusId": {
+          "equipamentoStatus": {
             "type": "string",
             "example": "1"
           }

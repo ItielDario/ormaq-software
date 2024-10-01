@@ -9,7 +9,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="pt-br">
       <head>
-        <meta charset="utf-8"/> 
+        <meta charSet="utf-8"/> 
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <title>Painel Administrativo</title>
         
@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
         {/*FONT*/}
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback"/>
         <link rel="preconnect" href="https://fonts.googleapis.com"/>
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin/>
+        <link rel="preconnect" href="https://fonts.gstatic.com"/>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap" rel="stylesheet"/>
 
         {/*ICONS*/}
@@ -37,20 +37,20 @@ export default function RootLayout({ children }) {
             </figure>
 
             <nav>
-              <ul class="itens-nav">
+              <ul className="itens-nav">
                 <article>
-                  <a href="/"><li class="itens"><i class="nav-icon fas fa-home"></i>Home</li></a>
-                  <a href="/maquina"><li class="itens"><i class="nav-icon fas fa-tractor"></i>Máquinas</li></a>
-                  <a href="/peca"><li class="itens"><i class="nav-icon fas fa-tools"></i>Peças</li></a>
-                  <a href="/implemento"><li class="itens"><i class="nav-icon fas fa-cogs"></i>Implementos</li></a>
-                  <a href="/locacao"><li class="itens"><i class="nav-icon fas fa-truck"></i>Locações</li></a>
-                  <a href="/manutencao"><li class="itens"><i class="nav-icon fas fa-wrench"></i>Manutenções</li></a>
-                  <a href="/relatorio"><li class="itens"><i class="nav-icon fas fa-file-alt"></i>Relatórios</li></a>
-                  <a href="/usuario"><li class="itens"><i class="nav-icon fas fa-user"></i>Usuários</li></a>
+                  <a href="/"><li className="itens"><i className="nav-icon fas fa-home"></i>Home</li></a>
+                  <a href="/maquina"><li className="itens"><i className="nav-icon fas fa-tractor"></i>Máquinas</li></a>
+                  <a href="/peca"><li className="itens"><i className="nav-icon fas fa-tools"></i>Peças</li></a>
+                  <a href="/implemento"><li className="itens"><i className="nav-icon fas fa-cogs"></i>Implementos</li></a>
+                  <a href="/locacao"><li className="itens"><i className="nav-icon fas fa-truck"></i>Locações</li></a>
+                  <a href="/manutencao"><li className="itens"><i className="nav-icon fas fa-wrench"></i>Manutenções</li></a>
+                  <a href="/relatorio"><li className="itens"><i className="nav-icon fas fa-file-alt"></i>Relatórios</li></a>
+                  <a href="/usuario"><li className="itens"><i className="nav-icon fas fa-user"></i>Usuários</li></a>
                 </article>
 
                 <article>
-                  <li class="itens logout"><i class="nav-icon fas fa-sign-out-alt"></i>Sair</li>
+                  <li className="itens logout"><i className="nav-icon fas fa-sign-out-alt"></i>Sair</li>
                 </article>
               </ul>
             </nav>
@@ -68,10 +68,6 @@ export default function RootLayout({ children }) {
             </section>
           </section>
         </main>
-
-        <script src="/js/bootstrap/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.sheetjs.com/xlsx-0.20.0/package/dist/xlsx.full.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
       </body>
     </html>
   );

@@ -5,8 +5,6 @@ export default class maquinaController {
         try{
             let maquinas = new MaquinaModel()
             maquinas = await maquinas.listarMaquinas()
-
-            console.log(maquinas);
             res.status(200).json(maquinas);
         }
         catch(error){

@@ -1,12 +1,9 @@
 'use client'
-import Link from "next/link";
 
 export default function MontaTabela(props){
 
     const cabecalhos = props.cabecalhos
     const listaMaquinas = props.listaMaquinas
-
-    console.log(listaMaquinas)
     
     return(
         <table>
@@ -21,7 +18,7 @@ export default function MontaTabela(props){
             </thead>
             <tbody>
                 {listaMaquinas.map((maquina, index) => (
-                    <tr key={index}>
+                    <tr id={maquina.maqId}>
                         <td></td>
                         <td>{maquina.maqNome}</td>
                         <td>{maquina.maqDataAquisicao}</td>

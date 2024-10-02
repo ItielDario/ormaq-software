@@ -107,6 +107,7 @@ main{
     border-radius: 0.45vw 0.45vw 0 0;
     border: 0.1vw solid rgb(236, 236, 236);
     box-shadow: 0vw 0vw 0.8vw 0.2vw rgba(0, 0, 0, 0.158);
+    padding: 1vw 2vw;
 }
 
 .page_page__556_G{

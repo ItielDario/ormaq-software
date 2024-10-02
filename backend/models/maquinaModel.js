@@ -11,7 +11,7 @@ export default class MaquinaModel {
     #maqDescricao;
     #impInativo;
     #maqHorasUso;
-    #equipamentoStatus; // Agora um objeto do tipo EquipamentoStatusModel
+    #equipamentoStatus;
 
     get maqId() { return this.#maqId; }
     set maqId(maqId) { this.#maqId = maqId; }
@@ -67,10 +67,7 @@ export default class MaquinaModel {
         rows.forEach(maquina => {
             const dataAquisicao = new Date(maquina["maqDataAquisicao"]);
             const dataFormatada = dataAquisicao.toISOString().split('T')[0];
-
             const equipamentoStatus = new EquipamentoStatusModel(maquina["equipamentoStatusId"], maquina["eqpStaDescricao"]);
-
-            console.log(equipamentoStatus)
 
             listaMaquinas.push(new MaquinaModel(
                 maquina["maqId"],
@@ -86,18 +83,15 @@ export default class MaquinaModel {
 
         return listaMaquinas;
     }
-
+    
     async listarMaquinas() {
-        console.log('aaaaaaaaaaa')
         const sql = `
             SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqInativo, m.maqHorasUso, es.eqpStaId, es.eqpStaDescricao
             FROM Maquina m
             JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId`;
 
         const rows = await db.ExecutaComando(sql);
-        console.log(rows)
         const listaMaquinas = this.toMAP(rows);
-        console.log(listaMaquinas)
 
         return listaMaquinas;
     }

@@ -1,8 +1,7 @@
 'use client'
 import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
-import MontaTabela from "../components/montaTabela.js";
-
+import MontarTabela from "../components/montarTabela.js";
+import CriarBotao from "../components/criarBotao.js";
 export default function Maquina() {
   
   //funcao pra listar máquinas
@@ -21,23 +20,21 @@ export default function Maquina() {
       })
       .then(r => {
           setlistaMaquinas(r);
-          console.log(r)
-          console.log(listaMaquinas)
       })
   }
 
   return (
-    <section className="content-main-children">
+    <section className="content-main-children-listar">
       <article className="title">
         <h1>Lista de Maquinas</h1>
       </article>
 
       <article className="container-btn-cadastrar">
-        <Link className="btn-cadastrar" href={'/maquina/cadastrar'}>Cadastrar</Link>
+        <CriarBotao value='Cadastrar' href='/maquina/cadastrar' class='btn-cadastrar'></CriarBotao>
       </article>
 
       <article className="container-table">
-        <MontaTabela listaMaquinas={listaMaquinas} cabecalhos={['Inativo', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Status', 'Ações']}></MontaTabela>
+        <MontarTabela listaMaquinas={listaMaquinas} cabecalhos={['Inativo', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Status', 'Ações']}></MontarTabela>
       </article>
     </section>
   );

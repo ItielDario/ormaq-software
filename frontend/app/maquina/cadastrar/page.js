@@ -1,25 +1,24 @@
 'use client'
-import { useState, useRef, useEffect } from "react";
-import Link from "next/link";
+import { useState } from "react";
+import MontarFormulario from "../../components/montarFormulario.js";
+import CriarBotao from "../../components/criarBotao.js";
 
-export default function Maquina() {
-  
-  //funcao pra listar máquinas
-  
+export default function CadastrarMaquina() {
+  const [descricao, setDescricao] = useState('');
 
   return (
-    <section className="content-main-children">
+    <section className="content-main-children-cadastrar">
       <article className="title">
         <h1>Cadastrar Máquina</h1>
       </article>
 
-      <article>
-
+      <article className="container-forms">
+        <MontarFormulario descricao={descricao} setDescricao={setDescricao} />
       </article>
 
       <article className="container-btn-cadastrar">
-        <Link className="btn-cadastrar" href={'/maquina'}>Voltar</Link>
-        <Link className="btn-cadastrar" href={'/maquina/cadastrar'}>Cadastrar</Link>
+        <CriarBotao value='Voltar' href='/maquina' class='btn-voltar'></CriarBotao>
+        <CriarBotao value='Cadastrar' href='/maquina/cadastrar' class='btn-cadastrar'></CriarBotao>
       </article>
     </section>
   );

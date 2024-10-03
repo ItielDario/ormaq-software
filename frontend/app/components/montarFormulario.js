@@ -3,52 +3,58 @@ import { useState } from 'react';
 import CustomEditor from './custom-editor';
 
 export default function MontarFormulario(props) {
-    const [descricao, setDescricao] = useState('');
+    const labelTitle = props.labelTitle;
+    const id = props.id;
+    const typeImput = props.typeImput;
+
+    console.log(props);
+    console.log(labelTitle);
+    console.log(id);
+    console.log(typeImput);
 
     return (
         <form>
-            <section>
-                <label htmlFor="maqNome">Nome da Máquina:</label>
-                <input type="text" id="maqNome" name="maqNome" required />
-            </section>
-
-            <section>
-                <label htmlFor="maqDataAquisicao">Data de Aquisição:</label>
-                <input type="date" id="maqDataAquisicao" name="maqDataAquisicao" required />
-            </section>
-
-            <section>
-                <label htmlFor="maqTipo">Tipo de Máquina:</label>
-                <select id="maqTipo" name="maqTipo" required>
-                    <option value="Nova">Nova</option>
-                    <option value="Semi-Nova">Semi-Nova</option>
-                </select>
-            </section>
-
-            <section>
-                <label htmlFor="maqHorasUso">Horas de Uso:</label>
-                <input type="number" id="maqHorasUso" name="maqHorasUso" required />
-            </section>
-
-            <section>
-                <label htmlFor="equipamentoStatusId">Status do Equipamento:</label>
-                <select id="equipamentoStatusId" name="equipamentoStatusId" required>
-                    <option value="1">Disponível</option>
-                </select>
-            </section>
-
-            <section>
-                <label htmlFor="maqInativo">Inativo:</label>
-                <select id="maqInativo" name="maqInativo" required>
-                    <option value="N">Não</option>
-                    <option value="S">Sim</option>
-                </select>
-            </section>
-
-            <section>
-                <label htmlFor="maqDescricao">Descrição da Máquina:</label>
-                <CustomEditor value={descricao} onChange={setDescricao} />
-            </section>
+            {
+                typeImput.map((value, index) => {
+                    if(value == 'text'){
+                        return(
+                            <section>
+                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
+                                <input type="text" id={id[index]} name={id[index]} required />
+                            </section>
+                        )
+                    }
+                    else if(value == 'number'){
+                        return(
+                            <section>
+                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
+                                <input type="number" id={id[index]} name={id[index]} required />
+                            </section>
+                        )
+                    }
+                    else if(value == 'date'){
+                        return(
+                            <section>
+                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
+                                <input type="date" id={id[index]} name={id[index]} required />
+                            </section>
+                        )
+                    }
+                    else if(value == 'select'){
+                        {console.log(value)}
+                        return(
+                            
+                            <section>
+                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
+                                <select id={id[index]} name={id[index]} required>
+                                    <option value="Nova">Nova</option>
+                                    <option value="Semi-Nova">Semi-Nova</option>
+                                </select>
+                            </section>
+                        )
+                    }
+                })
+            }
         </form>
     );
 }

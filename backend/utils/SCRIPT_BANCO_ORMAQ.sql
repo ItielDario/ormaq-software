@@ -1,7 +1,6 @@
-
 CREATE TABLE `Equipamento_Status` (
-  `epqStaId` INT NOT NULL PRIMARY KEY,
-  `epqStaDescricao` VARCHAR(45) NOT NULL
+  `eqpStaId` INT NOT NULL PRIMARY KEY,
+  `eqpStaDescricao` VARCHAR(45) NOT NULL
 );
 
 CREATE TABLE `Implemento` (
@@ -22,7 +21,7 @@ CREATE TABLE `Maquina` (
   `maqDataAquisicao` DATE NOT NULL,
   `maqTipo` VARCHAR(100) NOT NULL,
   `maqDescricao` VARCHAR(250) NULL,
-  `impInativo` CHAR(1) NOT NULL,
+  `maqInativo` CHAR(1) NOT NULL,
   `maqHorasUso` INT NULL,
   `maqStatus` INT NOT NULL,
   CONSTRAINT `maqStatus`
@@ -147,7 +146,7 @@ VALUES
   (1, 'Administrador'),
   (2, 'Funcionário');
 
-INSERT INTO `Equipamento_Status` (`epqStaId`, `epqStaDescricao`)
+INSERT INTO `Equipamento_Status` (`eqpStaId`, `eqpStaDescricao`)
 VALUES
   (1, 'Disponível'),
   (2, 'Locado'),
@@ -174,7 +173,6 @@ VALUES
   (1, 'Ferro de Reposição', '2023-01-05', 'Ferro para substituição', 'N', 1),
   (2, 'Correia', '2023-02-10', 'Correia de transmissão', 'N', 1);
 
-  
 SELECT * FROM `Equipamento_Status`;
 SELECT * FROM `Locacao_Status`;
 SELECT * FROM `Usuario_Perfil`;
@@ -183,4 +181,9 @@ SELECT * FROM `Cliente`;
 SELECT * FROM `Implemento`;
 SELECT * FROM `Peca`;
 
-DROP TABLE Implemento
+
+SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqInativo, m.maqHorasUso, es.eqpStaId, es.eqpStaDescricao
+FROM Maquina m
+JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId;
+
+DESCRIBE Equipamento_Status;

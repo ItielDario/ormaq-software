@@ -4,8 +4,6 @@ import MontarFormulario from "../../components/montarFormulario.js";
 import CriarBotao from "../../components/criarBotao.js";
 
 export default function CadastrarMaquina() {
-  const [descricao, setDescricao] = useState('');
-
   return (
     <section className="content-main-children-cadastrar">
       <article className="title">
@@ -13,7 +11,34 @@ export default function CadastrarMaquina() {
       </article>
 
       <article className="container-forms">
-        <MontarFormulario descricao={descricao} setDescricao={setDescricao} />
+        <MontarFormulario 
+        labelTitle={[
+          'Nome da Máquina', 
+          'Data de Aquisição', 
+          'Tipo da Máquina', 
+          'Horas de Uso', 
+          'Status do Equipamento', 
+          'Inativo', 
+          'Descrição da Maquina',
+        ]} 
+        id={[
+          'maqNome', 
+          'maqDataAquisicao', 
+          'maqTipo', 
+          'maqHorasUso', 
+          'equipamentoStatus', 
+          'maqInativo', 
+          'maqDescricao',
+        ]}
+        typeImput={[
+          'text', 
+          'date', 
+          'select', ['Nova', 'Semi-Nova'],
+          'number', 
+          'select', ['Disponível'], 
+          'select', ['Não', 'Sim'],
+          'customEditor',
+        ]}/>
       </article>
 
       <article className="container-btn-cadastrar">

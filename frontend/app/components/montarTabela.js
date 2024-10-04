@@ -11,14 +11,14 @@ export default function MontaTabela(props){
                 <tr>
                     {   
                         cabecalhos.map((cab, index) => (
-                            <th>{cab}</th>
+                            <th key={index}>{cab}</th>
                         ))
                     }
                 </tr>
             </thead>
             <tbody>
                 {listaMaquinas.map((maquina, index) => (
-                    <tr id={maquina.maqId}>
+                    <tr key={maquina.maqId}>
                         <td></td>
                         <td>{maquina.maqNome}</td>
                         <td>{maquina.maqDataAquisicao}</td>

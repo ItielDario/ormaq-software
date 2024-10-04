@@ -1,59 +1,44 @@
-'use client'
-import { useState } from 'react';
-import CustomEditor from './custom-editor';
+'use client';
 
 export default function MontarFormulario(props) {
-    const labelTitle = props.labelTitle;
-    const id = props.id;
-    const typeImput = props.typeImput;
-
-    console.log(props);
-    console.log(labelTitle);
-    console.log(id);
-    console.log(typeImput);
+    const { labelTitle, id, typeImput, optinsOfSelect } = props;
+    let contOptions = 0;
+    
 
     return (
         <form>
             {
                 typeImput.map((value, index) => {
-                    if(value == 'text'){
-                        return(
-                            <section>
-                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
-                                <input type="text" id={id[index]} name={id[index]} required />
-                            </section>
-                        )
-                    }
-                    else if(value == 'number'){
-                        return(
-                            <section>
-                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
-                                <input type="number" id={id[index]} name={id[index]} required />
-                            </section>
-                        )
-                    }
-                    else if(value == 'date'){
-                        return(
-                            <section>
-                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
-                                <input type="date" id={id[index]} name={id[index]} required />
-                            </section>
-                        )
-                    }
-                    else if(value == 'select'){
-                        {console.log(value)}
-                        return(
+                    const options = optinsOfSelect[contOptions];
+
+                    return (
+                        <section key={id[index]}>
+                            <label htmlFor={id[index]}>{labelTitle[index]}</label>
                             
-                            <section>
-                                <label htmlFor={id[index]}>{labelTitle[index]}</label>
+                            {value === 'text' && (
+                                <input type="text" id={id[index]} name={id[index]} required />
+                            )}
+
+                            {value === 'number' && (
+                                <input type="number" id={id[index]} name={id[index]} required />
+                            )}
+
+                            {value === 'date' && (
+                                <input type="date" id={id[index]} name={id[index]} required />
+                            )}
+
+                            {value === 'select' && (
                                 <select id={id[index]} name={id[index]} required>
-                                    <option value="Nova">Nova</option>
-                                    <option value="Semi-Nova">Semi-Nova</option>
+                                    {options.map((option, optionIndex) => (
+                                        <option key={optionIndex} value={option}>{option}</option>
+                                    ))}
                                 </select>
-                            </section>
-                        )
-                    }
-                })
+                               
+                            )}
+                             {/*contOptions++*/}
+                        </section>
+                    );
+                })                
             }
         </form>
     );

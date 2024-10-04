@@ -24,7 +24,7 @@ export default function CadastrarMaquina() {
         id={[
           'maqNome', 
           'maqDataAquisicao', 
-          'maqTipo', 
+           'maqTipo',
           'maqHorasUso', 
           'equipamentoStatus', 
           'maqInativo', 
@@ -33,11 +33,16 @@ export default function CadastrarMaquina() {
         typeImput={[
           'text', 
           'date', 
-          'select', ['Nova', 'Semi-Nova'],
+          'select',
           'number', 
-          'select', ['Disponível'], 
-          'select', ['Não', 'Sim'],
+          'select',
+          'select',
           'customEditor',
+        ]}
+        optinsOfSelect={[
+          ['Nova', 'Semi-Nova'],
+          ['Disponível'], 
+          ['Não', 'Sim'],
         ]}/>
       </article>
 

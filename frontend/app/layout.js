@@ -31,6 +31,8 @@ export default function RootLayout({ children }) {
       </head>
 
       <body className={``}>
+        <div id="topAnchor" style={{ position: 'relative', top: 0, height: 0 }}></div> {/* Âncora no topo */}
+        
         <header>
           <section className="container-header">
             <figure>

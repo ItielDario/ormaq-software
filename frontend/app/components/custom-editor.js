@@ -11,12 +11,6 @@ import {
 	Base64UploadAdapter,
 	Essentials,
 	Heading,
-	Image,
-	ImageCaption,
-	ImageResize,
-	ImageStyle,
-	ImageToolbar,
-	ImageUpload,
 	PictureEditing,
 	Indent,
 	IndentBlock,
@@ -27,21 +21,31 @@ import {
 	Paragraph,
 	PasteFromOffice,
 	Table,
+	TableCaption,
+	TableCellProperties,
 	TableColumnResize,
+	TableProperties,
 	TableToolbar,
 	TextTransformation,
 } from 'ckeditor5';
-import 'ckeditor5/ckeditor5.css';
 
-function CustomEditor({ value, onChange }) {
+import 'ckeditor5/ckeditor5.css';
+import { useState } from 'react';
+
+function CustomEditor({ onChange }) {
+    const [editorData, setEditorData] = useState('');
+
+    const handleEditorChange = (event, editor) => {
+        const data = editor.getData();
+        setEditorData(data);
+        onChange(data); // Chama a função onChange com os dados do editor
+    };
+
     return (
         <CKEditor
             editor={ClassicEditor}
-            data={value}
-            onChange={(event, editor) => {
-                const data = editor.getData();
-                onChange(data);
-            }}
+            data={editorData} // Passa o valor do estado para o CKEditor
+            onChange={handleEditorChange}
             config={{
                 toolbar: [
                     'undo',
@@ -82,7 +86,10 @@ function CustomEditor({ value, onChange }) {
                     PasteFromOffice,
                     PictureEditing,
                     Table,
+                    TableCaption,
+                    TableCellProperties,
                     TableColumnResize,
+                    TableProperties,
                     TableToolbar,
                     TextTransformation,
                     Underline,
@@ -127,7 +134,6 @@ function CustomEditor({ value, onChange }) {
                 table: {
                     contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
                 },
-                initialData: '<p>Hello from CKEditor 5 in React!</p>'
             }}
         />
     );

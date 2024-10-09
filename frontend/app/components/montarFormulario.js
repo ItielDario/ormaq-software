@@ -1,16 +1,26 @@
 'use client';
+import CustomEditor from "./custom-editor.js";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 
-export default function MontarFormulario(props) {
+const MontarFormulario = forwardRef((props, ref) => {
     const { labelTitle, id, typeImput, optinsOfSelect } = props;
-    let contOptions = 0;
-    
+    const customEditorValue = useRef(''); // Cria uma referência para armazenar o valor do editor
+    const formRef = useRef(null); // Referência para o formulário
+    let contOptions = -1;
+
+    useImperativeHandle(ref, () => ({
+        getCustomEditorValue: () => customEditorValue.current, // Função para obter o valor do editor
+        getFormElement: () => formRef.current // Expor a referência do formulário
+    }));
+
+    const handleCustomEditorChange = (data) => {
+        customEditorValue.current = data; 
+    };
 
     return (
-        <form>
+        <form ref={formRef}>
             {
                 typeImput.map((value, index) => {
-                    const options = optinsOfSelect[contOptions];
-
                     return (
                         <section key={id[index]}>
                             <label htmlFor={id[index]}>{labelTitle[index]}</label>
@@ -28,18 +38,25 @@ export default function MontarFormulario(props) {
                             )}
 
                             {value === 'select' && (
-                                <select id={id[index]} name={id[index]} required>
-                                    {options.map((option, optionIndex) => (
-                                        <option key={optionIndex} value={option}>{option}</option>
-                                    ))}
-                                </select>
-                               
+                                <>
+                                    <select id={id[index]} name={id[index]} required>
+                                        {contOptions++}
+                                        {optinsOfSelect[contOptions]?.map((option, optionIndex) => (
+                                            <option key={optionIndex} value={option}>{option}</option>
+                                        ))}
+                                    </select>
+                                </>
                             )}
-                             {/*contOptions++*/}
+
+                            {value === 'customEditor' && (
+                                <CustomEditor onChange={handleCustomEditorChange} />
+                            )}
                         </section>
                     );
-                })                
+                })
             }
         </form>
     );
-}
+});
+
+export default MontarFormulario;

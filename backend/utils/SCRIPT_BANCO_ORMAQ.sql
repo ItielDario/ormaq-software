@@ -1,3 +1,5 @@
+CREATE SCHEMA `ormaq_db` ;
+
 CREATE TABLE `Equipamento_Status` (
   `eqpStaId` INT NOT NULL PRIMARY KEY,
   `eqpStaDescricao` VARCHAR(45) NOT NULL
@@ -12,7 +14,7 @@ CREATE TABLE `Implemento` (
   `impStatus` INT NOT NULL,
   CONSTRAINT `impStatus`
     FOREIGN KEY (`impStatus`)
-    REFERENCES `Equipamento_Status` (`epqStaId`)
+    REFERENCES `Equipamento_Status` (`eqpStaId`)
 );
 
 CREATE TABLE `Maquina` (
@@ -26,7 +28,7 @@ CREATE TABLE `Maquina` (
   `maqStatus` INT NOT NULL,
   CONSTRAINT `maqStatus`
     FOREIGN KEY (`maqStatus`)
-    REFERENCES `Equipamento_Status` (`epqStaId`)
+    REFERENCES `Equipamento_Status` (`eqpStaId`)
 );
 
 CREATE TABLE `Peca` (
@@ -38,7 +40,7 @@ CREATE TABLE `Peca` (
   `pecStatus` INT NOT NULL,
   CONSTRAINT `pecStatus`
     FOREIGN KEY (`pecStatus`)
-    REFERENCES `Equipamento_Status` (`epqStaId`)
+    REFERENCES `Equipamento_Status` (`eqpStaId`)
 );
 
 CREATE TABLE `Manutencao_Equipamento` (
@@ -152,11 +154,11 @@ VALUES
   (2, 'Locado'),
   (3, 'Manutenção');
 
-INSERT INTO `Maquina` (`maqId`, `maqNome`, `maqDataAquisicao`, `maqTipo`, `maqDescricao`, `impInativo`, `maqStatus`)
+INSERT INTO `Maquina` (`maqId`, `maqNome`, `maqDataAquisicao`, `maqTipo`, `maqDescricao`, `maqInativo`, `maqStatus`, `maqHorasUso`)
 VALUES
-  (1, 'Escavadeira', '2022-05-15', 'Nova', 'Escavadeira de grande porte', 'N', 1),
-  (2, 'Retroescavadeira', '2023-03-10', 'Nova', 'Retroescavadeira compacta', 'N', 1),
-  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 'N', 2);
+  (1, 'Escavadeira', '2022-05-15', 'Nova', 'Escavadeira de grande porte', 'N', 1, 200),
+  (2, 'Retroescavadeira', '2023-03-10', 'Nova', 'Retroescavadeira compacta', 'N', 1, 0),
+  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 'N', 2, 180);
 
 INSERT INTO `Cliente` (`cliId`, `cliNome`, `cliCPF_CNPJ`, `usuTelefone`, `usuEmail`)
 VALUES
@@ -185,5 +187,3 @@ SELECT * FROM `Peca`;
 SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqInativo, m.maqHorasUso, es.eqpStaId, es.eqpStaDescricao
 FROM Maquina m
 JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId;
-
-DESCRIBE Equipamento_Status;

@@ -2,9 +2,9 @@
 import { useState, useRef, useEffect } from "react";
 import MontarTabela from "../components/montarTabela.js";
 import CriarBotao from "../components/criarBotao.js";
+
 export default function Maquina() {
-  
-  //funcao pra listar máquinas
+
   const [listaMaquinas, setlistaMaquinas] = useState([]);
   
   useEffect((e) => {

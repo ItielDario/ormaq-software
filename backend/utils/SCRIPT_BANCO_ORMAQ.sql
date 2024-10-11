@@ -1,16 +1,17 @@
-CREATE SCHEMA `ormaq_db` ;
+CREATE SCHEMA `ormaq_db`;
+USE `ormaq_db`;
 
 CREATE TABLE `Equipamento_Status` (
-  `eqpStaId` INT NOT NULL PRIMARY KEY,
+  `eqpStaId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `eqpStaDescricao` VARCHAR(45) NOT NULL
 );
 
 CREATE TABLE `Implemento` (
-  `impId` INT NOT NULL PRIMARY KEY,
+  `impId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `impNome` VARCHAR(45) NOT NULL,
   `impDataAquisicao` DATE NOT NULL,
-  `impDescricao` VARCHAR(250) NULL,
-  `impInativo` CHAR(1) NOT NULL,
+  `impDescricao` LONGTEXT NULL,
+  `impInativo` INT NOT NULL,
   `impStatus` INT NOT NULL,
   CONSTRAINT `impStatus`
     FOREIGN KEY (`impStatus`)
@@ -18,12 +19,12 @@ CREATE TABLE `Implemento` (
 );
 
 CREATE TABLE `Maquina` (
-  `maqId` INT NOT NULL PRIMARY KEY,
+  `maqId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `maqNome` VARCHAR(45) NOT NULL,
   `maqDataAquisicao` DATE NOT NULL,
   `maqTipo` VARCHAR(100) NOT NULL,
-  `maqDescricao` VARCHAR(250) NULL,
-  `maqInativo` CHAR(1) NOT NULL,
+  `maqDescricao` LONGTEXT NULL, 
+  `maqInativo` INT NOT NULL, 
   `maqHorasUso` INT NULL,
   `maqStatus` INT NOT NULL,
   CONSTRAINT `maqStatus`
@@ -32,11 +33,11 @@ CREATE TABLE `Maquina` (
 );
 
 CREATE TABLE `Peca` (
-  `pecId` INT NOT NULL PRIMARY KEY,
+  `pecId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `pecNome` VARCHAR(45) NOT NULL,
   `pecDataAquisicao` DATE NOT NULL,
-  `pecDescricao` VARCHAR(250) NULL,
-  `pecInativo` CHAR(1) NOT NULL,
+  `pecDescricao` LONGTEXT NULL,
+  `pecInativo` INT NOT NULL,
   `pecStatus` INT NOT NULL,
   CONSTRAINT `pecStatus`
     FOREIGN KEY (`pecStatus`)
@@ -44,7 +45,7 @@ CREATE TABLE `Peca` (
 );
 
 CREATE TABLE `Manutencao_Equipamento` (
-  `manId` INT NOT NULL PRIMARY KEY,
+  `manId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `manDataInicio` DATE NOT NULL,
   `manDecricao` VARCHAR(150) NOT NULL,
   `manDataTermino` DATE NULL,
@@ -65,7 +66,7 @@ CREATE TABLE `Manutencao_Equipamento` (
 );
 
 CREATE TABLE `Cliente` (
-  `cliId` INT NOT NULL PRIMARY KEY,
+  `cliId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `cliNome` VARCHAR(60) NOT NULL,
   `cliCPF_CNPJ` VARCHAR(25) NOT NULL,
   `usuTelefone` VARCHAR(14) NULL,
@@ -73,12 +74,12 @@ CREATE TABLE `Cliente` (
 );
 
 CREATE TABLE `Usuario_Perfil` (
-  `usuPerId` INT NOT NULL PRIMARY KEY,
+  `usuPerId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `usuPerDescricao` VARCHAR(45) NOT NULL
 );
 
 CREATE TABLE `Usuario` (
-  `usuId` INT NOT NULL PRIMARY KEY,
+  `usuId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `usuNome` VARCHAR(60) NOT NULL,
   `usuSenha` VARCHAR(20) NOT NULL,
   `usuTelefone` VARCHAR(14) NULL,
@@ -90,12 +91,12 @@ CREATE TABLE `Usuario` (
 );
 
 CREATE TABLE `Locacao_Status` (
-  `locStaId` INT NOT NULL PRIMARY KEY,
+  `locStaId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `locStaDescricao` VARCHAR(45) NOT NULL
 );
 
 CREATE TABLE `Locacao` (
-  `locId` INT NOT NULL PRIMARY KEY,
+  `locId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `locDataInicio` DATE NOT NULL,
   `locDataFinalPrevista` DATE NOT NULL,
   `locDataFinalEntrega` DATE NOT NULL,
@@ -117,7 +118,7 @@ CREATE TABLE `Locacao` (
 );
 
 CREATE TABLE `Itens_Locacao` (
-  `iteLocId` INT NOT NULL  PRIMARY KEY,
+  `iteLocId` INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   `iteLocQuantidade` INT NOT NULL,
   `iteLocValorUnitario` DECIMAL(10, 2) NOT NULL,
   `iteLocPecId` INT NOT NULL,
@@ -130,7 +131,7 @@ CREATE TABLE `Itens_Locacao` (
   CONSTRAINT `iteLocImpId`
     FOREIGN KEY (`iteLocImpId`)
     REFERENCES `Implemento` (`impId`),
-CONSTRAINT `iteLocMaqId`
+  CONSTRAINT `iteLocMaqId`
     FOREIGN KEY (`iteLocMaqId`)
     REFERENCES `Implemento` (`impId`),
   CONSTRAINT `IteLocLocacaoId`
@@ -156,9 +157,9 @@ VALUES
 
 INSERT INTO `Maquina` (`maqId`, `maqNome`, `maqDataAquisicao`, `maqTipo`, `maqDescricao`, `maqInativo`, `maqStatus`, `maqHorasUso`)
 VALUES
-  (1, 'Escavadeira', '2022-05-15', 'Nova', 'Escavadeira de grande porte', 'N', 1, 200),
-  (2, 'Retroescavadeira', '2023-03-10', 'Nova', 'Retroescavadeira compacta', 'N', 1, 0),
-  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 'N', 2, 180);
+  (1, 'Escavadeira', '2022-05-15', 'Nova', 'Escavadeira de grande porte', 0, 1, 200),
+  (2, 'Retroescavadeira', '2023-03-10', 'Nova', 'Retroescavadeira compacta', 0, 1, 0),
+  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 0, 2, 180);
 
 INSERT INTO `Cliente` (`cliId`, `cliNome`, `cliCPF_CNPJ`, `usuTelefone`, `usuEmail`)
 VALUES
@@ -167,13 +168,13 @@ VALUES
 
 INSERT INTO `Implemento` (`impId`, `impNome`, `impDataAquisicao`, `impDescricao`, `impInativo`, `impStatus`)
 VALUES
-  (1, 'Pulverizador', '2022-01-10', 'Pulverizador agrícola', 'N', 1),
-  (2, 'Arado', '2022-02-15', 'Arado para trator', 'N', 1);
+  (1, 'Pulverizador', '2022-01-10', 'Pulverizador agrícola', 0, 1),
+  (2, 'Arado', '2022-02-15', 'Arado para trator', 0, 1);
 
 INSERT INTO `Peca` (`pecId`, `pecNome`, `pecDataAquisicao`, `pecDescricao`, `pecInativo`, `pecStatus`)
 VALUES
-  (1, 'Ferro de Reposição', '2023-01-05', 'Ferro para substituição', 'N', 1),
-  (2, 'Correia', '2023-02-10', 'Correia de transmissão', 'N', 1);
+  (1, 'Ferro de Reposição', '2023-01-05', 'Ferro para substituição', 0, 1),
+  (2, 'Correia', '2023-02-10', 'Correia de transmissão', 0, 1);
 
 SELECT * FROM `Equipamento_Status`;
 SELECT * FROM `Locacao_Status`;
@@ -182,7 +183,6 @@ SELECT * FROM `Maquina`;
 SELECT * FROM `Cliente`;
 SELECT * FROM `Implemento`;
 SELECT * FROM `Peca`;
-
 
 SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqInativo, m.maqHorasUso, es.eqpStaId, es.eqpStaDescricao
 FROM Maquina m

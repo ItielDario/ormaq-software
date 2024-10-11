@@ -15,29 +15,31 @@ export default class maquinaController {
     async cadastrarMaquina(req, res) {
         try {
             console.log(req.body)
+            let { maqNome, maqDataAquisicao, maqTipo, maqHorasUso, equipamentoStatus, maqInativo, maqDescricao} = req.body;
 
-            // if(imovelDescricao != "" && imovelValor != "" && imovelCep != "" && imovelEndereco != "" && imovelBairro != "" && imovelCidade != "" && imovelUf != "" && imovelDisponivel != "") {
-            //     if(parseFloat(imovelValor) > 0) {
-            //         let imovel = new ImovelModel(0, imovelDescricao, imovelValor, imovelCep, imovelEndereco, imovelBairro, imovelCidade, imovelUf, imovelDisponivel);
+            if(maqNome != "" && maqDataAquisicao != "" && maqTipo != "" && maqHorasUso != "" && equipamentoStatus != "" && maqInativo != "" && maqDescricao != "") {
+                if(parseFloat(maqHorasUso) > 0) {
+                    let maquina = new MaquinaModel(0, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, equipamentoStatus, maqInativo, maqDescricao);
 
-            //         let result  = await imovel.gravar();
-
-            //         if(result) {
-            //             res.status(201).json({msg: "Imóvel cadastrado com sucesso!"});
-            //         }
-            //         else {
-            //             res.status(500).json({msg: "Erro durante o cadastro do imóvel"});
-            //         }
-            //     }
-            //     else {
-            //         res.status(400).json({msg: "O valor não pode ser negativo!"});
-            //     }
-            // }
-            // else {
-            //     res.status(400).json({msg: "Preencha corretamente os valores necessários!"});
-            // }
+                    let result  = await maquina.gravar();
+                    
+                    if(result) {
+                        res.status(201).json({msg: "Máquina cadastrada com sucesso!"});
+                    }
+                    else {
+                        res.status(500).json({msg: "Erro durante o cadastro da Máquina"});
+                    }
+                }
+                else {
+                    res.status(400).json({msg: "A hora de uso não pode ser negativa!"});
+                }
+            }
+            else {
+                res.status(400).json({msg: "Por favor, preencha os campos abaixo corretamente!"});
+            }
         }
         catch(ex) {
+            console.log(ex)
             res.status(500).json({msg: "Erro interno de servidor!"});
         }
     }

@@ -42,7 +42,7 @@ const MontarFormulario = forwardRef((props, ref) => {
                                     <select id={id[index]} name={id[index]} required>
                                         {contOptions++}
                                         {optinsOfSelect[contOptions]?.map((option, optionIndex) => (
-                                            <option key={optionIndex} value={option}>{option}</option>
+                                            <option key={optionIndex} value={optionIndex + 1}>{option}</option>
                                         ))}
                                     </select>
                                 </>

@@ -1,12 +1,18 @@
 import express from 'express';
-import MaquinaController from '../controllers/maquinaController.js';
+import PecaController from '../controllers/pecaController.js'
 
 const router = express.Router();
-const ctrl = new MaquinaController();
+const ctrl = new PecaController();
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todas as peças cadastradas'
-    ctrl.listarMaquinas(req, res)
+    ctrl.listarPeca(req, res)
+})
+
+router.post('/cadastrar', (req, res) => {
+    // #swagger.tags = ['Peças']
+    // #swagger.summary = 'Cadsatrar peças'
+    ctrl.cadastrarPeca(req, res)
 })
 
 export default router;

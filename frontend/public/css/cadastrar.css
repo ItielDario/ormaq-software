@@ -41,6 +41,7 @@ label {
     font-weight: 500;
     display: block;
     font-size: 1.2vw;
+    color: #1d1d1d;
 }
   
 input[type="text"],
@@ -55,6 +56,8 @@ textarea,
     border: 0.1vw solid #ccc;
     border-radius: 0.4vw;
     font-size: 1.1vw;
+    background-color: white;
+    color: #1d1d1d;
 }
   
 textarea {

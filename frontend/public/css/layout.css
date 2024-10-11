@@ -9,6 +9,7 @@ body{
     height: 100vh;
     display: flex;
     font-family: "Roboto", sans-serif;
+    background-color: white;
 }
 
 header{

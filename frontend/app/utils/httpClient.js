@@ -10,14 +10,14 @@ const httpClient = {
         return p;
     },
     
-    post: (endpoint, body) => {
+    post: (endpoint, dados) => {
         let p = fetch(baseUrl + endpoint, {
             method: "POST",
             credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify(body)
+            body: JSON.stringify(dados)
         })
 
         return p;

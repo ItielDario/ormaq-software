@@ -4,20 +4,20 @@ import CriarBotao from "../../components/criarBotao.js";
 import httpClient from "@/app/utils/httpClient.js";
 import { useRef } from "react";
 
-export default function CadastrarPeca() {
+export default function CadastrarImplemento() {
   const formRef = useRef(null);
   const alertMsg = useRef(null);
 
-  const cadastrarPeca = () => {
+  const cadastrarImplemento = () => {
     const formElement = formRef.current.getFormElement(); // Obtem os elementos (TAGs) do formulário
     const formData = new FormData(formElement); // Obtem os imputs do formulário
     alertMsg.current.style.display = 'none';
     
     const dados = {
-      pecaNome: formData.get('pecaNome'), // Obtem o valor do imput 'pecaNome'
-      pecaDataAquisicao: formData.get('pecaDataAquisicao'),
-      pecaDescricao: formRef.current.getCustomEditorValue(), // Obtem o valor do ckeditor 'customEditor'
-      pecaInativo: formData.get('pecaInativo'),
+      impNome: formData.get('implementoNome'), // Obtem o valor do imput 'implementoNome'
+      impDataAquisicao: formData.get('implementoDataAquisicao'),
+      impDescricao: formRef.current.getCustomEditorValue(), // Obtem o valor do ckeditor 'customEditor'
+      impInativo: formData.get('implementoInativo'),
       equipamentoStatus: formData.get('equipamentoStatus'), // Obtem o status do equipamento
     }
   
@@ -28,7 +28,7 @@ export default function CadastrarPeca() {
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
     } else {
-      httpClient.post("/peca/cadastrar", dados)
+      httpClient.post("/implemento/cadastrar", dados)
         .then(r => {
           return r.json();
         })
@@ -36,7 +36,7 @@ export default function CadastrarPeca() {
           setTimeout(() => {
             alertMsg.current.className = 'alertSuccess';
             alertMsg.current.style.display = 'block';
-            alertMsg.current.textContent = 'Peça cadastrada com sucesso!';
+            alertMsg.current.textContent = 'Implemento cadastrado com sucesso!';
             
             formElement.reset(); // Limpa todos os campos do formulário
           }, 100);
@@ -55,7 +55,7 @@ export default function CadastrarPeca() {
   return (
     <section className="content-main-children-cadastrar">
       <article className="title">
-        <h1>Cadastrar Peça</h1>
+        <h1>Cadastrar Implemento</h1>
       </article>
 
       <article ref={alertMsg}></article>
@@ -64,18 +64,18 @@ export default function CadastrarPeca() {
         <MontarFormulario 
           ref={formRef}
           labelTitle={[
-            'Nome da Peça', 
+            'Nome do Implemento', 
             'Data de Aquisição', 
             'Status do Equipamento', 
             'Inativo', 
-            'Descrição da Peça',
+            'Descrição do Implemento',
           ]} 
           id={[
-            'pecaNome', 
-            'pecaDataAquisicao', 
+            'implementoNome', 
+            'implementoDataAquisicao', 
             'equipamentoStatus', 
-            'pecaInativo', 
-            'pecaDescricao',
+            'implementoInativo', 
+            'implementoDescricao',
           ]}
           typeImput={[
             'text', 
@@ -92,8 +92,8 @@ export default function CadastrarPeca() {
       </article>
 
       <article className="container-btn-cadastrar">
-        <CriarBotao value='Voltar' href='/peca' class='btn-voltar'></CriarBotao>
-        <button type="button" className='btn-cadastrar' onClick={cadastrarPeca}>Cadastrar</button>
+        <CriarBotao value='Voltar' href='/implemento' class='btn-voltar'></CriarBotao>
+        <button type="button" className='btn-cadastrar' onClick={cadastrarImplemento}>Cadastrar</button>
       </article>
     </section>
   );

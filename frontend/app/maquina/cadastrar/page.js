@@ -26,21 +26,19 @@ export default function CadastrarMaquina() {
       maqDescricao: formRef.current.getCustomEditorValue() // Obtem o valor do ckeditor 'customEditor'
     }
   
-    console.log(dados);
-  
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
+      
     } else {
       httpClient.post("/maquina/cadastrar", dados)
         .then(r => {
           return r.json();
         })
         .then(r => {
-          console.log(r);
           setTimeout(() => {
             alertMsg.current.className = 'alertSuccess';
             alertMsg.current.style.display = 'block';

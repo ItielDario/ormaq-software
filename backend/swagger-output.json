@@ -142,6 +142,69 @@
           }
         }
       }
+    },
+    "/implemento/": {
+      "get": {
+        "tags": [
+          "Implemento"
+        ],
+        "summary": "Listar todos os Implementos cadastradas",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/implemento/cadastrar": {
+      "post": {
+        "tags": [
+          "Implemento"
+        ],
+        "summary": "Cadsatrar Implementos",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "impNome": {
+                    "example": "any"
+                  },
+                  "impDataAquisicao": {
+                    "example": "any"
+                  },
+                  "impDescricao": {
+                    "example": "any"
+                  },
+                  "impInativo": {
+                    "example": "any"
+                  },
+                  "equipamentoStatus": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

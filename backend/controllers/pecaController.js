@@ -13,9 +13,7 @@ export default class pecaController {
     }
 
     async cadastrarPeca(req, res) {
-        console.log(req.body)
         try {
-            console.log(req.body)
             let { pecaNome, pecaDataAquisicao, pecaDescricao, pecaInativo, equipamentoStatus} = req.body;
 
             if(pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaInativo != "" && equipamentoStatus != "") {

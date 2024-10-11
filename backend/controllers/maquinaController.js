@@ -14,7 +14,6 @@ export default class maquinaController {
 
     async cadastrarMaquina(req, res) {
         try {
-            console.log(req.body)
             let { maqNome, maqDataAquisicao, maqTipo, maqHorasUso, equipamentoStatus, maqInativo, maqDescricao} = req.body;
 
             if(maqNome != "" && maqDataAquisicao != "" && maqTipo != "" && maqHorasUso != "" && equipamentoStatus != "" && maqInativo != "" && maqDescricao != "") {
@@ -22,7 +21,7 @@ export default class maquinaController {
                     let maquina = new MaquinaModel(0, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, equipamentoStatus, maqInativo, maqDescricao);
 
                     let result  = await maquina.gravar();
-                    
+
                     if(result) {
                         res.status(201).json({msg: "Máquina cadastrada com sucesso!"});
                     }

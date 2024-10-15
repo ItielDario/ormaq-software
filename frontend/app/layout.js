@@ -68,6 +68,10 @@ export default function RootLayout({ children }) {
           <section className="container-main">
             <section className="content-main">
               {children}
+
+              <article className="footer">
+                <p>© 2024 ORMAQ. Todos os direitos reservados.</p>
+              </article>
             </section>
           </section>
         </main>

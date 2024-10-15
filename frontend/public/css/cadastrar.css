@@ -4,6 +4,10 @@
     box-sizing: border-box;
 }
 
+.content-main-children-cadastrar{
+    padding: 1vw 2vw;
+}
+
 .content-main-children-cadastrar .title{
     color: black;
     font-size: 2.5vw;

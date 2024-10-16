@@ -5,6 +5,7 @@ export default class pecaController {
         try{
             let peca = new PecaModel()
             peca = await peca.listarPecas()
+            console.log(peca)
             res.status(200).json(peca);
         }
         catch(error){

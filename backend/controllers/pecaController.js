@@ -1,4 +1,4 @@
-import PecaModel from "../models/pecaModel.js"
+import PecaModel from "../models/pecaModel.js" 
 
 export default class pecaController {
     async listarPeca(req, res){
@@ -9,6 +9,25 @@ export default class pecaController {
         }
         catch(error){
             res.status(500).json(error)
+        }
+    }
+
+    async obterPeca(req, res) {
+        try{
+            let { id } = req.params;
+            let peca = new PecaModel();
+            peca = await peca.obter(id);
+
+            if(peca == null) {
+                res.staus(404).json({msg: `Peça com o id ${id} não encontrada!`})
+            }
+            else{
+                res.status(200).json(peca);
+            }
+        }
+        catch(ex) {
+            console.log(ex)
+            res.status(500).json({msg: "Erro interno de servidor!"});
         }
     }
 

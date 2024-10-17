@@ -169,6 +169,45 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Alterar uma peça",
+        "description": "",
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
+    "/peca/{id}": {
+      "get": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Obter uma peça",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/peca/cadastrar": {
@@ -176,7 +215,7 @@
         "tags": [
           "Peças"
         ],
-        "summary": "Cadsatrar peças",
+        "summary": "Cadsatrar uma peça",
         "description": "",
         "responses": {
           "201": {

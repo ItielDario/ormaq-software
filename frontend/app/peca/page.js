@@ -38,8 +38,8 @@ export default function Peca() {
                     }))}
                     renderActions={(peca) => (
                         <div>
-                            <a href="/manutencao"><i className="nav-icon fas fa-pen"></i></a>
-                            <a href="/manutencao"><i className="nav-icon fas fa-trash"></i></a>
+                            <a href={`/peca/alterar/${peca.id}`}><i className="nav-icon fas fa-pen"></i></a>
+                            <a href={`/peca/alterar/${peca.id}`}><i className="nav-icon fas fa-trash"></i></a>
                         </div>
                     )}
                 />

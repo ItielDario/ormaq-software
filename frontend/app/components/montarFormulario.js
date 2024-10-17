@@ -3,8 +3,10 @@ import CustomEditor from "./custom-editor.js";
 import { forwardRef, useImperativeHandle, useRef, useEffect } from "react";
 
 const MontarFormulario = forwardRef((props, ref) => {
-    const { labelTitle, id, typeImput, optinsOfSelect, initialValues } = props;
-    const customEditorValue = useRef(initialValues?.maqDescricao || ''); // Preencher com valor inicial, se existir
+    const { labelTitle, id, typeImput, optinsOfSelect, initialValues, customType } = props;
+    
+    // Utilize a chave correta para buscar a descrição a partir dos valores iniciais
+    const customEditorValue = useRef(initialValues?.[customType] || ''); // Preencher com valor inicial, se existir
     const formRef = useRef(null); // Referência para o formulário
     let contOptions = -1;
 
@@ -22,7 +24,6 @@ const MontarFormulario = forwardRef((props, ref) => {
         if (formRef.current && initialValues) {
             id.forEach((inputId) => {
                 const inputElement = formRef.current.querySelector(`#${inputId}`);
-                console.log(inputElement)
                 if (inputElement) {
                     inputElement.value = initialValues[inputId] || ''; // Preencher com o valor inicial se existir
                 }
@@ -59,7 +60,10 @@ const MontarFormulario = forwardRef((props, ref) => {
                         )}
 
                         {value === 'customEditor' && (
-                            <CustomEditor onChange={handleCustomEditorChange} initialValue={initialValues?.maqDescricao || ''} />
+                            <CustomEditor 
+                                onChange={handleCustomEditorChange} 
+                                initialValue={initialValues?.[customType] || ''} // Usa a chave genérica para descrição
+                            />
                         )}
                     </section>
                 ))

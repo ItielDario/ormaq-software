@@ -100,4 +100,19 @@ export default class PecaModel {
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async obter(id) {
+        let sql = "SELECT * FROM Peca WHERE pecId = ?";
+        let valores = [id];
+
+        let rows = await db.ExecutaComando(sql, valores);
+
+        console.log(rows)
+
+        if(rows.length > 0) {           
+            return this.toMAP(rows)[0];
+        }
+
+        return null;
+    }
 }

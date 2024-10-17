@@ -66,6 +66,20 @@ tr:hover {
     background-color: #ddd;
 }
 
+.fa-trash{
+    color: rgb(195, 0, 0);
+}
+
+.fa-pen{
+    color: rgb(0, 16, 195);
+    font-size: 1.5vw;
+}
+
+.coluna-acoes{
+    text-align: center;
+    font-size: 1.5vw;
+}
+
 @media (max-width: 60vw) {
     table, thead, tbody, th, td, tr {
         display: block;

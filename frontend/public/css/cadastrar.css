@@ -73,31 +73,28 @@ textarea {
     min-height: 5vw;
 }
   
-.content-main-children-cadastrar .container-btn-cadastrar{
+.content-main-children-cadastrar .container-btn{
     display: flex;
     justify-content: end;
     margin: 2vw 0;
 }
 
-.content-main-children-cadastrar .btn-cadastrar, .btn-voltar{
+.content-main-children-cadastrar .btn-cadastrar, .btn-voltar, .btn-alterar{
     padding: 0.8vw 2vw;
-    background-color: rgb(0, 110, 255);
-    color: white;
     font-weight: 500;
     border-radius: 0.5vw;
     font-size: 1.2vw;
     margin-left: 2vw;
-    border: 0.1vw solid rgb(26, 118, 238);
     cursor: pointer;
 }
 
-.content-main-children-cadastrar .btn-cadastrar{
+.content-main-children-cadastrar .btn-cadastrar, .btn-alterar{
     background-color: rgb(0, 110, 255);
     color: white;
     border: 0.1vw solid rgb(26, 118, 238);
 }
 
-.content-main-children-cadastrar .btn-cadastrar:hover{   
+.content-main-children-cadastrar .btn-cadastrar:hover, .btn-alterar:hover{   
     background-color: rgb(32, 129, 255);
 }
 

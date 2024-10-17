@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import MontarTabela from "../components/montarTabela.js";
 import CriarBotao from "../components/criarBotao.js";
+import httpClient from "../utils/httpClient.js"
 
 export default function Maquina() {
     const [listaMaquinas, setListaMaquinas] = useState([]);
@@ -11,7 +12,7 @@ export default function Maquina() {
     }, []);
 
     function carregarMaquinas() {
-      fetch('http://localhost:5000/maquina', { credentials: "include" })
+        httpClient.get("/maquina")
         .then(r => r.json())
         .then(r => setListaMaquinas(r));
     }
@@ -28,7 +29,7 @@ export default function Maquina() {
 
             <article className="container-table">
                 <MontarTabela
-                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Status']}
+                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Status', 'Ações']}
                     listaDados={listaMaquinas.map(maquina => ({
                         id: maquina.maqId,
                         Nome: maquina.maqNome,
@@ -39,8 +40,8 @@ export default function Maquina() {
                     }))}
                     renderActions={(maquina) => (
                         <div>
-                            <button>Editar</button>
-                            <button>Deletar</button>
+                            <a href={`/maquina/alterar/${maquina.id}`}><i className="nav-icon fas fa-pen"></i></a>
+                            <a href={`/maquina/excluir/${maquina.id}`}><i className="nav-icon fas fa-trash"></i></a>
                         </div>
                     )}
                 />

@@ -16,7 +16,7 @@ export default function MontaTabela({ cabecalhos, listaDados, renderActions }) {
                         {Object.values(item).map((value, idx) => (
                             <td key={idx}>{value}</td>
                         ))}
-                        {renderActions && <td>{renderActions(item)}</td>}
+                        {renderActions && <td className="coluna-acoes">{renderActions(item)}</td>}
                     </tr>
                 ))}
             </tbody>

@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import MontarTabela from "../components/montarTabela.js";
 import CriarBotao from "../components/criarBotao.js";
+import httpClient from "../utils/httpClient.js"
 
 export default function Peca() {
     const [listaPecas, setListaPecas] = useState([]);
@@ -11,12 +12,9 @@ export default function Peca() {
     }, []);
 
     function carregarPecas() {
-        fetch('http://localhost:5000/peca', { credentials: "include" })
+        httpClient.get("/peca")
             .then(r => r.json())
-            .then((r) => {
-              setListaPecas(r);
-              console.log(r)
-            })
+            .then((r) => setListaPecas(r))
     }
 
     return (
@@ -31,18 +29,17 @@ export default function Peca() {
 
             <article className="container-table">
                 <MontarTabela
-                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Descrição', 'Status']}
+                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Status', 'Ações']}
                     listaDados={listaPecas.map(peca => ({
-                        id: peca.pecId,
-                        Nome: peca.pecNome,
-                        'Data de Aquisição': peca.pecDataAquisicao,
-                        Descrição: peca.pecDescricao,
-                        Status: peca.equipamentoStatus.equipamentoStatusDescricao
+                        id: peca.pecaId,
+                        Nome: peca.pecaNome,
+                        'Data de Aquisição': peca.pecaDataAquisicao,
+                        Status: peca.equipamentoStatus.equipamentoStatusDescricao                    
                     }))}
                     renderActions={(peca) => (
                         <div>
-                            <button>Editar</button>
-                            <button>Deletar</button>
+                            <a href="/manutencao"><i className="nav-icon fas fa-pen"></i></a>
+                            <a href="/manutencao"><i className="nav-icon fas fa-trash"></i></a>
                         </div>
                     )}
                 />

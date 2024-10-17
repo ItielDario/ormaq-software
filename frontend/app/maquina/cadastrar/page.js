@@ -32,12 +32,10 @@ export default function CadastrarMaquina() {
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-      
-    } else {
+    } 
+    else {
       httpClient.post("/maquina/cadastrar", dados)
-        .then(r => {
-          return r.json();
-        })
+        .then(r => r.json())
         .then(r => {
           setTimeout(() => {
             alertMsg.current.className = 'alertSuccess';
@@ -49,10 +47,8 @@ export default function CadastrarMaquina() {
           }, 100);
         });
     }
-  
-    document.getElementById('topAnchor').scrollIntoView({
-      behavior: 'auto',
-    });
+    
+    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
   };
   
 

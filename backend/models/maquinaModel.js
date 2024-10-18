@@ -120,12 +120,15 @@ export default class MaquinaModel {
     }
 
     async obter(id) {
-        let sql = "SELECT * FROM Maquina WHERE maqId = ?";
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome, Maquina.maqDataAquisicao, Maquina.maqTipo, Maquina.maqDescricao, Maquina.maqInativo, Maquina.maqHorasUso, Equipamento_Status.eqpStaDescricao
+                    FROM Maquina INNER JOIN Equipamento_Status
+                    ON Maquina.maqStatus = Equipamento_Status.eqpStaId
+                    WHERE Maquina.maqId = ?`;
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
         if(rows.length > 0) {           
-            return this.toMAP(rows)[0];
+            return rows[0];
         }
         return null;
     }

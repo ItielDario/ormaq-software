@@ -39,8 +39,6 @@ export default function AlterarImplemento({ params: { id } }) {
       equipamentoStatus: equipamentoStatusRef.current.value
     };
 
-    console.log(dados);
-
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';

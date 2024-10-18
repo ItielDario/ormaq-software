@@ -1,43 +1,51 @@
 'use client';
-import MontarFormulario from "../../../components/montarFormulario.js";
 import CriarBotao from "../../../components/criarBotao.js";
+import CustomEditor from "../../../components/custom-editor.js";
 import httpClient from "@/app/utils/httpClient.js";
 import { useRef, useState, useEffect } from "react";
 
 export default function AlterarMaquina({ params: { id } }) {
-  const formRef = useRef(null);
   const alertMsg = useRef(null);
+
+  const maquinaNomeRef = useRef(null);
+  const maquinaDataAquisicaoRef = useRef(null);
+  const maquinaTipoRef = useRef(null);
+  const equipamentoStatusRef = useRef(null);
+  const maquinaInativoRef = useRef(null);
+  const maquinaHorasUsoRef = useRef(null);
+
+  const [maquinaDescricao, setMaquinaDescricao] = useState('');
   const [maquinaSelecionada, setMaquinaSelecionada] = useState(null);
 
   useEffect(() => {
-    carregarMaquinas();
+    carregarMaquina();
   }, []);
 
-  function carregarMaquinas() {
+  function carregarMaquina() {
     httpClient.get(`/maquina/${id}`)
       .then(r => r.json())
-      .then(r =>setMaquinaSelecionada(r));
+      .then(r => {
+        console.log(r);
+        r.maqDataAquisicao = new Date(r.maqDataAquisicao).toISOString().split('T')[0];
+        setMaquinaSelecionada(r);
+        setMaquinaDescricao(r.maqDescricao); // Inicializa o valor do editor
+      });
   }
 
   const alterarMaquina = () => {
-    const formElement = formRef.current.getFormElement(); // Obtem os elementos (TAGs) do formulário
-    const formData = new FormData(formElement); // Obtem os inputs do formulário
-    alertMsg.current.style.display = 'none';
-    
-    const maqTipoSelect = formElement.querySelector('select[name="maqTipo"]'); // Seleciona o <select> pelo nome
-    const maqTipoTexto = maqTipoSelect.selectedIndex >= 0 
-    ? maqTipoSelect.options[maqTipoSelect.selectedIndex].text 
-    : undefined; // Verifica se existe uma option escolhida no select
-  
     const dados = {
       maqId: id,
-      maqNome: formData.get('maqNome'), // Obtem o valor do input 'maqNome'
-      maqDataAquisicao: formData.get('maqDataAquisicao'),
-      maqTipo: maqTipoTexto,
-      maqHorasUso: formData.get('maqHorasUso'),
-      maqDescricao: formRef.current.getCustomEditorValue() // Obtem o valor do ckeditor 'customEditor'
+      maqNome: maquinaNomeRef.current.value,
+      maqDataAquisicao: maquinaDataAquisicaoRef.current.value,
+      maqTipo: maquinaTipoRef.current.value,
+      maqDescricao: maquinaDescricao,
+      maqInativo: maquinaInativoRef.current.value,
+      maqHorasUso: maquinaHorasUsoRef.current.value,
+      equipamentoStatus: equipamentoStatusRef.current.value
     };
-  
+
+    console.log(dados);
+
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
@@ -45,11 +53,11 @@ export default function AlterarMaquina({ params: { id } }) {
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
     } else {
-      httpClient.put("/maquina", dados)
+      httpClient.put(`/maquina`, dados)
         .then((r) => { 
           status = r.status;
-          return r.json()}
-        )
+          return r.json();
+        })
         .then(r => {
           setTimeout(() => {
             if(status == 201){
@@ -69,9 +77,12 @@ export default function AlterarMaquina({ params: { id } }) {
   };
 
   const verificaCampoVazio = (dados) => {
-    const camposVazios = Object.values(dados).some(value => value == '' || value == null || value == undefined);
-    return camposVazios;
-  }
+    return Object.values(dados).some(value => value === '' || value === null || value === undefined);
+  };
+
+  const handleCustomEditorChange = (data) => {
+    setMaquinaDescricao(data); // Atualiza o valor do editor no estado
+  };
 
   return (
     <section className="content-main-children-cadastrar">
@@ -81,36 +92,96 @@ export default function AlterarMaquina({ params: { id } }) {
 
       <article ref={alertMsg}></article>
 
-      <article className="container-forms">
+      <article>
         {maquinaSelecionada && (
-          <MontarFormulario 
-            ref={formRef}
-            initialValues={maquinaSelecionada} // Passar os dados atuais da máquina
-            labelTitle={[
-              'Nome da Máquina', 
-              'Data de Aquisição', 
-              'Tipo da Máquina', 
-              'Horas de Uso', 
-              'Descrição da Máquina',
-            ]} 
-            id={[
-              'maqNome', 
-              'maqDataAquisicao', 
-              'maqTipo',
-              'maqHorasUso',  
-              'maqDescricao',
-            ]}
-            typeImput={[
-              'text', 
-              'date', 
-              'select',
-              'number', 
-              'customEditor',
-            ]}
-            optinsOfSelect={[
-              ['Nova', 'Semi-Nova'],   // Opções para "Tipo da Máquina"
-            ]}
-          />
+          <article className="container-forms">
+            <form>
+              <section>
+                <label htmlFor="maqNome">Nome da máquina</label>
+                <input 
+                  type="text" 
+                  id="maqNome" 
+                  name="maqNome" 
+                  defaultValue={maquinaSelecionada.maqNome} 
+                  ref={maquinaNomeRef} 
+                  required 
+                />
+              </section>
+
+              <section>
+                <label htmlFor="maqDataAquisicao">Data de Aquisição</label>
+                <input 
+                  type="date" 
+                  id="maqDataAquisicao" 
+                  name="maqDataAquisicao" 
+                  defaultValue={maquinaSelecionada.maqDataAquisicao} 
+                  ref={maquinaDataAquisicaoRef} 
+                  required 
+                />
+              </section>
+
+              <section>
+                  <label htmlFor="maqTipo">Tipo da Máquina</label>
+                  <select 
+                      id="maqTipo" 
+                      name="maqTipo" 
+                      defaultValue={maquinaSelecionada.maqTipo === "Semi-Nova" ? "1" : "0"} 
+                      ref={maquinaTipoRef} 
+                      required
+                  >
+                      <option value="0">Nova</option>
+                      <option value="1">Semi-Nova</option>
+                  </select>
+              </section>
+
+
+              <section>
+                <label htmlFor="equipamentoStatus">Status do Equipamento</label>
+                <select 
+                  id="equipamentoStatus" 
+                  name="equipamentoStatus" 
+                  defaultValue={maquinaSelecionada.eqpStaDescricao} // Use a descrição do status
+                  ref={equipamentoStatusRef} 
+                  required
+                >
+                  <option value={maquinaSelecionada.maqStatus}>
+                    {maquinaSelecionada.eqpStaDescricao} {/* Exibe a descrição do status */}
+                  </option>
+                </select>
+              </section>
+
+              <section>
+                <label htmlFor="maqInativo">Máquina Inativa</label>
+                <select 
+                  id="maqInativo" 
+                  name="maqInativo" 
+                  defaultValue={maquinaSelecionada.maqInativo} 
+                  ref={maquinaInativoRef} 
+                  required
+                >
+                  <option value="1">Sim</option>
+                  <option value="0">Não</option>
+                </select>
+              </section>
+
+              <section>
+                <label htmlFor="maqHorasUso">Horas de Uso</label>
+                <input 
+                  type="number" 
+                  id="maqHorasUso" 
+                  name="maqHorasUso" 
+                  defaultValue={maquinaSelecionada.maqHorasUso} 
+                  ref={maquinaHorasUsoRef} 
+                />
+              </section>
+
+              {/* Editor Customizado */}
+              <CustomEditor 
+                onChange={handleCustomEditorChange} 
+                initialValue={maquinaDescricao} // Usa o valor armazenado no estado
+              />
+            </form>
+          </article>
         )}
       </article>
 

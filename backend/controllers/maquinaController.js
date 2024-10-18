@@ -76,7 +76,7 @@ export default class maquinaController {
                         res.status(201).json({msg: "Máquina alterada com sucesso!"});
                     }
                     else {
-                        res.status(500).json({msg: "Erro durante o alteração da máquina"});
+                        res.status(500).json({msg: "Erro durante a alteração da máquina"});
                     }
                 }
                 else {

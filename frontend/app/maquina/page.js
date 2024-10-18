@@ -7,9 +7,17 @@ import httpClient from "../utils/httpClient.js"
 export default function Maquina() {
     const [listaMaquinas, setListaMaquinas] = useState([]);
     const alertMsg = useRef(null);
+    let timeoutId = null; // Armazena o timeoutId
 
     useEffect(() => {
         carregarMaquinas();
+
+        // Cleanup function para limpar o timeout quando o componente desmontar
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId); // Limpa o timeout
+            }
+        };
     }, []);
 
     function carregarMaquinas() {
@@ -22,7 +30,6 @@ export default function Maquina() {
     }
 
     function excluirMaquina(idMaquina) {
-
         if(confirm("Tem certeza que deseja excluir essa máquina?")) {
             let status = 0;
 
@@ -43,9 +50,12 @@ export default function Maquina() {
                 alertMsg.current.style.display = 'block';
                 alertMsg.current.textContent = r.msg;
 
-                setTimeout(() => {
-                    alertMsg.current.style.display = 'none';
-                }, 8000)
+                // Inicia o setTimeout e armazena o ID
+                timeoutId = setTimeout(() => {
+                    if (alertMsg.current) { // Verifica se alertMsg ainda existe
+                        alertMsg.current.style.display = 'none';
+                    }
+                }, 6000);
                 document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
             })
         }

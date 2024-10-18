@@ -82,4 +82,29 @@ export default class pecaController {
             res.status(500).json({msg: "Erro interno de servidor!"});
         }
     }
+
+    async excluirPeca(req, res) {
+        try{
+            let {id} = req.params;
+            let peca = new PecaModel();
+
+            if(await peca.isLocado(id) == false){
+                let result = await peca.excluir(id);
+
+                if(result) {
+                    res.status(200).json({msg: `Peca excluída com sucesso!`});
+                }
+                else{
+                    res.status(500).json({msg: "Erro durante a exclusão da peca"});
+                }
+            }
+            else{
+                res.status(400).json({msg: "Essa peca está alugada!"})
+            }
+        }
+        catch(ex) {
+            console.log(ex)
+            res.status(500).json({msg: "Erro interno de servidor!"});
+        }
+    }
 }

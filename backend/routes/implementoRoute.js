@@ -27,4 +27,10 @@ router.put("/", (req, res) => {
     ctrl.alterarImplemento(req, res);
 })
 
+router.delete("/:id", (req, res) => {
+    // #swagger.tags = ['Implemento']
+    //#swagger.summary = 'Exclui um implemento pelo id'
+    ctrl.excluirImplemento(req, res);
+})
+
 export default router;

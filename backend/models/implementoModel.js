@@ -114,4 +114,23 @@ export default class ImplementoModel {
         }
         return null;
     }
+
+    async isLocado(idImplemento) {
+        let sql = `SELECT Implemento.impId, Implemento.impNome
+                    FROM Implemento
+                    WHERE Implemento.impStatus = 2
+                    AND Implemento.impId = ?`;
+        let valores = [idImplemento]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async excluir(idImplemento) {
+        let sql = "DELETE FROM Implemento WHERE impId = ?";
+        let valores = [idImplemento];
+
+        let result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
 }

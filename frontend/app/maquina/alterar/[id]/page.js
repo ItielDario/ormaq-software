@@ -25,7 +25,6 @@ export default function AlterarMaquina({ params: { id } }) {
     httpClient.get(`/maquina/${id}`)
       .then(r => r.json())
       .then(r => {
-        console.log(r);
         r.maqDataAquisicao = new Date(r.maqDataAquisicao).toISOString().split('T')[0];
         setMaquinaSelecionada(r);
         setMaquinaDescricao(r.maqDescricao); // Inicializa o valor do editor

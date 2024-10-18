@@ -27,5 +27,10 @@ router.put("/", (req, res) => {
     ctrl.alterarPeca(req, res);
 })
 
+router.delete("/:id", (req, res) => {
+    // #swagger.tags = ['Peças']
+    //#swagger.summary = 'Exclui uma peça pelo id'
+    ctrl.excluirPeca(req, res);
+})
 
 export default router;

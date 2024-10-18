@@ -114,4 +114,23 @@ export default class PecaModel {
         }
         return null;
     }
+
+    async isLocado(idPeca) {
+        let sql = `SELECT Peca.pecId, Peca.pecNome
+                    FROM Peca
+                    WHERE Peca.pecStatus = 2
+                    AND Peca.pecId = ?`;
+        let valores = [idPeca]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async excluir(idPeca) {
+        let sql = "DELETE FROM Peca WHERE pecId = ?";
+        let valores = [idPeca];
+
+        let result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
 }

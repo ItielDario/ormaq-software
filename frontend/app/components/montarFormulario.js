@@ -31,7 +31,7 @@ const MontarFormulario = forwardRef((props, ref) => {
 
                             {value === 'number' && (
                                 <input type="number" id={id[index]} name={id[index]} required />
-                            )}
+                            )}B
 
                             {value === 'date' && (
                                 <input type="date" id={id[index]} name={id[index]} required />

@@ -91,5 +91,28 @@ export default class maquinaController {
             console.log(ex)
             res.status(500).json({msg: "Erro interno de servidor!"});
         }
-    }    
+    }
+    
+    async excluirMaquina(req, res) {
+        try{
+            let {id} = req.params;
+            let maquina = new MaquinaModel();
+            if(await maquina.isLocado(id) == false){
+
+                let result = await maquina.excluir(id);
+                if(result) {
+                    res.status(200).json({msg: `Máquina excluída com sucesso!`});
+                }
+                else{
+                    res.status(500).json({msg: "Erro durante a exclusão da máquina"});
+                }
+            }
+            else{
+                res.status(400).json({msg: "Essa máquina está alugada!"})
+            }
+        }
+        catch(ex) {
+            res.status(500).json({msg: "Erro interno de servidor!"});
+        }
+    }
 }

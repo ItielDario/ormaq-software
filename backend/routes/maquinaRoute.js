@@ -28,4 +28,10 @@ router.put("/", (req, res) => {
     ctrl.alterarMaquina(req, res);
 })
 
+router.delete("/:id", (req, res) => {
+    // #swagger.tags = ['Máquina']
+    //#swagger.summary = 'Exclui uma máquina pelo id'
+    ctrl.excluirMaquina(req, res);
+})
+
 export default router;

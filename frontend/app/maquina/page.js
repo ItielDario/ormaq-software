@@ -1,11 +1,12 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import MontarTabela from "../components/montarTabela.js";
 import CriarBotao from "../components/criarBotao.js";
 import httpClient from "../utils/httpClient.js"
 
 export default function Maquina() {
     const [listaMaquinas, setListaMaquinas] = useState([]);
+    const alertMsg = useRef(null);
 
     useEffect(() => {
         carregarMaquinas();
@@ -20,6 +21,36 @@ export default function Maquina() {
         })
     }
 
+    function excluirMaquina(idMaquina) {
+
+        if(confirm("Tem certeza que deseja excluir essa máquina?")) {
+            let status = 0;
+
+            httpClient.delete(`/maquina/${idMaquina}`)
+            .then(r => {
+                status = r.status;
+                return r.json();
+            })
+            .then(r => {
+                if(status == 200) {
+                    carregarMaquinas();
+                    alertMsg.current.className = 'alertSuccess';
+                }
+                else {
+                    alertMsg.current.className = 'alertError';
+                }
+
+                alertMsg.current.style.display = 'block';
+                alertMsg.current.textContent = r.msg;
+
+                setTimeout(() => {
+                    alertMsg.current.style.display = 'none';
+                }, 8000)
+                document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+            })
+        }
+    }
+
     return (
         <section className="content-main-children-listar">
             <article className="title">
@@ -29,6 +60,8 @@ export default function Maquina() {
             <article className="container-btn-cadastrar">
                 <CriarBotao value='Cadastrar' href='/maquina/cadastrar' class='btn-cadastrar'></CriarBotao>
             </article>
+
+            <article ref={alertMsg}></article>
 
             <article className="container-table">
                 <MontarTabela
@@ -44,7 +77,7 @@ export default function Maquina() {
                     renderActions={(maquina) => (
                         <div>
                             <a href={`/maquina/alterar/${maquina.id}`}><i className="nav-icon fas fa-pen"></i></a>
-                            <a href={`/maquina/excluir/${maquina.id}`}><i className="nav-icon fas fa-trash"></i></a>
+                            <a onClick={() => excluirMaquina(maquina.id)}><i className="nav-icon fas fa-trash"></i></a>
                         </div>
                     )}
                 />

@@ -22,8 +22,8 @@ router.post('/cadastrar', (req, res) => {
 })
 
 router.put("/", (req, res) => {
-    // #swagger.tags = ['Peças']
-    // #swagger.summary = 'Alterar uma peça'
+    // #swagger.tags = ['Implemento']
+    // #swagger.summary = 'Alterar um implemento'
     ctrl.alterarImplemento(req, res);
 })
 

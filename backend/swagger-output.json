@@ -100,6 +100,34 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "delete": {
+        "tags": [
+          "Máquina"
+        ],
+        "summary": "Exclui uma máquina pelo id",
+        "description": "Lista todas as máquinas.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/maquina/cadastrar": {
@@ -309,9 +337,9 @@
       },
       "put": {
         "tags": [
-          "Peças"
+          "Implemento"
         ],
-        "summary": "Alterar uma peça",
+        "summary": "Alterar um implemento",
         "description": "",
         "responses": {
           "201": {

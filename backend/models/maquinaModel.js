@@ -132,4 +132,23 @@ export default class MaquinaModel {
         }
         return null;
     }
+
+    async isLocado(idMaquina) {
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome
+                    FROM Maquina
+                    WHERE Maquina.maqStatus = 2
+                    AND Maquina.maqId = ?`;
+        let valores = [idMaquina]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async excluir(idMaquina) {
+        let sql = "DELETE FROM Maquina WHERE maqId = ?";
+        let valores = [idMaquina];
+
+        let result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
 }

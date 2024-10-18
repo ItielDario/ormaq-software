@@ -14,24 +14,6 @@
     margin-bottom: 2vw;
 }
 
-.alertError, .alertSuccess{
-    padding: 1.2vw 2vw;
-    display: none;
-    margin-bottom: 2vw;
-    color: white;
-    font-size: 1.4vw;
-    font-weight: bold;
-    border-radius: 0.3vw;
-}
-
-.alertError{
-    background-color: rgb(151, 7, 7) !important;
-}
-
-.alertSuccess{
-    background-color: rgb(7, 69, 151) !important;
-}
-
 form {
     display: flex;
     flex-direction: column;

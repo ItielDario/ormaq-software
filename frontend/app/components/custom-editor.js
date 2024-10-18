@@ -32,7 +32,7 @@ import {
 import 'ckeditor5/ckeditor5.css';
 import { useState } from 'react';
 
-function CustomEditor({ onChange }) {
+function CustomEditor({ onChange, initialValue }) {
     const [editorData, setEditorData] = useState('');
 
     const handleEditorChange = (event, editor) => {
@@ -134,6 +134,7 @@ function CustomEditor({ onChange }) {
                 table: {
                     contentToolbar: ['tableColumn', 'tableRow', 'mergeTableCells'],
                 },
+                initialData: initialValue
             }}
         />
     );

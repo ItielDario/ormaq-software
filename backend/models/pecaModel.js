@@ -90,12 +90,45 @@ export default class PecaModel {
         if (this.#pecaId == 0 || this.#pecaId == null) {
             // Inserção
             sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecStatus, pecInativo) VALUES (?, ?, ?, ?, ?)`;
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#equipamentoStatus, this.#pecaInativo];
         } else {
             // Alteração
-            sql = `UPDATE Peca SET pecaNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecInativo = ? WHERE pecId = ?`;
+            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecInativo = ? WHERE pecId = ?`;
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaInativo, this.#pecaId];
         }
 
-        valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#equipamentoStatus, this.#pecaInativo, this.#pecaId];
+        let result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
+
+    async obter(id) {
+        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecInativo, Peca.pecStatus,Equipamento_Status.eqpStaDescricao
+                    FROM Peca INNER JOIN Equipamento_Status
+                    ON Peca.pecStatus = Equipamento_Status.eqpStaId
+                    WHERE Peca.pecId = ?;`;
+        let valores = [id];
+
+        let rows = await db.ExecutaComando(sql, valores);
+        if(rows.length > 0) {           
+            return rows;
+        }
+        return null;
+    }
+
+    async isLocado(idPeca) {
+        let sql = `SELECT Peca.pecId, Peca.pecNome
+                    FROM Peca
+                    WHERE Peca.pecStatus = 2
+                    AND Peca.pecId = ?`;
+        let valores = [idPeca]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async excluir(idPeca) {
+        let sql = "DELETE FROM Peca WHERE pecId = ?";
+        let valores = [idPeca];
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;

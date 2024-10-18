@@ -90,12 +90,45 @@ export default class ImplementoModel {
         if (this.#impId == 0 || this.#impId == null) {
             // Inserção
             sql = `INSERT INTO Implemento (impNome, impDescricao, impDataAquisicao, impStatus, impInativo) VALUES (?, ?, ?, ?, ?)`;
+            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#equipamentoStatus, this.#impInativo, this.#impId];
         } else {
             // Alteração
-            sql = `UPDATE Implemento SET impNome = ?, impDescricao = ?, impDataAquisicao = ?, impStatus = ?, impInativo = ? WHERE impId = ?`;
+            sql = `UPDATE Implemento SET impNome = ?, impDescricao = ?, impDataAquisicao = ?, impInativo = ? WHERE impId = ?`;
+            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#impInativo, this.#impId];
         }
 
-        valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#equipamentoStatus, this.#impInativo, this.#impId];
+        let result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
+
+    async obter(id) {
+        let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impDataAquisicao, Implemento.impDescricao, Implemento.impStatus, Implemento.impInativo, Equipamento_Status.eqpStaDescricao
+                    FROM Implemento INNER JOIN Equipamento_Status
+                    ON Implemento.impStatus = Equipamento_Status.eqpStaId
+                    WHERE Implemento.impId = ?`;
+        let valores = [id];
+
+        let rows = await db.ExecutaComando(sql, valores);
+        if(rows.length > 0) {           
+            return rows;
+        }
+        return null;
+    }
+
+    async isLocado(idImplemento) {
+        let sql = `SELECT Implemento.impId, Implemento.impNome
+                    FROM Implemento
+                    WHERE Implemento.impStatus = 2
+                    AND Implemento.impId = ?`;
+        let valores = [idImplemento]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async excluir(idImplemento) {
+        let sql = "DELETE FROM Implemento WHERE impId = ?";
+        let valores = [idImplemento];
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;

@@ -26,6 +26,108 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Máquina"
+        ],
+        "summary": "Alterar uma maquina existente",
+        "description": "Lista todas as máquinas.",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "maqId": {
+                    "example": "any"
+                  },
+                  "maqNome": {
+                    "example": "any"
+                  },
+                  "maqDataAquisicao": {
+                    "example": "any"
+                  },
+                  "maqTipo": {
+                    "example": "any"
+                  },
+                  "maqHorasUso": {
+                    "example": "any"
+                  },
+                  "maqDescricao": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/maquina/{id}": {
+      "get": {
+        "tags": [
+          "Máquina"
+        ],
+        "summary": "Buscar Máquina",
+        "description": "Lista todas as máquinas.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Máquina"
+        ],
+        "summary": "Exclui uma máquina pelo id",
+        "description": "Lista todas as máquinas.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/maquina/cadastrar": {
@@ -95,6 +197,108 @@
             "description": "Internal Server Error"
           }
         }
+      },
+      "put": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Alterar uma peça",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pecaId": {
+                    "example": "any"
+                  },
+                  "pecaNome": {
+                    "example": "any"
+                  },
+                  "pecaDataAquisicao": {
+                    "example": "any"
+                  },
+                  "pecaDescricao": {
+                    "example": "any"
+                  },
+                  "pecaInativo": {
+                    "example": "any"
+                  },
+                  "equipamentoStatus": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/peca/{id}": {
+      "get": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Obter uma peça",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Exclui uma peça pelo id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
       }
     },
     "/peca/cadastrar": {
@@ -102,7 +306,7 @@
         "tags": [
           "Peças"
         ],
-        "summary": "Cadsatrar peças",
+        "summary": "Cadsatrar uma peça",
         "description": "",
         "responses": {
           "201": {
@@ -153,6 +357,108 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Implemento"
+        ],
+        "summary": "Alterar um implemento",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "impId": {
+                    "example": "any"
+                  },
+                  "impNome": {
+                    "example": "any"
+                  },
+                  "impDataAquisicao": {
+                    "example": "any"
+                  },
+                  "impDescricao": {
+                    "example": "any"
+                  },
+                  "impInativo": {
+                    "example": "any"
+                  },
+                  "equipamentoStatus": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/implemento/{id}": {
+      "get": {
+        "tags": [
+          "Implemento"
+        ],
+        "summary": "Obter um implemento",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Implemento"
+        ],
+        "summary": "Exclui um implemento pelo id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"

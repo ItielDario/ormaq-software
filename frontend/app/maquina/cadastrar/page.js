@@ -32,27 +32,30 @@ export default function CadastrarMaquina() {
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-      
-    } else {
+    } 
+    else {
       httpClient.post("/maquina/cadastrar", dados)
-        .then(r => {
-          return r.json();
-        })
-        .then(r => {
-          setTimeout(() => {
+      .then((r) => { 
+        status = r.status;
+        return r.json()}
+      )
+      .then(r => {
+        setTimeout(() => {
+          if(status == 201){
             alertMsg.current.className = 'alertSuccess';
-            alertMsg.current.style.display = 'block';
-            alertMsg.current.textContent = 'Máquina cadastrada com sucesso!';
-            
-            formElement.reset(); // Limpa todos os campos do formulário
-            maqTipoSelect.selectedIndex = 0; // Reinicia o select para a primeira opção
-          }, 100);
-        });
+          }
+          else{
+            alertMsg.current.className = 'alertError';
+          }
+
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = r.msg;
+          formElement.reset(); // Limpa todos os campos do formulário
+        }, 100);
+      });
     }
-  
-    document.getElementById('topAnchor').scrollIntoView({
-      behavior: 'auto',
-    });
+
+    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
   };
   
 
@@ -107,7 +110,7 @@ export default function CadastrarMaquina() {
         ]}/>
       </article>
 
-      <article className="container-btn-cadastrar">
+      <article className="container-btn">
         <CriarBotao value='Voltar' href='/maquina' class='btn-voltar'></CriarBotao>
         <button type="button" className='btn-cadastrar' onClick={cadastrarMaquina}>Cadastrar</button>
       </article>

@@ -88,7 +88,6 @@ export default class MaquinaModel {
         return listaMaquinas;
     }
     
-
     async listarMaquinas() {
         const sql = `
             SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqDescricao, m.maqInativo, m.maqHorasUso, es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
@@ -108,13 +107,46 @@ export default class MaquinaModel {
         if(this.#maqId == 0 || this.#maqId == null) {
             //Inserção
             sql = `INSERT INTO Maquina (maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqStatus, maqHorasUso) VALUES (?, ?, ?, ?, ?, ?, ?)`
+            valores = [this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqDescricao, this.#maqInativo, this.#equipamentoStatus, this.#maqHorasUso, this.#maqId];
         }
         else{
             //Alteração
-            sql = `UPDATE maquina ser maqNome = ?, maqDataAquisicao = ?, maqTipo = ?, maqDescricao = ?, maqInativo = ?, maqStatus = ?, maqHorasUso = ? where maqId = ?`
+            sql = `UPDATE maquina SET maqNome = ?, maqDataAquisicao = ?, maqTipo = ?, maqDescricao = ?, maqHorasUso = ? where maqId = ?`
+            valores = [this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqDescricao, this.#maqHorasUso, this.#maqId];
         }
 
-        valores = [this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqDescricao, this.#maqInativo, this.#equipamentoStatus, this.#maqHorasUso, this.#maqId];
+        let result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
+
+    async obter(id) {
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome, Maquina.maqDataAquisicao, Maquina.maqTipo, Maquina.maqDescricao, Maquina.maqInativo, Maquina.maqHorasUso, Equipamento_Status.eqpStaDescricao
+                    FROM Maquina INNER JOIN Equipamento_Status
+                    ON Maquina.maqStatus = Equipamento_Status.eqpStaId
+                    WHERE Maquina.maqId = ?`;
+        let valores = [id];
+
+        let rows = await db.ExecutaComando(sql, valores);
+        if(rows.length > 0) {           
+            return rows[0];
+        }
+        return null;
+    }
+
+    async isLocado(idMaquina) {
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome
+                    FROM Maquina
+                    WHERE Maquina.maqStatus = 2
+                    AND Maquina.maqId = ?`;
+        let valores = [idMaquina]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async excluir(idMaquina) {
+        let sql = "DELETE FROM Maquina WHERE maqId = ?";
+        let valores = [idMaquina];
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;

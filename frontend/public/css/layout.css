@@ -108,7 +108,9 @@ main{
     border-radius: 0.45vw 0.45vw 0 0;
     border: 0.1vw solid rgb(236, 236, 236);
     box-shadow: 0vw 0vw 0.8vw 0.2vw rgba(0, 0, 0, 0.158);
-    padding: 1vw 2vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .page_page__556_G{
@@ -120,6 +122,41 @@ main{
 .top-bar h1{ 
     font-size: 3vw;
     color: rgb(255, 255, 255);
+}
+
+.alertError, .alertSuccess{
+    padding: 1.2vw 2vw;
+    display: none;
+    margin-bottom: 2vw;
+    color: white;
+    font-size: 1.4vw;
+    font-weight: bold;
+    border-radius: 0.3vw;
+}
+
+.alertError{
+    background-color: rgb(151, 7, 7) !important;
+}
+
+.alertSuccess{
+    background-color: rgb(53, 151, 7) !important;
+}
+
+.footer{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 2vw;
+    background-color: white;
+    height: 10vh;
+    border-top: 0.1vw solid rgba(202, 202, 202, 0.782);
+    margin: 0 2vw;
+}
+
+.footer > p{
+    color: rgb(127, 127, 127);
+    font-size: 1vw;
+    font-weight: 400;
 }
 
 @media only screen and (min-width: 1600px) {

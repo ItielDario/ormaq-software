@@ -176,6 +176,27 @@ VALUES
   (1, 'Ferro de Reposição', '2023-01-05', 'Ferro para substituição', 0, 1),
   (2, 'Correia', '2023-02-10', 'Correia de transmissão', 0, 1);
 
+INSERT INTO `Manutencao_Equipamento` (`manId`, `manDataInicio`, `manDecricao`, `manDataTermino`, `manObservacao`, `manStatus`, `manMaqId`, `manImpId`, `manPecId`)
+VALUES
+  (1, '2024-01-10', 'Troca de óleo', '2024-01-15', 'Óleo trocado com sucesso', 'Concluído', 1, 1, 1),
+  (2, '2024-02-20', 'Reparo nas correias', '2024-02-25', 'Correias substituídas', 'Concluído', 2, 2, 2);
+
+INSERT INTO `Usuario` (`usuId`, `usuNome`, `usuSenha`, `usuTelefone`, `usuEmail`, `usuPerfil`)
+VALUES
+  (1, 'Carlos Pereira', 'senha123', '(11)99876-5432', 'carlos.pereira@email.com', 1),
+  (2, 'Fernanda Lima', 'senha456', '(11)91234-6789', 'fernanda.lima@email.com', 2);
+
+INSERT INTO `Locacao` (`locId`, `locDataInicio`, `locDataFinalPrevista`, `locDataFinalEntrega`, `locValorTotal`, `locDesconto`, `locValorFinal`, `locCliId`, `locUsuId`, `locStatus`)
+VALUES
+  (1, '2024-05-01', '2024-05-10', '2024-05-09', 10000.00, 500.00, 9500.00, 1, 1, 1),
+  (2, '2024-06-01', '2024-06-15', '2024-06-14', 15000.00, 750.00, 14250.00, 2, 2, 1);
+
+INSERT INTO `Itens_Locacao` (`iteLocId`, `iteLocQuantidade`, `iteLocValorUnitario`, `iteLocPecId`, `iteLocImpId`, `iteLocMaqId`, `IteLocLocacaoId`)
+VALUES
+  (1, 1, 1000.00, 1, 1, 1, 1),
+  (2, 2, 1500.00, 2, 2, 2, 2);
+
+
 SELECT * FROM `Equipamento_Status`;
 SELECT * FROM `Locacao_Status`;
 SELECT * FROM `Usuario_Perfil`;
@@ -183,7 +204,7 @@ SELECT * FROM `Maquina`;
 SELECT * FROM `Cliente`;
 SELECT * FROM `Implemento`;
 SELECT * FROM `Peca`;
-
-SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqInativo, m.maqHorasUso, es.eqpStaId, es.eqpStaDescricao
-FROM Maquina m
-JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId;
+SELECT * FROM `Manutencao_Equipamento`;
+SELECT * FROM `Usuario`;
+SELECT * FROM `Locacao`;
+SELECT * FROM `Itens_Locacao`;

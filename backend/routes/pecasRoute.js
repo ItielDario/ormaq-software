@@ -9,10 +9,28 @@ router.get('/', (req, res) => {
     ctrl.listarPeca(req, res)
 })
 
+router.get('/:id', (req, res) => {
+    // #swagger.tags = ['Peças']
+    // #swagger.summary = 'Obter uma peça'
+    ctrl.obterPeca(req, res)
+})
+
 router.post('/cadastrar', (req, res) => {
     // #swagger.tags = ['Peças']
-    // #swagger.summary = 'Cadsatrar peças'
+    // #swagger.summary = 'Cadsatrar uma peça'
     ctrl.cadastrarPeca(req, res)
+})
+
+router.put("/", (req, res) => {
+    // #swagger.tags = ['Peças']
+    // #swagger.summary = 'Alterar uma peça'
+    ctrl.alterarPeca(req, res);
+})
+
+router.delete("/:id", (req, res) => {
+    // #swagger.tags = ['Peças']
+    //#swagger.summary = 'Exclui uma peça pelo id'
+    ctrl.excluirPeca(req, res);
 })
 
 export default router;

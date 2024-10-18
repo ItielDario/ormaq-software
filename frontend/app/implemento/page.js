@@ -1,42 +1,95 @@
-'use client'
-import { useState, useEffect } from "react";
+'use client';
+import { useState, useEffect, useRef } from "react";
 import MontarTabela from "../components/montarTabela.js";
 import CriarBotao from "../components/criarBotao.js";
+import httpClient from "../utils/httpClient.js"
 
 export default function Implemento() {
+    const [listaImplementos, setListaImplementos] = useState([]);
+    const alertMsg = useRef(null);
+    let timeoutId = null; // Armazena o timeoutId
 
-  const [listaImplemento, setlistaImplemento] = useState([]);
-  
-  useEffect((e) => {
-      carregarImplemento();
-  }, [])
+    useEffect(() => {
+        carregarImplementos();
 
-  function carregarImplemento() {
-      fetch('http://localhost:5000/implemento', {
-          credentials: "include"
-      })
-      .then(r => {
-          return r.json()
-      })
-      .then(r => {
-        setlistaImplemento(r);
-        console.log(r)
-      })
-  }
+        // Cleanup function para limpar o timeout quando o componente desmontar
+        return () => {
+            if (timeoutId) {
+                clearTimeout(timeoutId); // Limpa o timeout
+            }
+        };
+    }, []);
 
-  return (
-    <section className="content-main-children-listar">
-      <article className="title">
-        <h1>Lista de Implementos</h1>
-      </article>
+    function carregarImplementos() {
+        httpClient.get("/implemento")
+            .then(r => r.json())
+            .then((r) => {
+                r.map(implemento => implemento.impDataAquisicao = new Date(implemento.impDataAquisicao).toLocaleDateString()) // Formatando a data
+                setListaImplementos(r)
+            })
+    }
 
-      <article className="container-btn-cadastrar">
-        <CriarBotao value='Cadastrar' href='/implemento/cadastrar' class='btn-cadastrar'></CriarBotao>
-      </article>
+    function excluirImplemento(idImplemento) {
+        if(confirm("Tem certeza que deseja excluir esse implemento?")) {
+            let status = 0;
 
-      <article className="container-table">
-        <MontarTabela listaMaquinas={listaImplemento} cabecalhos={['Inativo', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Status', 'Ações']}></MontarTabela>
-      </article>
-    </section>
-  );
+            httpClient.delete(`/implemento/${idImplemento}`)
+            .then(r => {
+                status = r.status;
+                return r.json();
+            })
+            .then(r => {
+                if(status == 200) {
+                    carregarImplementos();
+                    alertMsg.current.className = 'alertSuccess';
+                }
+                else {
+                    alertMsg.current.className = 'alertError';
+                }
+
+                alertMsg.current.style.display = 'block';
+                alertMsg.current.textContent = r.msg;
+
+                // Inicia o setTimeout e armazena o ID
+                timeoutId = setTimeout(() => {
+                    if (alertMsg.current) { // Verifica se alertMsg ainda existe
+                        alertMsg.current.style.display = 'none';
+                    }
+                }, 6000);
+                document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+            })
+        }
+    }
+
+    return (
+        <section className="content-main-children-listar">
+            <article className="title">
+                <h1>Lista de Implementos</h1>
+            </article>
+
+            <article className="container-btn-cadastrar">
+                <CriarBotao value='Cadastrar' href='/implemento/cadastrar' class='btn-cadastrar'></CriarBotao>
+            </article>
+
+            <article ref={alertMsg}></article>
+
+            <article className="container-table">
+                <MontarTabela
+                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Status', 'Ações']}
+                    listaDados={listaImplementos.map(implemento => ({
+                        id: implemento.impId,
+                        Nome: implemento.impNome,
+                        'Data de Aquisição': implemento.impDataAquisicao,
+                        Status: implemento.equipamentoStatus.equipamentoStatusDescricao
+                    }))}
+                    renderActions={(implemento) => (
+                        <div>
+                            <a href={`/implemento/alterar/${implemento.id}`}><i className="nav-icon fas fa-pen"></i></a>
+                            <a onClick={() => excluirImplemento(implemento.id)}><i className="nav-icon fas fa-trash"></i></a>
+                        </div>
+                    )}
+                />
+            </article>
+        </section>
+    );
 }

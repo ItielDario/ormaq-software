@@ -27,21 +27,29 @@ export default function CadastrarImplemento() {
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-    } else {
+    } 
+    else {
       httpClient.post("/implemento/cadastrar", dados)
-        .then(r => {
-          return r.json();
-        })
-        .then(r => {
-          setTimeout(() => {
+      .then((r) => { 
+        status = r.status;
+        return r.json()}
+      )
+      .then(r => {
+        setTimeout(() => {
+          if(status == 201){
             alertMsg.current.className = 'alertSuccess';
-            alertMsg.current.style.display = 'block';
-            alertMsg.current.textContent = 'Implemento cadastrado com sucesso!';
-            
-            formElement.reset(); // Limpa todos os campos do formulário
-          }, 100);
-        });
+          }
+          else{
+            alertMsg.current.className = 'alertError';
+          }
+
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = r.msg;
+          formElement.reset(); // Limpa todos os campos do formulário
+        }, 100);
+      });
     }
+      
   
     document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
   };
@@ -85,13 +93,13 @@ export default function CadastrarImplemento() {
             'customEditor',
           ]}
           optinsOfSelect={[
-            ['Disponível', 'Indisponível'], // Opções para "Status do Equipamento"
+            ['Disponível'], // Opções para "Status do Equipamento"
             ['Sim', 'Não'],   // Opções para "Inativo"
           ]}
         />
       </article>
 
-      <article className="container-btn-cadastrar">
+      <article className="container-btn">
         <CriarBotao value='Voltar' href='/implemento' class='btn-voltar'></CriarBotao>
         <button type="button" className='btn-cadastrar' onClick={cadastrarImplemento}>Cadastrar</button>
       </article>

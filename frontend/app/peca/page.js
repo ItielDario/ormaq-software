@@ -14,7 +14,10 @@ export default function Peca() {
     function carregarPecas() {
         httpClient.get("/peca")
             .then(r => r.json())
-            .then((r) => setListaPecas(r))
+            .then((r) => {
+                r.map(peca => peca.pecaDataAquisicao = new Date(peca.pecaDataAquisicao).toLocaleDateString()) // Formatando a data
+                setListaPecas(r)
+            })
     }
 
     return (

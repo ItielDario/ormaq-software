@@ -25,7 +25,6 @@ export default function AlterarPeca({ params: { id } }) {
       .then(r => {
         r.pecDataAquisicao = new Date(r.pecDataAquisicao).toISOString().split('T')[0];
         setPecaSelecionada(r);
-        console.log(r)
         setPecaDescricao(r.pecDescricao); // Inicializa o valor do editor
       });
   }

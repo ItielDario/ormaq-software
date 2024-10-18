@@ -14,7 +14,10 @@ export default function Maquina() {
     function carregarMaquinas() {
         httpClient.get("/maquina")
         .then(r => r.json())
-        .then(r => setListaMaquinas(r));
+        .then((r) => {
+            r.map(maquina => maquina.maqDataAquisicao = new Date(maquina.maqDataAquisicao).toLocaleDateString()) // Formatando a data
+            setListaMaquinas(r)
+        })
     }
 
     return (

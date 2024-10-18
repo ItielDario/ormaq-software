@@ -14,7 +14,10 @@ export default function Implemento() {
     function carregarImplementos() {
         httpClient.get("/implemento")
             .then(r => r.json())
-            .then((r) => setListaImplementos(r))
+            .then((r) => {
+                r.map(implemento => implemento.impDataAquisicao = new Date(implemento.impDataAquisicao).toLocaleDateString()) // Formatando a data
+                setListaImplementos(r)
+            })
     }
 
     return (

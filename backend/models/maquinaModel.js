@@ -124,11 +124,9 @@ export default class MaquinaModel {
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
-
         if(rows.length > 0) {           
             return this.toMAP(rows)[0];
         }
-
         return null;
     }
 }

@@ -41,8 +41,8 @@ export default function Implemento() {
                     }))}
                     renderActions={(implemento) => (
                         <div>
-                            <a href="/manutencao"><i className="nav-icon fas fa-pen"></i></a>
-                            <a href="/manutencao"><i className="nav-icon fas fa-trash"></i></a>
+                            <a href={`/implemento/alterar/${implemento.id}`}><i className="nav-icon fas fa-pen"></i></a>
+                            <a href={`/implemento/alterar/${implemento.id}`}><i className="nav-icon fas fa-trash"></i></a>
                         </div>
                     )}
                 />

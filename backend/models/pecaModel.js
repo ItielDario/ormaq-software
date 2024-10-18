@@ -90,12 +90,12 @@ export default class PecaModel {
         if (this.#pecaId == 0 || this.#pecaId == null) {
             // Inserção
             sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecStatus, pecInativo) VALUES (?, ?, ?, ?, ?)`;
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#equipamentoStatus, this.#pecaInativo];
         } else {
             // Alteração
-            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecInativo = ? WHERE pecId = ?`;
+            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecInativo = ? WHERE pecId = ?`;
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaInativo, this.#pecaId];
         }
-
-        valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#equipamentoStatus, this.#pecaInativo, this.#pecaId];
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
@@ -109,13 +109,9 @@ export default class PecaModel {
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
-
-        console.log(rows)
-
         if(rows.length > 0) {           
             return rows;
         }
-
         return null;
     }
 }

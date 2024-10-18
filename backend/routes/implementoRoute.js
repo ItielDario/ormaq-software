@@ -9,10 +9,22 @@ router.get('/', (req, res) => {
     ctrl.listarImplementos(req, res)
 })
 
+router.get('/:id', (req, res) => {
+    // #swagger.tags = ['Implemento']
+    // #swagger.summary = 'Obter um implemento'
+    ctrl.obterImplemento(req, res)
+})
+
 router.post('/cadastrar', (req, res) => {
     // #swagger.tags = ['Implemento']
     // #swagger.summary = 'Cadsatrar Implementos'
     ctrl.cadastrarImplemento(req, res)
+})
+
+router.put("/", (req, res) => {
+    // #swagger.tags = ['Peças']
+    // #swagger.summary = 'Alterar uma peça'
+    ctrl.alterarImplemento(req, res);
 })
 
 export default router;

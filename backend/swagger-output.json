@@ -177,8 +177,43 @@
         "summary": "Alterar uma peça",
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pecaId": {
+                    "example": "any"
+                  },
+                  "pecaNome": {
+                    "example": "any"
+                  },
+                  "pecaDataAquisicao": {
+                    "example": "any"
+                  },
+                  "pecaDescricao": {
+                    "example": "any"
+                  },
+                  "pecaInativo": {
+                    "example": "any"
+                  },
+                  "equipamentoStatus": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }

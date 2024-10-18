@@ -92,7 +92,7 @@ export default class PecaModel {
             sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecStatus, pecInativo) VALUES (?, ?, ?, ?, ?)`;
         } else {
             // Alteração
-            sql = `UPDATE Peca SET pecaNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecInativo = ? WHERE pecId = ?`;
+            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecInativo = ? WHERE pecId = ?`;
         }
 
         valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#equipamentoStatus, this.#pecaInativo, this.#pecaId];
@@ -102,7 +102,10 @@ export default class PecaModel {
     }
 
     async obter(id) {
-        let sql = "SELECT * FROM Peca WHERE pecId = ?";
+        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecInativo, Peca.pecStatus,Equipamento_Status.eqpStaDescricao
+                    FROM Peca INNER JOIN Equipamento_Status
+                    ON Peca.pecStatus = Equipamento_Status.eqpStaId
+                    WHERE Peca.pecId = ?;`;
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
@@ -110,7 +113,7 @@ export default class PecaModel {
         console.log(rows)
 
         if(rows.length > 0) {           
-            return this.toMAP(rows)[0];
+            return rows;
         }
 
         return null;

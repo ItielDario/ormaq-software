@@ -91,7 +91,7 @@ export default function CadastrarPeca() {
             'customEditor',
           ]}
           optinsOfSelect={[
-            ['Disponível', 'Indisponível'], // Opções para "Status do Equipamento"
+            ['Disponível'], // Opções para "Status do Equipamento"
             ['Sim', 'Não'],   // Opções para "Inativo"
           ]}
         />

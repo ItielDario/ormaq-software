@@ -22,7 +22,7 @@ export default class pecaController {
                 res.staus(404).json({msg: `Peça com o id ${id} não encontrada!`})
             }
             else{
-                res.status(200).json(peca);
+                res.status(200).json(peca[0]);
             }
         }
         catch(ex) {
@@ -45,6 +45,32 @@ export default class pecaController {
                 }
                 else {
                     res.status(500).json({msg: "Erro durante o cadastro da Peça"});
+                }
+            }
+            else {
+                res.status(400).json({msg: "Por favor, preencha os campos abaixo corretamente!"});
+            }
+        }
+        catch(ex) {
+            console.log(ex)
+            res.status(500).json({msg: "Erro interno de servidor!"});
+        }
+    }
+
+    async alterarPeca(req, res) {
+        try {
+            let { pecaId, pecaNome, pecaDataAquisicao, pecaDescricao, pecaInativo, equipamentoStatus } = req.body;
+
+            if(pecaId != "" && pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaInativo != "" && equipamentoStatus != "") {
+                let peca = new PecaModel(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, equipamentoStatus, pecaInativo);
+
+                let result  = await peca.gravar();
+
+                if(result) {
+                    res.status(201).json({msg: "Peça alterada com sucesso!"});
+                }
+                else {
+                    res.status(500).json({msg: "Erro durante a alteração da Peça"});
                 }
             }
             else {

@@ -1,12 +1,18 @@
 'use client';
-import MontarFormulario from "../../../components/montarFormulario.js";
 import CriarBotao from "../../../components/criarBotao.js";
+import CustomEditor from "../../../components/custom-editor.js";
 import httpClient from "@/app/utils/httpClient.js";
 import { useRef, useState, useEffect } from "react";
 
 export default function AlterarPeca({ params: { id } }) {
-  const formRef = useRef(null);
   const alertMsg = useRef(null);
+
+  const pecaNomeRef = useRef(null);
+  const pecaDataAquisicaoRef = useRef(null);
+  const equipamentoStatusRef = useRef(null);
+  const pecaInativoRef = useRef(null);
+
+  const [pecaDescricao, setPecaDescricao] = useState('');
   const [pecaSelecionada, setPecaSelecionada] = useState(null);
 
   useEffect(() => {
@@ -16,24 +22,26 @@ export default function AlterarPeca({ params: { id } }) {
   function carregarPeca() {
     httpClient.get(`/peca/${id}`)
       .then(r => r.json())
-      .then(r =>{
-        r.pecaDataAquisicao = new Date(r.pecaDataAquisicao).toISOString().split('T')[0];
+      .then(r => {
+        r.pecDataAquisicao = new Date(r.pecDataAquisicao).toISOString().split('T')[0];
+        setPecaSelecionada(r);
         console.log(r)
-        setPecaSelecionada(r)
+        setPecaDescricao(r.pecDescricao); // Inicializa o valor do editor
       });
   }
 
   const alterarPeca = () => {
-    const formElement = formRef.current.getFormElement(); // Obtem os elementos (TAGs) do formulário
-    const formData = new FormData(formElement); // Obtem os imputs do formulário
-    alertMsg.current.style.display = 'none';
-    
     const dados = {
-      pecaNome: formData.get('pecaNome'), // Obtem o valor do imput 'pecaNome'
-      pecaDataAquisicao: formData.get('pecaDataAquisicao'),
-      pecaDescricao: formRef.current.getCustomEditorValue(), // Obtem o valor do ckeditor 'customEditor'
-    }
-  
+      pecaId: id,
+      pecaNome: pecaNomeRef.current.value,
+      pecaDataAquisicao: pecaDataAquisicaoRef.current.value,
+      pecaDescricao: pecaDescricao,
+      pecaInativo: pecaInativoRef.current.value,
+      equipamentoStatus: equipamentoStatusRef.current.value
+    };
+
+    console.log(dados)
+
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
@@ -41,7 +49,7 @@ export default function AlterarPeca({ params: { id } }) {
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
     } else {
-      httpClient.put("/peca", dados)
+      httpClient.put(`/peca`, dados)
       .then((r) => { 
         status = r.status;
         return r.json()}
@@ -57,7 +65,6 @@ export default function AlterarPeca({ params: { id } }) {
 
           alertMsg.current.style.display = 'block';
           alertMsg.current.textContent = r.msg;
-          formElement.reset(); // Limpa todos os campos do formulário
         }, 100);
       });
     }
@@ -66,10 +73,12 @@ export default function AlterarPeca({ params: { id } }) {
   };
 
   const verificaCampoVazio = (dados) => {
-    // Itera sobre os valores do objeto 'dados' e verifica se algum campo está vazio
-    const camposVazios = Object.values(dados).some(value => value === '' || value === null || value === undefined);
-    return camposVazios;
-  }
+    return Object.values(dados).some(value => value === '' || value === null || value === undefined);
+  };
+
+  const handleCustomEditorChange = (data) => {
+    setPecaDescricao(data); // Atualiza o valor do editor no estado
+  };
 
   return (
     <section className="content-main-children-cadastrar">
@@ -79,27 +88,72 @@ export default function AlterarPeca({ params: { id } }) {
 
       <article ref={alertMsg}></article>
 
-      <article className="container-forms">
-        <MontarFormulario 
-          ref={formRef}
-          initialValues={pecaSelecionada}
-          labelTitle={[
-            'Nome da Peça', 
-            'Data de Aquisição', 
-            'Descrição da Peça',
-          ]} 
-          id={[
-            'pecaNome', 
-            'pecaDataAquisicao', 
-            'pecaDescricao',
-          ]}
-          typeImput={[
-            'text', 
-            'date', 
-            'customEditor',
-          ]}
-          customType='pecaDescricao'
-        />
+      <article>
+        {pecaSelecionada && (
+          <article className="container-forms">
+            <form>
+              <section>
+                <label htmlFor="pecaNome">Nome da peça</label>
+                <input 
+                  type="text" 
+                  id="pecaNome" 
+                  name="pecaNome" 
+                  defaultValue={pecaSelecionada.pecNome} 
+                  ref={pecaNomeRef} 
+                  required 
+                />
+              </section>
+
+              <section>
+                <label htmlFor="pecaDataAquisicao">Data de Aquisição</label>
+                <input 
+                  type="date" 
+                  id="pecaDataAquisicao" 
+                  name="pecaDataAquisicao" 
+                  defaultValue={pecaSelecionada.pecDataAquisicao} 
+                  ref={pecaDataAquisicaoRef} 
+                  required 
+                />
+              </section>
+
+              <section>
+                <label htmlFor="equipamentoStatus">Status do Equipamento</label>
+                <select 
+                  id="equipamentoStatus" 
+                  name="equipamentoStatus" 
+                  defaultValue={pecaSelecionada.eqpStaDescricao} // Use a descrição do status
+                  ref={equipamentoStatusRef} 
+                  required
+                >
+                  <option value={pecaSelecionada.pecStatus}>
+                    {pecaSelecionada.eqpStaDescricao} {/* Exibe a descrição do status */}
+                  </option>
+                </select>
+              </section>
+
+
+              <section>
+                <label htmlFor="pecaInativo">Peça Inativa</label>
+                <select 
+                  id="pecaInativo" 
+                  name="pecaInativo" 
+                  defaultValue={pecaSelecionada.pecInativo} 
+                  ref={pecaInativoRef} 
+                  required
+                >
+                  <option value="1">Sim</option>
+                  <option value="0">Não</option>
+                </select>
+              </section>
+
+              {/* Editor Customizado */}
+              <CustomEditor 
+                onChange={handleCustomEditorChange} 
+                initialValue={pecaDescricao} // Usa o valor armazenado no estado
+              />
+            </form>
+          </article>
+        )}
       </article>
 
       <article className="container-btn">

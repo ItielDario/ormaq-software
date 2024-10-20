@@ -350,7 +350,7 @@
     "/implemento/": {
       "get": {
         "tags": [
-          "Implemento"
+          "Implementos"
         ],
         "summary": "Listar todos os Implementos cadastradas",
         "description": "",
@@ -503,6 +503,192 @@
                     "example": "any"
                   },
                   "equipamentoStatus": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locacao/": {
+      "get": {
+        "tags": [
+          "Locações"
+        ],
+        "summary": "Listar todas as locações cadastradas",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Locações"
+        ],
+        "summary": "Alterar uma locação",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "locId": {
+                    "example": "any"
+                  },
+                  "locDataInicio": {
+                    "example": "any"
+                  },
+                  "locDataFinalPrevista": {
+                    "example": "any"
+                  },
+                  "locDataFinalEntrega": {
+                    "example": "any"
+                  },
+                  "locValorTotal": {
+                    "example": "any"
+                  },
+                  "locDesconto": {
+                    "example": "any"
+                  },
+                  "locValorFinal": {
+                    "example": "any"
+                  },
+                  "locCliId": {
+                    "example": "any"
+                  },
+                  "locUsuId": {
+                    "example": "any"
+                  },
+                  "locStatus": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locacao/{id}": {
+      "get": {
+        "tags": [
+          "Locações"
+        ],
+        "summary": "Obter uma locação",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Locações"
+        ],
+        "summary": "Exclui uma locação pelo id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/locacao/cadastrar": {
+      "post": {
+        "tags": [
+          "Locações"
+        ],
+        "summary": "Cadsatrar uma locação",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "locDataInicio": {
+                    "example": "any"
+                  },
+                  "locDataFinalPrevista": {
+                    "example": "any"
+                  },
+                  "locValorTotal": {
+                    "example": "any"
+                  },
+                  "locDesconto": {
+                    "example": "any"
+                  },
+                  "locValorFinal": {
+                    "example": "any"
+                  },
+                  "locCliId": {
+                    "example": "any"
+                  },
+                  "locUsuId": {
+                    "example": "any"
+                  },
+                  "locStatus": {
                     "example": "any"
                   }
                 }

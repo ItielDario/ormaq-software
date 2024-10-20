@@ -8,6 +8,7 @@ import cors from 'cors';
 import MaquinaRoute from './routes/maquinaRoute.js';
 import PecasRoute from './routes/pecasRoute.js';
 import ImplementoRoute from './routes/implementoRoute.js';
+import LocacaoRoute from './routes/locacaoRouter.js';
 
 const app = express();
 app.listen(5000);
@@ -28,6 +29,11 @@ app.use('/peca',
 );
 
 app.use('/implemento', 
-    // #swagger.tags = ['Implemento']
+    // #swagger.tags = ['Implementos']
     ImplementoRoute
+);
+
+app.use('/locacao', 
+    // #swagger.tags = ['Locações']
+    LocacaoRoute
 );

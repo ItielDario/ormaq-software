@@ -35,7 +35,8 @@ input[type="date"],
 input[type="number"],
 select,
 textarea,
-.ck-editor__editable {
+.ck-editor__editable,
+.datalist {
     width: 100%;
     padding: 0.6vw;
     margin-top: 0.4vw;
@@ -54,14 +55,69 @@ textarea {
 .ck-editor__editable {
     min-height: 5vw;
 }
+
+input::placeholder{
+    color: #8f8f8f;
+    font-weight: 500;
+    font-size: 1vw;
+}
+
+.input-group{
+    display: flex;
+    gap: 2vw;
+}
+
+.input-group > section{
+    width: 50%;
+}
   
+.itens-locacao{
+    border: 1px solid rgb(179, 179, 179);
+    padding: 1vw;
+    border-radius: 0.4vw;
+}
+
+.itens-locacao-header{
+    display: flex;
+    justify-content: space-between;
+    margin: 1vw 0;
+}
+
+.itens-locacao-header p{
+    color: #1d1d1d;
+    font-size: 1.5vw;
+    font-weight: bold;
+}
+
+.input-equipamento{
+    width: 70% !important;
+}
+
+.input-quantidade{
+    width: 30% !important;
+}
+
+.itens-locacao-footer{
+    margin-top: 4vw;
+    display: flex;
+    gap: 0.4vw;
+    align-items: center;
+    font-size: 1.3vw;
+    
+}
+.valor-total-box{
+    padding: 0.4vw 0.7vw;
+    border: 0.1vw solid rgb(126, 126, 126);
+    border-radius: 0.4vw;
+}
+
 .content-main-children-cadastrar .container-btn{
     display: flex;
     justify-content: end;
     margin: 2vw 0;
 }
 
-.content-main-children-cadastrar .btn-cadastrar, .btn-voltar, .btn-alterar{
+.content-main-children-cadastrar .btn-cadastrar, .btn-voltar, .btn-alterar, .btn-add{
     padding: 0.8vw 2vw;
     font-weight: 500;
     border-radius: 0.5vw;
@@ -88,6 +144,16 @@ textarea {
 
 .content-main-children-cadastrar .btn-voltar:hover{   
     background-color: rgb(206, 206, 206);
+}
+
+.content-main-children-cadastrar .btn-add{
+    background-color: rgb(68, 167, 22);
+    color: white;
+    border: 0.1vw solid rgb(41, 136, 28)
+}
+
+.content-main-children-cadastrar .btn-add:hover{   
+    background-color: rgb(71, 187, 17);
 }
 
 @media (max-width: 60vw) {

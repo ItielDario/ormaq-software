@@ -79,14 +79,14 @@ export default function Locacao() {
 
             <article className="container-table">
                 <MontarTabela
-                    cabecalhos={['ID', 'Cliente', 'Data de Início', 'Data Final Prevista', 'Data de Entrega', 'Valor Total', 'Status', 'Ações']}
+                    cabecalhos={['ID', 'Cliente', 'CPF/CNPJ', 'Data de Início', 'Data Final Prevista', 'Valor', 'Status', 'Ações']}
                     listaDados={listaLocacoes.map(locacao => ({
                       id: locacao.locId,
                       Cliente: locacao.cliNome,
+                      'CPF/CNPJ': locacao.cliCPF_CNPJ,
                       'Data de Início': locacao.locDataInicio,
                       'Data Final Prevista': locacao.locDataFinalPrevista,
-                      'Data de Entrega': locacao.locDataFinalEntrega,
-                      'Valor Total': locacao.locValorFinal ? parseFloat(locacao.locValorFinal).toFixed(2) : 'N/A',
+                      'Valor': locacao.locValorFinal ? parseFloat(locacao.locValorFinal).toFixed(2) : 'N/A',
                       Status: locacao.locStaDescricao
                     }))}                  
                     renderActions={(locacao) => (

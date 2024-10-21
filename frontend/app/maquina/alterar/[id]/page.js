@@ -126,8 +126,8 @@ export default function AlterarMaquina({ params: { id } }) {
                       ref={maquinaTipoRef} 
                       required
                   >
-                      <option value="0">Nova</option>
-                      <option value="1">Semi-Nova</option>
+                      <option value="Nova">Nova</option>
+                      <option value="Semi-Nova">Semi-Nova</option>
                   </select>
               </section>
 

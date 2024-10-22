@@ -14,7 +14,7 @@
     "/maquina/": {
       "get": {
         "tags": [
-          "Máquina"
+          "Maquina"
         ],
         "summary": "Listar todas as máquinas cadastradas",
         "description": "Lista todas as máquinas.",
@@ -29,7 +29,7 @@
       },
       "put": {
         "tags": [
-          "Máquina"
+          "Maquina"
         ],
         "summary": "Alterar uma maquina existente",
         "description": "Lista todas as máquinas.",
@@ -78,7 +78,7 @@
     "/maquina/{id}": {
       "get": {
         "tags": [
-          "Máquina"
+          "Maquina"
         ],
         "summary": "Buscar Máquina",
         "description": "Lista todas as máquinas.",
@@ -103,7 +103,7 @@
       },
       "delete": {
         "tags": [
-          "Máquina"
+          "Maquina"
         ],
         "summary": "Exclui uma máquina pelo id",
         "description": "Lista todas as máquinas.",
@@ -133,7 +133,7 @@
     "/maquina/cadastrar": {
       "post": {
         "tags": [
-          "Máquina"
+          "Maquina"
         ],
         "summary": "Cadsatrar máquinas",
         "description": "Lista todas as máquinas.",
@@ -365,7 +365,7 @@
       },
       "put": {
         "tags": [
-          "Implemento"
+          "Implementos"
         ],
         "summary": "Alterar um implemento",
         "description": "",
@@ -414,7 +414,7 @@
     "/implemento/{id}": {
       "get": {
         "tags": [
-          "Implemento"
+          "Implementos"
         ],
         "summary": "Obter um implemento",
         "description": "",
@@ -439,7 +439,7 @@
       },
       "delete": {
         "tags": [
-          "Implemento"
+          "Implementos"
         ],
         "summary": "Exclui um implemento pelo id",
         "description": "",
@@ -469,7 +469,7 @@
     "/implemento/cadastrar": {
       "post": {
         "tags": [
-          "Implemento"
+          "Implementos"
         ],
         "summary": "Cadsatrar Implementos",
         "description": "",
@@ -689,6 +689,165 @@
                     "example": "any"
                   },
                   "locStatus": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cliente/": {
+      "get": {
+        "tags": [
+          "Clientes"
+        ],
+        "summary": "Listar todas os clientes cadastradas",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Clientes"
+        ],
+        "summary": "Alterar um cliente",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cliId": {
+                    "example": "any"
+                  },
+                  "cliNome": {
+                    "example": "any"
+                  },
+                  "cliCPF_CNPJ": {
+                    "example": "any"
+                  },
+                  "usuTelefone": {
+                    "example": "any"
+                  },
+                  "usuEmail": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cliente/{id}": {
+      "get": {
+        "tags": [
+          "Clientes"
+        ],
+        "summary": "Obter um cliente",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Clientes"
+        ],
+        "summary": "Exclui um cliente pelo id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/cliente/cadastrar": {
+      "post": {
+        "tags": [
+          "Clientes"
+        ],
+        "summary": "Cadsatrar um cliente",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cliNome": {
+                    "example": "any"
+                  },
+                  "cliCPF_CNPJ": {
+                    "example": "any"
+                  },
+                  "usuTelefone": {
+                    "example": "any"
+                  },
+                  "usuEmail": {
                     "example": "any"
                   }
                 }

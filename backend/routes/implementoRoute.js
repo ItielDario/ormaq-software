@@ -10,25 +10,21 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
-    // #swagger.tags = ['Implemento']
     // #swagger.summary = 'Obter um implemento'
     ctrl.obterImplemento(req, res)
 })
 
 router.post('/cadastrar', (req, res) => {
-    // #swagger.tags = ['Implemento']
     // #swagger.summary = 'Cadsatrar Implementos'
     ctrl.cadastrarImplemento(req, res)
 })
 
 router.put("/", (req, res) => {
-    // #swagger.tags = ['Implemento']
     // #swagger.summary = 'Alterar um implemento'
     ctrl.alterarImplemento(req, res);
 })
 
 router.delete("/:id", (req, res) => {
-    // #swagger.tags = ['Implemento']
     //#swagger.summary = 'Exclui um implemento pelo id'
     ctrl.excluirImplemento(req, res);
 })

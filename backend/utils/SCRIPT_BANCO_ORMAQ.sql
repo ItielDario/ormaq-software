@@ -72,8 +72,8 @@ CREATE TABLE Cliente (
   cliId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   cliNome VARCHAR(60) NOT NULL,
   cliCPF_CNPJ VARCHAR(25) NOT NULL,
-  usuTelefone VARCHAR(14) NULL,
-  usuEmail VARCHAR(25) NULL
+  cliTelefone VARCHAR(14) NULL,
+  cliEmail VARCHAR(25) NULL
 );
 
 CREATE TABLE Usuario_Perfil (

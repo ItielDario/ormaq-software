@@ -65,6 +65,15 @@ input::placeholder{
 .input-group{
     display: flex;
     gap: 2vw;
+    align-items: center;
+    margin: 0;
+}
+
+.input-group-equipamento{
+    display: flex !important;
+    gap: 2vw;
+    align-items: initial;
+    margin: 2vw 0;
 }
 
 .input-group > section{
@@ -75,6 +84,7 @@ input::placeholder{
     border: 1px solid rgb(179, 179, 179);
     padding: 1vw;
     border-radius: 0.4vw;
+    margin: 1vw 0 2vw 0;
 }
 
 .itens-locacao-header{
@@ -85,16 +95,40 @@ input::placeholder{
 
 .itens-locacao-header p{
     color: #1d1d1d;
-    font-size: 1.5vw;
+    font-size: 1.6vw;
     font-weight: bold;
 }
 
 .input-equipamento{
-    width: 70% !important;
+    width: 80% !important;
 }
 
 .input-quantidade{
-    width: 30% !important;
+    width: 20% !important;
+}
+
+.input-cliente{
+    width: 97% !important;
+}
+
+.box-cadastrar-cliente{
+    width: 3% !important;
+    display: flex;
+    justify-content: center;
+
+}
+
+.tipo-equipamento{
+    display: flex;
+    gap: 2vw;
+    margin: 0.7vw 0 2vw 0;
+}
+
+.msg-obs{
+    font-weight: bold;
+    font-size: 1vw;
+    color: rgb(194, 142, 0);
+    margin-top: 0.5vw;
 }
 
 .itens-locacao-footer{
@@ -103,8 +137,8 @@ input::placeholder{
     gap: 0.4vw;
     align-items: center;
     font-size: 1.3vw;
-    
 }
+  
 .valor-total-box{
     padding: 0.4vw 0.7vw;
     border: 0.1vw solid rgb(126, 126, 126);
@@ -117,7 +151,7 @@ input::placeholder{
     margin: 2vw 0;
 }
 
-.content-main-children-cadastrar .btn-cadastrar, .btn-voltar, .btn-alterar, .btn-add{
+.content-main-children-cadastrar .btn-cadastrar, .btn-voltar, .btn-alterar, .btn-add    {
     padding: 0.8vw 2vw;
     font-weight: 500;
     border-radius: 0.5vw;
@@ -155,6 +189,17 @@ input::placeholder{
 .content-main-children-cadastrar .btn-add:hover{   
     background-color: rgb(71, 187, 17);
 }
+
+.content-main-children-cadastrar .fa-plus-circle{
+    color: rgb(32, 129, 255);
+    font-size: 3vw;
+    font-weight: bold;
+}
+
+.content-main-children-cadastrar .fa-plus-circle:hover{
+    color: rgb(55, 142, 255);
+}
+
 
 @media (max-width: 60vw) {
     

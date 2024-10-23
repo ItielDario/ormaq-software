@@ -6,6 +6,7 @@ import httpClient from "@/app/utils/httpClient.js";
 export default function CadastrarLocacao() {
   const formRef = useRef(null);
   const alertMsg = useRef(null);
+  const alertMsgEqp = useRef(null);
 
   // Campos do formulário
   const clienteIdRef = useRef(null);
@@ -21,22 +22,22 @@ export default function CadastrarLocacao() {
   // Itens de locação
   const equipamentoIdRef = useRef(null);
   const quantidadeRef = useRef(null);
-  const valorUnitarioRef = useRef(null);
 
   const [clientes, setClientes] = useState([]);
-  const [equipamentos, setEquipamentos] = useState([]);
+  const [maquina, setMaquina] = useState([]);
+  const [peca, setPeca] = useState([]);
+  const [implemento, setImplemento] = useState([]);
   const [itensLocacao, setItensLocacao] = useState([]);
   const [tipoEquipamento, setTipoEquipamento] = useState(''); // Armazena o tipo selecionado
 
   useEffect(() => {
-    httpClient.get("/cliente")
-      .then((r) => r.json())
-      .then((r) => {
-        console.log(r);
-        setClientes(r);
-      });
-    // httpClient.get("/equipamento").then((response) => setEquipamentos(response.data));
+    // Clientes
+    httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
+    httpClient.get("/maquina").then(r => r.json()).then(r => setMaquina(r));
+    httpClient.get("/peca").then(r => r.json()).then(r => setPeca(r));
+    httpClient.get("/implemento").then(r => r.json()).then(r => setImplemento(r));
   }, []);
+  
 
   const verificaClienteExiste = () => {
     if (clienteIdRef.current.value.length > 0) {
@@ -55,63 +56,156 @@ export default function CadastrarLocacao() {
   };
 
   const adicionarItemLocacao = () => {
-    const equipamentoId = equipamentoIdRef.current.value;
-    const quantidade = quantidadeRef.current.value;
-    const valorUnitario = valorUnitarioRef.current.value;
+    alertMsgEqp.current.style.display = 'none';
 
-    setItensLocacao([...itensLocacao, { equipamentoId, quantidade, valorUnitario }]);
+    if (equipamentoIdRef.current.value.length > 0 && quantidadeRef.current.value > 0) {
+      let equipamentoNome = [];
+      let equipamentoDados = '';
+
+      if(tipoEquipamento == "Máquina"){
+        equipamentoNome = maquina.map(maq => maq.maqNome);
+        equipamentoDados = maquina.filter(value => value.maqNome == equipamentoIdRef.current.value)
+        console.log(equipamentoDados[0])
+        equipamentoDados = {
+          'id': equipamentoDados[0].maqId,
+          'nome': equipamentoDados[0].maqNome,
+          'data': equipamentoDados[0].maqDataAquisicao,
+          'preco': '',
+          'quantidade': quantidadeRef.current.value,
+        }
+        console.log(equipamentoDados)
+      }
+      else if(tipoEquipamento == "Peça"){
+        equipamentoNome = peca.map(pec => pec.pecaNome);
+        equipamentoDados = peca.filter(value => value.pecaNome == equipamentoIdRef.current.value)
+        equipamentoDados = {
+          'id': equipamentoDados[0].pecaId,
+          'nome': equipamentoDados[0].pecaNome,
+          'data': equipamentoDados[0].pecaDataAquisicao,
+          'preco': '',
+          'quantidade': quantidadeRef.current.value,
+        }
+      }
+      else if(tipoEquipamento == "Implemento"){
+        equipamentoNome = implemento.map(imp => imp.impNome);
+        equipamentoDados = implemento.filter(value => value.impNome == equipamentoIdRef.current.value)
+        equipamentoDados = {
+          'id': equipamentoDados[0].impId,
+          'nome': equipamentoDados[0].impNome,
+          'data': equipamentoDados[0].impDataAquisicao,
+          'preco': '',
+          'quantidade': quantidadeRef.current.value,
+        }
+      }
+
+      const result = equipamentoNome.some((value) => value == equipamentoIdRef.current.value);
+
+      if (!result) {
+        setTimeout(() => {
+          alertMsgEqp.current.className = 'alertError';
+          alertMsgEqp.current.style.display = 'block';
+          alertMsgEqp.current.textContent = `${tipoEquipamento} não cadastrado!`;
+        }, 100);
+      }
+      else {
+        setItensLocacao([...itensLocacao, equipamentoDados]);
+        setTimeout(() => {
+          alertMsgEqp.current.className = 'alertSuccess';
+          alertMsgEqp.current.style.display = 'block';
+          alertMsgEqp.current.textContent = `${tipoEquipamento} inserido na lista com sucesso!`;
+        }, 100);
+        equipamentoIdRef.current.value = ''
+        quantidadeRef.current.value = ''
+      }      
+    }
+    else{
+      setTimeout(() => {
+        alertMsgEqp.current.className = 'alertError';
+        alertMsgEqp.current.style.display = 'block';
+        alertMsgEqp.current.textContent = `Por favor, digite um equipemento e sua quantidade!`;
+      }, 100);
+    }
+    
+  };
+
+  const excluirItem = (index) => {
+    const novaLista = itensLocacao.filter((item, i) => i !== index);
+    setItensLocacao(novaLista);
   };
 
   const cadastrarLocacao = () => {
-    alertMsg.current.style.display = 'none';
+  alertMsg.current.style.display = 'none';
 
-    const dados = {
-      locDataInicio: dataInicioRef.current.value,
-      locDataFinalPrevista: dataFinalPrevistaRef.current.value,
-      locDataFinalEntrega: dataFinalEntregaRef.current.value,
-      locValorTotal: valorTotalRef.current.value,
-      locDesconto: descontoRef.current.value,
-      locValorFinal: valorFinalRef.current.value,
-      locCliId: clienteIdRef.current.value,
-      locUsuId: usuarioIdRef.current.value,
-      locStatus: statusRef.current.value,
-      itens: itensLocacao, // Array de itens da locação
-    };
-
-    if (verificaCampoVazio(dados)) {
-      setTimeout(() => {
-        alertMsg.current.className = 'alertError';
-        alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
-      }, 100);
-    } else {
-      httpClient.post("/locacao/cadastrar", dados)
-        .then((r) => {
-          status = r.status;
-          return r.json();
-        })
-        .then(r => {
-          setTimeout(() => {
-            if (status == 201) {
-              alertMsg.current.className = 'alertSuccess';
-            } else {
-              alertMsg.current.className = 'alertError';
-            }
-
-            alertMsg.current.style.display = 'block';
-            alertMsg.current.textContent = r.msg;
-            formRef.current.reset();
-            setItensLocacao([]);
-          }, 100);
-        });
-    }
-    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+  const dados = {
+    locDataInicio: dataInicioRef.current.value,
+    locDataFinalPrevista: dataFinalPrevistaRef.current.value,
+    locDataFinalEntrega: dataFinalEntregaRef.current.value,
+    locValorTotal: valorTotalRef.current.value,
+    locDesconto: descontoRef.current.value,
+    locValorFinal: valorFinalRef.current.value,
+    locCliId: clienteIdRef.current.value,
+    locUsuId: usuarioIdRef.current.value,
+    locStatus: statusRef.current.value,
+    itens: itensLocacao, // Array de itens da locação
   };
+
+  if (verificaCampoVazio(dados)) {
+    setTimeout(() => {
+      alertMsg.current.className = 'alertError';
+      alertMsg.current.style.display = 'block';
+      alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
+    }, 100);
+  } else {
+    httpClient.post("/locacao/cadastrar", dados)
+      .then((r) => {
+        status = r.status;
+        return r.json();
+      })
+      .then(r => {
+        setTimeout(() => {
+          if (status == 201) {
+            alertMsg.current.className = 'alertSuccess';
+          } else {
+            alertMsg.current.className = 'alertError';
+          }
+
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = r.msg;
+          
+          formRef.current.reset();
+          setTipoEquipamento(''); // Isso desmarca os radio buttons
+          setItensLocacao([]);
+        }, 100);
+      });
+  }
+  document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+};
 
   const verificaCampoVazio = (dados) => {
     return Object.values(dados).some(value => value === '' || value === null || value === undefined);
   };
 
+  const verificaTipoEquipamento = () => {
+    const listaEquipamentos = {
+      'Máquina': maquina,
+      'Peça': peca,
+      'Implemento': implemento,
+    };
+  
+    const equipamentos = listaEquipamentos[tipoEquipamento] || [];
+  
+    return (
+      <datalist id="equipamentos">
+        {equipamentos.map((equipamento) => (
+          <option
+            key={equipamento[Object.keys(equipamento)[0]]} // Usa o primeiro valor como chave
+            value={equipamento[Object.keys(equipamento)[1]]} // Usa o segundo valor como nome
+          />
+        ))}
+      </datalist>
+    );
+  };   
+  
   return (
     <section className="content-main-children-cadastrar">
       <article className="title">
@@ -156,6 +250,8 @@ export default function CadastrarLocacao() {
             <p>Itens da Locação</p>
             <button type="button" className='btn-add' onClick={adicionarItemLocacao}>Adicionar Item</button>
           </article>
+
+          <article ref={alertMsgEqp}></article>
           
           <section>
             <article>
@@ -163,49 +259,27 @@ export default function CadastrarLocacao() {
             </article>
 
             <article className="tipo-equipamento">
-              <label>
-                <input
-                  type="radio"
-                  name="tipoEquipamento"
-                  value="Máquina"
-                  onChange={() => setTipoEquipamento('Máquina')}
-                  required
-                /> Máquina
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  name="tipoEquipamento"
-                  value="Implemento"
-                  onChange={() => setTipoEquipamento('Implemento')}
-                /> Implemento
-              </label>
-
-              <label>
-                <input
-                  type="radio"
-                  name="tipoEquipamento"
-                  value="Peça"
-                  onChange={() => setTipoEquipamento('Peça')}
-                /> Peça
-              </label>
+              <label><input type="radio" name="tipoEquipamento" value="Máquina" onChange={() => setTipoEquipamento('Máquina')} require /> Máquina </label>
+              <label><input type="radio" name="tipoEquipamento" value="Implemento" onChange={() => setTipoEquipamento('Implemento')}/> Implemento</label>
+              <label><input type="radio" name="tipoEquipamento" value="Peça" onChange={() => setTipoEquipamento('Peça')}/> Peça</label>
             </article>            
           </section>
 
           <section className="input-group-equipamento">
             <section className="input-equipamento">
               <label>Nome do Equipamento</label>
-              <input list="equipamentos" name="equipamentoId" className="datalist" ref={equipamentoIdRef} tooltip={'enable'} disabled={!tipoEquipamento} />
-              <datalist id="equipamentos">
-                {equipamentos.map(equipamento => (
-                  <option key={equipamento.id} value={equipamento.id}>
-                    {equipamento.nome}
-                  </option>
-                ))}
-              </datalist>
-              <p className="msg-obs">* Primeiro selecione o tipo do equipamento </p>
+              <input 
+                list="equipamentos" 
+                name="equipamentoId" 
+                className="datalist" 
+                ref={equipamentoIdRef} 
+                disabled={!tipoEquipamento} 
+                style={{ cursor: !tipoEquipamento ? 'not-allowed' : 'text' }}
+              />
+              {verificaTipoEquipamento()}
+              <p style={{ display: !tipoEquipamento ? 'block' : 'none' }} className="msg-obs">* Primeiro selecione o tipo do equipamento</p>
             </section>
+
 
             <section className="input-quantidade">
               <label>Quantidade</label>
@@ -213,26 +287,26 @@ export default function CadastrarLocacao() {
             </section>
           </section>
 
-          <table>
+          <table id="table-itens-locacao">
             <thead>
-              <tr>
+              <tr className="thead-itens-locacao">
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Data de Aquisição</th>
                 <th>Preço por Hora</th>
-                <th>Status</th>
+                <th>Quantidade</th>
                 <th>Ações</th>
               </tr>
             </thead>
-            
-            <tbody>
+            <tbody className="tbody-itens-locacao">
               {itensLocacao.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.equipamentoId}</td>
-                  <td>{equipamentos.find(eq => eq.id === item.equipamentoId)?.nome}</td>
-                  <td>aaaaaaaaaaaa</td>
+                  <td>{item.id}</td>
+                  <td>{item.nome}</td>
+                  <td>{item.data}</td>
+                  <td>{item.preco}</td>
                   <td>{item.quantidade}</td>
-                  <td>{item.valorUnitario}</td>
+                  <td><a onClick={() => excluirItem(index)}><i className="nav-icon fas fa-trash"></i></a></td>
                 </tr>
               ))}
             </tbody>

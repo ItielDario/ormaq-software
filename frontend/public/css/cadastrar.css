@@ -131,6 +131,10 @@ input::placeholder{
     margin-top: 0.5vw;
 }
 
+.thead-itens-locacao, .tbody-itens-locacao{
+    font-size: 1.2vw;
+}
+
 .itens-locacao-footer{
     margin-top: 4vw;
     display: flex;
@@ -181,13 +185,13 @@ input::placeholder{
 }
 
 .content-main-children-cadastrar .btn-add{
-    background-color: rgb(68, 167, 22);
+    background-color: rgb(218, 143, 30);
     color: white;
-    border: 0.1vw solid rgb(41, 136, 28)
+    border: 0.1vw solid rgb(207, 130, 14);
 }
 
 .content-main-children-cadastrar .btn-add:hover{   
-    background-color: rgb(71, 187, 17);
+    background-color: rgb(224, 155, 51);
 }
 
 .content-main-children-cadastrar .fa-plus-circle{
@@ -199,7 +203,6 @@ input::placeholder{
 .content-main-children-cadastrar .fa-plus-circle:hover{
     color: rgb(55, 142, 255);
 }
-
 
 @media (max-width: 60vw) {
     

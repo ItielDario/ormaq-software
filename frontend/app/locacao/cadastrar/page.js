@@ -20,6 +20,7 @@ export default function CadastrarLocacao() {
   const statusRef = useRef(null);
 
   // Itens de locação
+  const tipoEquipemantoRef = useRef(null);
   const equipamentoIdRef = useRef(null);
   const quantidadeRef = useRef(null);
 
@@ -33,7 +34,7 @@ export default function CadastrarLocacao() {
   useEffect(() => {
     // Clientes
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
-    httpClient.get("/maquina").then(r => r.json()).then(r => setMaquina(r));
+    httpClient.get("/maquina").then(r => r.json()).then(r => {setMaquina(r); console.log(r)});
     httpClient.get("/peca").then(r => r.json()).then(r => setPeca(r));
     httpClient.get("/implemento").then(r => r.json()).then(r => setImplemento(r));
   }, []);
@@ -57,6 +58,7 @@ export default function CadastrarLocacao() {
 
   const adicionarItemLocacao = () => {
     alertMsgEqp.current.style.display = 'none';
+    let result = false
 
     if (equipamentoIdRef.current.value.length > 0 && quantidadeRef.current.value > 0) {
       let equipamentoNome = [];
@@ -65,57 +67,66 @@ export default function CadastrarLocacao() {
       if(tipoEquipamento == "Máquina"){
         equipamentoNome = maquina.map(maq => maq.maqNome);
         equipamentoDados = maquina.filter(value => value.maqNome == equipamentoIdRef.current.value)
-        console.log(equipamentoDados[0])
-        equipamentoDados = {
-          'id': equipamentoDados[0].maqId,
-          'nome': equipamentoDados[0].maqNome,
-          'data': equipamentoDados[0].maqDataAquisicao,
-          'preco': '',
-          'quantidade': quantidadeRef.current.value,
+
+        if(equipamentoDados.length > 0){
+          result = true;
+          equipamentoDados = {
+            'id': equipamentoDados[0].maqId,
+            'nome': equipamentoDados[0].maqNome,
+            'data': equipamentoDados[0].maqDataAquisicao,
+            'preco': equipamentoDados[0].maqPrecoUnitario,
+            'quantidade': quantidadeRef.current.value,
+          }
         }
-        console.log(equipamentoDados)
       }
       else if(tipoEquipamento == "Peça"){
         equipamentoNome = peca.map(pec => pec.pecaNome);
         equipamentoDados = peca.filter(value => value.pecaNome == equipamentoIdRef.current.value)
-        equipamentoDados = {
-          'id': equipamentoDados[0].pecaId,
-          'nome': equipamentoDados[0].pecaNome,
-          'data': equipamentoDados[0].pecaDataAquisicao,
-          'preco': '',
-          'quantidade': quantidadeRef.current.value,
+
+        if(equipamentoDados.length > 0){
+          result = true;
+          equipamentoDados = {
+            'id': equipamentoDados[0].pecaId,
+            'nome': equipamentoDados[0].pecaNome,
+            'data': equipamentoDados[0].pecaDataAquisicao,
+            'preco': '',
+            'quantidade': quantidadeRef.current.value,
+          }
         }
       }
       else if(tipoEquipamento == "Implemento"){
         equipamentoNome = implemento.map(imp => imp.impNome);
         equipamentoDados = implemento.filter(value => value.impNome == equipamentoIdRef.current.value)
-        equipamentoDados = {
-          'id': equipamentoDados[0].impId,
-          'nome': equipamentoDados[0].impNome,
-          'data': equipamentoDados[0].impDataAquisicao,
-          'preco': '',
-          'quantidade': quantidadeRef.current.value,
+        
+        if(equipamentoDados.length > 0){
+          result = true;
+          equipamentoDados = {
+            'id': equipamentoDados[0].impId,
+            'nome': equipamentoDados[0].impNome,
+            'data': equipamentoDados[0].impDataAquisicao,
+            'preco': '',
+            'quantidade': quantidadeRef.current.value,
+          }
         }
       }
 
-      const result = equipamentoNome.some((value) => value == equipamentoIdRef.current.value);
-
-      if (!result) {
-        setTimeout(() => {
-          alertMsgEqp.current.className = 'alertError';
-          alertMsgEqp.current.style.display = 'block';
-          alertMsgEqp.current.textContent = `${tipoEquipamento} não cadastrado!`;
-        }, 100);
-      }
-      else {
+      if (result) {
         setItensLocacao([...itensLocacao, equipamentoDados]);
         setTimeout(() => {
           alertMsgEqp.current.className = 'alertSuccess';
           alertMsgEqp.current.style.display = 'block';
           alertMsgEqp.current.textContent = `${tipoEquipamento} inserido na lista com sucesso!`;
         }, 100);
+        setTipoEquipamento('')
         equipamentoIdRef.current.value = ''
         quantidadeRef.current.value = ''
+      }
+      else {
+        setTimeout(() => {
+          alertMsgEqp.current.className = 'alertError';
+          alertMsgEqp.current.style.display = 'block';
+          alertMsgEqp.current.textContent = `${tipoEquipamento} não cadastrado!`;
+        }, 100);
       }      
     }
     else{
@@ -259,11 +270,21 @@ export default function CadastrarLocacao() {
             </article>
 
             <article className="tipo-equipamento">
-              <label><input type="radio" name="tipoEquipamento" value="Máquina" onChange={() => setTipoEquipamento('Máquina')} require /> Máquina </label>
-              <label><input type="radio" name="tipoEquipamento" value="Implemento" onChange={() => setTipoEquipamento('Implemento')}/> Implemento</label>
-              <label><input type="radio" name="tipoEquipamento" value="Peça" onChange={() => setTipoEquipamento('Peça')}/> Peça</label>
-            </article>            
+              <select 
+                name="tipoEquipamento" 
+                ref={tipoEquipemantoRef}
+                value={tipoEquipamento} 
+                onChange={(e) => setTipoEquipamento(e.target.value)} 
+                required
+              >
+                <option value="" disabled>Selecione o tipo do equipamento</option>
+                <option value="Máquina">Máquina</option>
+                <option value="Implemento">Implemento</option>
+                <option value="Peça">Peça</option>
+              </select>
+            </article>
           </section>
+
 
           <section className="input-group-equipamento">
             <section className="input-equipamento">
@@ -293,7 +314,7 @@ export default function CadastrarLocacao() {
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Data de Aquisição</th>
-                <th>Preço por Hora</th>
+                <th>Preço / Hora</th>
                 <th>Quantidade</th>
                 <th>Ações</th>
               </tr>
@@ -314,7 +335,7 @@ export default function CadastrarLocacao() {
 
           <article className="itens-locacao-footer">
             <strong>Valor total: </strong>
-            <strong className="valor-total-box">R$ 1000,00</strong>
+            <strong className="valor-total-box">R$ 00,00</strong>
           </article>
         </section>
 

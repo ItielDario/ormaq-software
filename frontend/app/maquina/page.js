@@ -24,6 +24,7 @@ export default function Maquina() {
         httpClient.get("/maquina")
         .then(r => r.json())
         .then((r) => {
+            console.log(r)
             r.map(maquina => maquina.maqDataAquisicao = new Date(maquina.maqDataAquisicao).toLocaleDateString()) // Formatando a data
             setListaMaquinas(r)
         })
@@ -75,13 +76,15 @@ export default function Maquina() {
 
             <article className="container-table">
                 <MontarTabela
-                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Status', 'Ações']}
+                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Tipo', 'Horas de uso', 'Preço Venda', 'Preço / Hora', 'Status', 'Ações']}
                     listaDados={listaMaquinas.map(maquina => ({
                         id: maquina.maqId,
                         Nome: maquina.maqNome,
                         'Data de Aquisição': maquina.maqDataAquisicao,
                         Tipo: maquina.maqTipo,
                         'Horas de Uso': maquina.maqHorasUso,
+                        'Preço Venda': `R$ ${maquina.maqPrecoVenda}`,
+                        'Preço / Hora': `R$ ${maquina.maqPrecoHora}`,
                         Status: maquina.equipamentoStatus.equipamentoStatusDescricao
                     }))}
                     renderActions={(maquina) => (

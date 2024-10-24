@@ -33,11 +33,12 @@ export default class maquinaController {
 
     async cadastrarMaquina(req, res) {
         try {
-            let { maqNome, maqDataAquisicao, maqTipo, maqHorasUso, equipamentoStatus, maqInativo, maqDescricao} = req.body;
+            let { maqNome, maqDataAquisicao, maqTipo, maqHorasUso, maqInativo, maqDescricao, maqPrecoVenda, maqPrecoHora} = req.body;
 
-            if(maqNome != "" && maqDataAquisicao != "" && maqTipo != "" && maqHorasUso != "" && equipamentoStatus != "" && maqInativo != "" && maqDescricao != "") {
+            console.log(req.body)
+            if(maqNome != "" && maqDataAquisicao != "" && maqTipo != "" && maqHorasUso != "" && equipamentoStatus != "" && maqInativo != "" && maqDescricao != "" && maqPrecoVenda != "" && maqPrecoHora != "") {
                 if(parseFloat(maqHorasUso) > 0) {
-                    let maquina = new MaquinaModel(0, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, equipamentoStatus, maqInativo, maqDescricao);
+                    let maquina = new MaquinaModel(0, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, 1, maqInativo, maqDescricao, maqPrecoVenda, maqPrecoHora);
 
                     let result  = await maquina.gravar();
 

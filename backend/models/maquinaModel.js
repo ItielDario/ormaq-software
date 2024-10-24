@@ -12,6 +12,8 @@ export default class MaquinaModel {
     #maqInativo;
     #maqHorasUso;
     #equipamentoStatus;
+    #maqPrecoVenda;
+    #maqPrecoHora;
 
     get maqId() { return this.#maqId; }
     set maqId(maqId) { this.#maqId = maqId; }
@@ -37,15 +39,23 @@ export default class MaquinaModel {
     get equipamentoStatus() { return this.#equipamentoStatus; }
     set equipamentoStatus(equipamentoStatus) { this.#equipamentoStatus = equipamentoStatus; }
 
-    constructor(maqId, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, equipamentoStatus, maqInativo, maqDescricao) {
+    get maqPrecoVenda() { return this.#maqPrecoVenda; }
+    set maqPrecoVenda(maqPrecoVenda) { this.#maqPrecoVenda = maqPrecoVenda; }
+
+    get maqPrecoHora() { return this.#maqPrecoHora; }
+    set maqPrecoHora(maqPrecoHora) { this.#maqPrecoHora = maqPrecoHora; }
+
+    constructor(maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqHorasUso, equipamentoStatus, maqPrecoVenda, maqPrecoHora) {
         this.#maqId = maqId;
         this.#maqNome = maqNome;
         this.#maqDataAquisicao = maqDataAquisicao;
         this.#maqTipo = maqTipo;
-        this.#maqHorasUso = maqHorasUso;
-        this.#equipamentoStatus = equipamentoStatus; 
-        this.#maqInativo = maqInativo;
         this.#maqDescricao = maqDescricao;
+        this.#maqInativo = maqInativo;
+        this.#maqHorasUso = maqHorasUso;
+        this.#equipamentoStatus = equipamentoStatus;
+        this.#maqPrecoVenda = maqPrecoVenda;  // Atributo novo para preço de venda
+        this.#maqPrecoHora = maqPrecoHora;    // Atributo novo para preço por hora
     }
 
     toJSON() {
@@ -57,40 +67,44 @@ export default class MaquinaModel {
             "maqDescricao": this.#maqDescricao,
             "maqInativo": this.#maqInativo,
             "maqHorasUso": this.#maqHorasUso,
+            "maqPrecoVenda": this.#maqPrecoVenda,     // Incluindo o preço de venda no JSON
+            "maqPrecoHora": this.#maqPrecoHora,       // Incluindo o preço por hora no JSON
             "equipamentoStatus": this.#equipamentoStatus
         };
     }
 
     toMAP(rows) {
         const listaMaquinas = [];
-    
+
         rows.forEach(maquina => {
             const dataAquisicao = new Date(maquina["maqDataAquisicao"]);
             const dataFormatada = dataAquisicao.toISOString().split('T')[0];
-            
-            // Criando o objeto EquipamentoStatus 
-            const equipamentoStatus = new EquipamentoStatusModel( 
-                maquina["equipamentoStatusId"], 
+
+            // Criando o objeto EquipamentoStatus
+            const equipamentoStatus = new EquipamentoStatusModel(
+                maquina["equipamentoStatusId"],
                 maquina["eqpStaDescricao"]
             );
-    
+
             listaMaquinas.push(new MaquinaModel(
                 maquina["maqId"],               // ID da máquina
                 maquina["maqNome"],             // Nome da máquina
                 dataFormatada,                  // Data de aquisição formatada
                 maquina["maqTipo"],             // Tipo da máquina
+                maquina["maqDescricao"],        // Descrição da máquina
+                maquina["maqInativo"],          // Se a máquina está inativa
                 maquina["maqHorasUso"],         // Horas de uso
                 equipamentoStatus,              // Status do equipamento como objeto
-                maquina["maqInativo"],          // Se a máquina está inativa
-                maquina["maqDescricao"]         // Descrição da máquina
+                maquina["maqPrecoVenda"],       // Preço de venda
+                maquina["maqPrecoHora"]         // Preço por hora
             ));
         });
         return listaMaquinas;
     }
-    
+
     async listarMaquinas() {
         const sql = `
-            SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqDescricao, m.maqInativo, m.maqHorasUso, es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
+            SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqDescricao, m.maqInativo, m.maqHorasUso, m.maqPrecoVenda, m.maqPrecoHora, es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Maquina m
             JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId;`;
 
@@ -104,15 +118,14 @@ export default class MaquinaModel {
         let sql = "";
         let valores = [];
 
-        if(this.#maqId == 0 || this.#maqId == null) {
-            //Inserção
-            sql = `INSERT INTO Maquina (maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqStatus, maqHorasUso) VALUES (?, ?, ?, ?, ?, ?, ?)`
-            valores = [this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqDescricao, this.#maqInativo, this.#equipamentoStatus, this.#maqHorasUso, this.#maqId];
-        }
-        else{
-            //Alteração
-            sql = `UPDATE maquina SET maqNome = ?, maqDataAquisicao = ?, maqTipo = ?, maqDescricao = ?, maqHorasUso = ? where maqId = ?`
-            valores = [this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqDescricao, this.#maqHorasUso, this.#maqId];
+        if (this.#maqId == 0 || this.#maqId == null) {
+            // Inserção
+            sql = `INSERT INTO Maquina (maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqStatus, maqHorasUso, maqPrecoVenda, maqPrecoHora) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+            valores = [this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqDescricao, this.#maqInativo, this.#equipamentoStatus, this.#maqHorasUso, this.#maqPrecoVenda, this.#maqPrecoHora];
+        } else {
+            // Alteração
+            sql = `UPDATE maquina SET maqNome = ?, maqDataAquisicao = ?, maqTipo = ?, maqDescricao = ?, maqHorasUso = ?, maqPrecoVenda = ?, maqPrecoHora = ? WHERE maqId = ?`;
+            valores = [this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqDescricao, this.#maqHorasUso, this.#maqPrecoVenda, this.#maqPrecoHora, this.#maqId];
         }
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
@@ -120,28 +133,17 @@ export default class MaquinaModel {
     }
 
     async obter(id) {
-        let sql = `SELECT Maquina.maqId, Maquina.maqNome, Maquina.maqDataAquisicao, Maquina.maqTipo, Maquina.maqDescricao, Maquina.maqInativo, Maquina.maqHorasUso, Equipamento_Status.eqpStaDescricao
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome, Maquina.maqDataAquisicao, Maquina.maqTipo, Maquina.maqDescricao, Maquina.maqInativo, Maquina.maqHorasUso, Maquina.maqPrecoVenda, Maquina.maqPrecoHora, Equipamento_Status.eqpStaDescricao
                     FROM Maquina INNER JOIN Equipamento_Status
                     ON Maquina.maqStatus = Equipamento_Status.eqpStaId
                     WHERE Maquina.maqId = ?`;
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
-        if(rows.length > 0) {           
+        if (rows.length > 0) {
             return rows[0];
         }
         return null;
-    }
-
-    async isLocado(idMaquina) {
-        let sql = `SELECT Maquina.maqId, Maquina.maqNome
-                    FROM Maquina
-                    WHERE Maquina.maqStatus = 2
-                    AND Maquina.maqId = ?`;
-        let valores = [idMaquina]
-
-        let rows = await db.ExecutaComando(sql, valores);
-        return rows.length > 0;
     }
 
     async excluir(idMaquina) {

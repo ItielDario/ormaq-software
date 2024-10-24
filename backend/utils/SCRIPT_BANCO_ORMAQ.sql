@@ -13,7 +13,8 @@ CREATE TABLE Implemento (
   impDescricao LONGTEXT NULL,
   impInativo INT NOT NULL,
   impStatus INT NOT NULL,
-  impPrecoUnitario DECIMAL(10, 2) NOT NULL, 
+  impPrecoVenda DECIMAL(10, 2) NOT NULL, 
+  impPrecoHora DECIMAL(10, 2) NOT NULL, 
   CONSTRAINT impStatus
     FOREIGN KEY (impStatus)
     REFERENCES Equipamento_Status (eqpStaId)
@@ -28,7 +29,8 @@ CREATE TABLE Maquina (
   maqInativo INT NOT NULL, 
   maqHorasUso INT NULL,
   maqStatus INT NOT NULL,
-  maqPrecoUnitario DECIMAL(10, 2) NOT NULL, 
+  maqPrecoVenda DECIMAL(10, 2) NOT NULL, 
+  maqPrecoHora DECIMAL(10, 2) NOT NULL,
   CONSTRAINT maqStatus
     FOREIGN KEY (maqStatus)
     REFERENCES Equipamento_Status (eqpStaId)
@@ -41,7 +43,8 @@ CREATE TABLE Peca (
   pecDescricao LONGTEXT NULL,
   pecInativo INT NOT NULL,
   pecStatus INT NOT NULL,
-  pecPrecoUnitario DECIMAL(10, 2) NOT NULL, 
+  pecPrecoVenda DECIMAL(10, 2) NOT NULL, 
+  pecPrecoHora DECIMAL(10, 2) NOT NULL,
   CONSTRAINT pecStatus
     FOREIGN KEY (pecStatus)
     REFERENCES Equipamento_Status (eqpStaId)
@@ -176,21 +179,21 @@ VALUES
   (2, 'Locado'),
   (3, 'Manutenção');
 
-INSERT INTO Maquina (maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqStatus, maqHorasUso, maqPrecoUnitario)
+INSERT INTO Maquina (maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqStatus, maqHorasUso, maqPrecoVenda, maqPrecoHora)
 VALUES
-  (1, 'Escavadeira', '2022-05-15', 'Nova', 'Escavadeira de grande porte', 0, 1, 200, 150000.00),
-  (2, 'Retroescavadeira', '2023-03-10', 'Nova', 'Retroescavadeira compacta', 0, 1, 0, 80000.00),
-  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 0, 2, 180, 250000.00);
+  (1, 'Escavadeira', '2022-05-15', 'Nova', 'Escavadeira de grande porte', 0, 1, 200, 150000.00, 500.00),
+  (2, 'Retroescavadeira', '2023-03-10', 'Nova', 'Retroescavadeira compacta', 0, 1, 0, 80000.00, 300.00),
+  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 0, 2, 180, 250000.00, 600.00);
 
-INSERT INTO Implemento (impId, impNome, impDataAquisicao, impDescricao, impInativo, impStatus, impPrecoUnitario)
+INSERT INTO Implemento (impId, impNome, impDataAquisicao, impDescricao, impInativo, impStatus, impPrecoVenda, impPrecoHora)
 VALUES
-  (1, 'Pulverizador', '2022-01-10', 'Pulverizador agrícola', 0, 1, 15000.00),
-  (2, 'Arado', '2022-02-15', 'Arado para trator', 0, 1, 12000.00);
+  (1, 'Pulverizador', '2022-01-10', 'Pulverizador agrícola', 0, 1, 15000.00, 100.00),
+  (2, 'Arado', '2022-02-15', 'Arado para trator', 0, 1, 12000.00, 80.00);
 
-INSERT INTO Peca (pecId, pecNome, pecDataAquisicao, pecDescricao, pecInativo, pecStatus, pecPrecoUnitario)
+INSERT INTO Peca (pecId, pecNome, pecDataAquisicao, pecDescricao, pecInativo, pecStatus, pecPrecoVenda, pecPrecoHora)
 VALUES
-  (1, 'Ferro de Reposição', '2023-01-05', 'Ferro para substituição', 0, 1, 200.00),
-  (2, 'Correia', '2023-02-10', 'Correia de transmissão', 0, 1, 150.00);
+  (1, 'Ferro de Reposição', '2023-01-05', 'Ferro para substituição', 0, 1, 200.00, 10.00),
+  (2, 'Correia', '2023-02-10', 'Correia de transmissão', 0, 1, 150.00, 8.00);
 
 INSERT INTO Imagens_Equipamento (imgUrl, imgPrincipal, imgPecId, imgMaqId, imgImpId)
 VALUES
@@ -202,7 +205,7 @@ VALUES
   ('https://example.com/pulverizador_principal.jpg', TRUE, NULL, NULL, 1),
   ('https://example.com/arado_principal.jpg', TRUE, NULL, NULL, 2);
 
-INSERT INTO Cliente (cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail)
+INSERT INTO Cliente (cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail)
 VALUES
   (1, 'João Silva', '123.456.789-00', '(11)91234-5678', 'joao.silva@email.com'),
   (2, 'Maria Oliveira', '987.654.321-00', '(11)98765-4321', 'maria.oliveira@email.com');

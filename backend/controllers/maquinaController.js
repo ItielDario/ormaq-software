@@ -35,11 +35,9 @@ export default class maquinaController {
         try {
             let { maqNome, maqDataAquisicao, maqTipo, maqHorasUso, maqInativo, maqDescricao, maqPrecoVenda, maqPrecoHora} = req.body;
 
-            console.log(req.body)
-            if(maqNome != "" && maqDataAquisicao != "" && maqTipo != "" && maqHorasUso != "" && equipamentoStatus != "" && maqInativo != "" && maqDescricao != "" && maqPrecoVenda != "" && maqPrecoHora != "") {
-                if(parseFloat(maqHorasUso) > 0) {
-                    let maquina = new MaquinaModel(0, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, 1, maqInativo, maqDescricao, maqPrecoVenda, maqPrecoHora);
-
+            if(maqNome != "" && maqDataAquisicao != "" && maqTipo != "" && maqHorasUso != "" && maqInativo != "" && maqDescricao != "" && maqPrecoVenda != "" && maqPrecoHora != "") {
+                if(parseFloat(maqHorasUso) >= 0) {
+                    let maquina = new MaquinaModel(0, maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqHorasUso, 1, maqPrecoVenda, maqPrecoHora);
                     let result  = await maquina.gravar();
 
                     if(result) {
@@ -65,12 +63,12 @@ export default class maquinaController {
 
     async alterarMaquina(req, res) {
         try {
-            let { maqId, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, maqDescricao} = req.body;
+            let { maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqHorasUso, maqPrecoVenda, maqPrecoHora} = req.body;
 
             if(maqId != "" && maqNome != "" && maqDataAquisicao != "" && maqTipo != "" && maqHorasUso != "" && maqDescricao != "") {
-                if(parseFloat(maqHorasUso) > 0) {
-                    let maquina = new MaquinaModel(maqId, maqNome, maqDataAquisicao, maqTipo, maqHorasUso, '', '', maqDescricao);
 
+                if(parseFloat(maqHorasUso) >= 0) {
+                    let maquina = new MaquinaModel(maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqHorasUso, 1, maqPrecoVenda, maqPrecoHora);
                     let result  = await maquina.gravar();
 
                     if(result) {
@@ -113,6 +111,7 @@ export default class maquinaController {
             }
         }
         catch(ex) {
+            console.log(ex)
             res.status(500).json({msg: "Erro interno de servidor!"});
         }
     }

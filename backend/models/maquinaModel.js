@@ -117,7 +117,7 @@ export default class MaquinaModel {
     async gravar() {
         let sql = "";
         let valores = [];
-
+        
         if (this.#maqId == 0 || this.#maqId == null) {
             // Inserção
             sql = `INSERT INTO Maquina (maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqStatus, maqHorasUso, maqPrecoVenda, maqPrecoHora) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
@@ -144,6 +144,17 @@ export default class MaquinaModel {
             return rows[0];
         }
         return null;
+    }
+
+    async isLocado(idMaquina) {
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome
+                    FROM Maquina
+                    WHERE Maquina.maqStatus = 2
+                    AND Maquina.maqId = ?`;
+        let valores = [idMaquina]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
     }
 
     async excluir(idMaquina) {

@@ -1,67 +1,39 @@
-import MaquinaModel from "../models/maquinaModel.js";
-
-export default class MaquinaController {
-    async listarMaquinas(req, res) {
+import ClienteModel from "../models/clienteModel.js";
+export default class clienteController {
+    async listarClientes(req, res) {
         try {
-            let maquina = new MaquinaModel();
-            const maquinas = await maquina.listarMaquinas();
-            res.status(200).json(maquinas);
+            let cliente = new ClienteModel();
+            cliente = await cliente.listarClientes();
+            res.status(200).json(cliente);
         } catch (error) {
-            res.status(500).json({ msg: "Erro ao listar máquinas!", error });
+            res.status(500).json(error);
         }
     }
-
-    async obterMaquina(req, res) {
+    async obterCliente(req, res) {
         try {
-            const { id } = req.params;
-            let maquina = new MaquinaModel();
-            const maquinaObtida = await maquina.obter(id);
-
-            if (!maquinaObtida) {
-                res.status(404).json({ msg: `Máquina com o id ${id} não encontrada!` });
+            let { id } = req.params;
+            let cliente = new ClienteModel();
+            cliente = await cliente.obter(id);
+            if (cliente == null) {
+                res.status(404).json({ msg: `Cliente com o id ${id} não encontrado!` });
             } else {
-                res.status(200).json(maquinaObtida[0]);
+                res.status(200).json(cliente[0]);
             }
         } catch (ex) {
             console.log(ex);
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
-
-    async cadastrarMaquina(req, res) {
+    async cadastrarCliente(req, res) {
         try {
-            const {
-                maqNome, 
-                maqDataAquisicao, 
-                maqTipo, 
-                maqDescricao, 
-                maqInativo, 
-                maqHorasUso, 
-                maqStatus,
-                maqPrecoVenda,
-                maqPrecoHora
-            } = req.body;
-
-            if (maqNome && maqDataAquisicao && maqTipo && maqStatus) {
-                const maquina = new MaquinaModel(
-                    0, 
-                    maqNome, 
-                    maqDataAquisicao, 
-                    maqTipo, 
-                    maqDescricao, 
-                    maqInativo, 
-                    maqHorasUso, 
-                    maqStatus,
-                    maqPrecoVenda,
-                    maqPrecoHora
-                );
-
-                const result = await maquina.gravar();
-
+            let { cliNome, cliCPF_CNPJ, usuTelefone, usuEmail } = req.body;
+            if (cliNome && cliCPF_CNPJ) {
+                let cliente = new ClienteModel(0, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail);
+                let result = await cliente.gravar();
                 if (result) {
-                    res.status(201).json({ msg: "Máquina cadastrada com sucesso!" });
+                    res.status(201).json({ msg: "Cliente cadastrado com sucesso!" });
                 } else {
-                    res.status(500).json({ msg: "Erro durante o cadastro da máquina" });
+                    res.status(500).json({ msg: "Erro durante o cadastro do Cliente" });
                 }
             } else {
                 res.status(400).json({ msg: "Por favor, preencha os campos obrigatórios corretamente!" });
@@ -71,42 +43,16 @@ export default class MaquinaController {
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
-
-    async alterarMaquina(req, res) {
+    async alterarCliente(req, res) {
         try {
-            const {
-                maqId,
-                maqNome, 
-                maqDataAquisicao, 
-                maqTipo, 
-                maqDescricao, 
-                maqInativo, 
-                maqHorasUso, 
-                maqStatus,
-                maqPrecoVenda,
-                maqPrecoHora
-            } = req.body;
-
-            if (maqId && maqNome && maqDataAquisicao && maqTipo && maqStatus) {
-                const maquina = new MaquinaModel(
-                    maqId, 
-                    maqNome, 
-                    maqDataAquisicao, 
-                    maqTipo, 
-                    maqDescricao, 
-                    maqInativo, 
-                    maqHorasUso, 
-                    maqStatus,
-                    maqPrecoVenda,
-                    maqPrecoHora
-                );
-
-                const result = await maquina.gravar();
-
+            let { cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail } = req.body;
+            if (cliId && cliNome && cliCPF_CNPJ) {
+                let cliente = new ClienteModel(cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail);
+                let result = await cliente.gravar();
                 if (result) {
-                    res.status(201).json({ msg: "Máquina alterada com sucesso!" });
+                    res.status(201).json({ msg: "Cliente alterado com sucesso!" });
                 } else {
-                    res.status(500).json({ msg: "Erro durante a alteração da máquina" });
+                    res.status(500).json({ msg: "Erro durante a alteração do Cliente" });
                 }
             } else {
                 res.status(400).json({ msg: "Por favor, preencha os campos obrigatórios corretamente!" });
@@ -116,18 +62,15 @@ export default class MaquinaController {
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
-
-    async excluirMaquina(req, res) {
+    async excluirCliente(req, res) {
         try {
-            const { id } = req.params;
-            let maquina = new MaquinaModel();
-
-            const result = await maquina.excluir(id);
-
+            let { id } = req.params;
+            let cliente = new ClienteModel();
+            let result = await cliente.excluir(id);
             if (result) {
-                res.status(200).json({ msg: "Máquina excluída com sucesso!" });
+                res.status(200).json({ msg: "Cliente excluído com sucesso!" });
             } else {
-                res.status(500).json({ msg: "Erro durante a exclusão da máquina" });
+                res.status(500).json({ msg: "Erro durante a exclusão do cliente" });
             }
         } catch (ex) {
             console.log(ex);

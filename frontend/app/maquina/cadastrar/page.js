@@ -1,7 +1,8 @@
 'use client';
 import CriarBotao from "../../components/criarBotao.js";
+import CustomEditor from "../../components/custom-editor.js";
 import httpClient from "@/app/utils/httpClient.js";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 
 export default function CadastrarMaquina() {
   const maqNomeRef = useRef(null);
@@ -10,10 +11,9 @@ export default function CadastrarMaquina() {
   const maqHorasUsoRef = useRef(null);
   const maqPrecoVendaRef = useRef(null); 
   const maqPrecoHoraRef = useRef(null); 
-
   const maqInativoRef = useRef(null);
-  const maqDescricaoRef = useRef(null);
   const alertMsg = useRef(null);
+  const [maquinaDescricao, setMaquinaDescricao] = useState('');
 
   const cadastrarMaquina = () => {
     alertMsg.current.style.display = 'none';
@@ -26,7 +26,7 @@ export default function CadastrarMaquina() {
       maqPrecoVenda: maqPrecoVendaRef.current.value, 
       maqPrecoHora: maqPrecoHoraRef.current.value,
       maqInativo: maqInativoRef.current.value,
-      maqDescricao: maqDescricaoRef.current.value,
+      maqDescricao: maquinaDescricao
     };
 
     if (verificaCampoVazio(dados)) {
@@ -38,24 +38,29 @@ export default function CadastrarMaquina() {
     } else {
       httpClient.post("/maquina/cadastrar", dados)
         .then((r) => {
-          const status = r.status;
+          status = r.status;
           return r.json();
         })
         .then(r => {
           setTimeout(() => {
-            alertMsg.current.className = status === 201 ? 'alertSuccess' : 'alertError';
+            if(status == 201){
+              alertMsg.current.className = 'alertSuccess';
+
+              // Limpa todos os campos do formulário
+              maqNomeRef.current.value = '';
+              maqDataAquisicaoRef.current.value = '';
+              maqTipoRef.current.value = '';
+              maqHorasUsoRef.current.value = '';
+              maqPrecoVendaRef.current.value = '';
+              maqPrecoHoraRef.current.value = '';
+              maqInativoRef.current.value = '0';
+              <CustomEditor initialValue={''}/>
+            }
+            else{
+              alertMsg.current.className = 'alertError';
+            }
             alertMsg.current.style.display = 'block';
             alertMsg.current.textContent = r.msg;
-
-            // Limpa todos os campos do formulário
-            maqNomeRef.current.value = '';
-            maqDataAquisicaoRef.current.value = '';
-            maqTipoRef.current.value = '';
-            maqHorasUsoRef.current.value = '';
-            maqPrecoVendaRef.current.value = '';
-            maqPrecoHoraRef.current.value = '';
-            maqInativoRef.current.value = '';
-            maqDescricaoRef.current.value = '';
           }, 100);
         });
     }
@@ -66,6 +71,10 @@ export default function CadastrarMaquina() {
   const verificaCampoVazio = (dados) => {
     return Object.values(dados).some(value => value === '' || value === null || value === undefined);
   }
+
+  const handleCustomEditorChange = (data) => {
+    setMaquinaDescricao(data);
+  };
 
   return (
     <section className="content-main-children-cadastrar">
@@ -124,7 +133,9 @@ export default function CadastrarMaquina() {
 
         <section>
           <label htmlFor="maqDescricao">Descrição da Máquina</label>
-          <textarea id="maqDescricao" ref={maqDescricaoRef}></textarea>
+          <CustomEditor
+            onChange={handleCustomEditorChange}
+          />
         </section>
       </form>
 

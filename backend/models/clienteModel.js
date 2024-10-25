@@ -6,8 +6,8 @@ export default class ClienteModel {
     #cliId;
     #cliNome;
     #cliCPF_CNPJ;
-    #usuTelefone;
-    #usuEmail;
+    #cliTelefone;
+    #cliEmail;
 
     get cliId() { return this.#cliId; }
     set cliId(cliId) { this.#cliId = cliId; }
@@ -18,18 +18,18 @@ export default class ClienteModel {
     get cliCPF_CNPJ() { return this.#cliCPF_CNPJ; }
     set cliCPF_CNPJ(cliCPF_CNPJ) { this.#cliCPF_CNPJ = cliCPF_CNPJ; }
 
-    get usuTelefone() { return this.#usuTelefone; }
-    set usuTelefone(usuTelefone) { this.#usuTelefone = usuTelefone; }
+    get cliTelefone() { return this.#cliTelefone; }
+    set cliTelefone(cliTelefone) { this.#cliTelefone = cliTelefone; }
 
-    get usuEmail() { return this.#usuEmail; }
-    set usuEmail(usuEmail) { this.#usuEmail = usuEmail; }
+    get cliEmail() { return this.#cliEmail; }
+    set cliEmail(cliEmail) { this.#cliEmail = cliEmail; }
 
-    constructor(cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail) {
+    constructor(cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail) {
         this.#cliId = cliId;
         this.#cliNome = cliNome;
         this.#cliCPF_CNPJ = cliCPF_CNPJ;
-        this.#usuTelefone = usuTelefone;
-        this.#usuEmail = usuEmail;
+        this.#cliTelefone = cliTelefone;
+        this.#cliEmail = cliEmail;
     }
 
     toJSON() {
@@ -37,8 +37,8 @@ export default class ClienteModel {
             "cliId": this.#cliId,
             "cliNome": this.#cliNome,
             "cliCPF_CNPJ": this.#cliCPF_CNPJ,
-            "usuTelefone": this.#usuTelefone,
-            "usuEmail": this.#usuEmail
+            "cliTelefone": this.#cliTelefone,
+            "cliEmail": this.#cliEmail
         };
     }
 
@@ -50,8 +50,8 @@ export default class ClienteModel {
                 cliente["cliId"], 
                 cliente["cliNome"], 
                 cliente["cliCPF_CNPJ"], 
-                cliente["usuTelefone"], 
-                cliente["usuEmail"]
+                cliente["cliTelefone"], 
+                cliente["cliEmail"]
             ));
         });
 
@@ -59,7 +59,7 @@ export default class ClienteModel {
     }
 
     async listarClientes() {
-        const sql = `SELECT cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail FROM Cliente;`;
+        const sql = `SELECT cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail FROM Cliente;`;
         const rows = await db.ExecutaComando(sql);
         const listaClientes = this.toMAP(rows);
         return listaClientes;
@@ -71,12 +71,12 @@ export default class ClienteModel {
 
         if (this.#cliId == 0 || this.#cliId == null) {
             // Inserção
-            sql = `INSERT INTO Cliente (cliNome, cliCPF_CNPJ, usuTelefone, usuEmail) VALUES (?, ?, ?, ?);`;
-            valores = [this.#cliNome, this.#cliCPF_CNPJ, this.#usuTelefone, this.#usuEmail];
+            sql = `INSERT INTO Cliente (cliNome, cliCPF_CNPJ, cliTelefone, cliEmail) VALUES (?, ?, ?, ?);`;
+            valores = [this.#cliNome, this.#cliCPF_CNPJ, this.#cliTelefone, this.#cliEmail];
         } else {
             // Alteração
-            sql = `UPDATE Cliente SET cliNome = ?, cliCPF_CNPJ = ?, usuTelefone = ?, usuEmail = ? WHERE cliId = ?;`;
-            valores = [this.#cliNome, this.#cliCPF_CNPJ, this.#usuTelefone, this.#usuEmail, this.#cliId];
+            sql = `UPDATE Cliente SET cliNome = ?, cliCPF_CNPJ = ?, cliTelefone = ?, cliEmail = ? WHERE cliId = ?;`;
+            valores = [this.#cliNome, this.#cliCPF_CNPJ, this.#cliTelefone, this.#cliEmail, this.#cliId];
         }
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
@@ -84,7 +84,7 @@ export default class ClienteModel {
     }
 
     async obter(id) {
-        const sql = `SELECT cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail FROM Cliente WHERE cliId = ?;`;
+        const sql = `SELECT cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail FROM Cliente WHERE cliId = ?;`;
         const valores = [id];
         const rows = await db.ExecutaComando(sql, valores);
 

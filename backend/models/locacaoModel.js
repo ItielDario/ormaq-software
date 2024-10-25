@@ -80,7 +80,7 @@ export default class LocacaoModel {
 
         rows.forEach(locacao => {
             // Criando os objetos Cliente, Usuario e LocacaoStatus
-            const cliente = new ClienteModel(locacao["cliId"], locacao["cliNome"], locacao["cliCPF_CNPJ"], locacao["usuTelefone"], locacao["usuEmail"]);
+            const cliente = new ClienteModel(locacao["cliId"], locacao["cliNome"], locacao["cliCPF_CNPJ"], locacao["cliTelefone"], locacao["cliEmail"]);
             const usuario = new UsuarioModel(locacao["usuId"], locacao["usuNome"], locacao["usuTelefone"], locacao["usuEmail"], locacao["usuPerfil"]);
             const locacaoStatus = new LocacaoStatusModel(locacao["locStatusId"], locacao["locStaDescricao"]);
 
@@ -103,7 +103,7 @@ export default class LocacaoModel {
     async listarLocacoes() {
         const sql = `
             SELECT l.locId, l.locDataInicio, l.locDataFinalPrevista, l.locDataFinalEntrega, l.locValorTotal, l.locDesconto, l.locValorFinal, 
-                   c.cliId, c.cliNome, c.cliCPF_CNPJ, c.usuTelefone, c.usuEmail, 
+                   c.cliId, c.cliNome, c.cliCPF_CNPJ, c.cliTelefone, c.cliEmail, 
                    u.usuId, u.usuNome, u.usuTelefone, u.usuEmail, u.usuPerfil,
                    ls.locStaId AS locStatusId, ls.locStaDescricao
             FROM Locacao l
@@ -139,7 +139,7 @@ export default class LocacaoModel {
     async obter(id) {
         let sql = `
             SELECT l.locId, l.locDataInicio, l.locDataFinalPrevista, l.locDataFinalEntrega, l.locValorTotal, l.locDesconto, l.locValorFinal,
-                   c.cliId, c.cliNome, c.cliCPF_CNPJ, c.usuTelefone, c.usuEmail, 
+                   c.cliId, c.cliNome, c.cliCPF_CNPJ, c.cliTelefone, c.cliEmail, 
                    u.usuId, u.usuNome, u.usuTelefone, u.usuEmail, u.usuPerfil,
                    ls.locStaId, ls.locStaDescricao
             FROM Locacao l

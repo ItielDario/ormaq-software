@@ -62,10 +62,19 @@
                   "maqTipo": {
                     "example": "any"
                   },
+                  "maqDescricao": {
+                    "example": "any"
+                  },
+                  "maqInativo": {
+                    "example": "any"
+                  },
                   "maqHorasUso": {
                     "example": "any"
                   },
-                  "maqDescricao": {
+                  "maqPrecoVenda": {
+                    "example": "any"
+                  },
+                  "maqPrecoHora": {
                     "example": "any"
                   }
                 }
@@ -164,9 +173,6 @@
                     "example": "any"
                   },
                   "maqHorasUso": {
-                    "example": "any"
-                  },
-                  "equipamentoStatus": {
                     "example": "any"
                   },
                   "maqInativo": {
@@ -712,8 +718,11 @@
         "summary": "Listar todas os clientes cadastradas",
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -724,8 +733,40 @@
         "summary": "Alterar um cliente",
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cliId": {
+                    "example": "any"
+                  },
+                  "cliNome": {
+                    "example": "any"
+                  },
+                  "cliCPF_CNPJ": {
+                    "example": "any"
+                  },
+                  "usuTelefone": {
+                    "example": "any"
+                  },
+                  "usuEmail": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -748,8 +789,14 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       },
@@ -770,8 +817,11 @@
           }
         ],
         "responses": {
-          "default": {
-            "description": ""
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -784,8 +834,37 @@
         "summary": "Cadsatrar um cliente",
         "description": "",
         "responses": {
-          "default": {
-            "description": ""
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "cliNome": {
+                    "example": "any"
+                  },
+                  "cliCPF_CNPJ": {
+                    "example": "any"
+                  },
+                  "usuTelefone": {
+                    "example": "any"
+                  },
+                  "usuEmail": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }

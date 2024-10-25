@@ -10,10 +10,10 @@ export default function AlterarMaquina({ params: { id } }) {
   const maquinaNomeRef = useRef(null);
   const maquinaDataAquisicaoRef = useRef(null);
   const maquinaTipoRef = useRef(null);
-  const equipamentoStatusRef = useRef(null);
   const maquinaInativoRef = useRef(null);
   const maquinaHorasUsoRef = useRef(null);
-
+  const maquinaPrecoVendaRef = useRef(null);
+  const maquinaPrecoHoraRef = useRef(null);
   const [maquinaDescricao, setMaquinaDescricao] = useState('');
   const [maquinaSelecionada, setMaquinaSelecionada] = useState(null);
 
@@ -27,7 +27,7 @@ export default function AlterarMaquina({ params: { id } }) {
       .then(r => {
         r.maqDataAquisicao = new Date(r.maqDataAquisicao).toISOString().split('T')[0];
         setMaquinaSelecionada(r);
-        setMaquinaDescricao(r.maqDescricao); // Inicializa o valor do editor
+        setMaquinaDescricao(r.maqDescricao);
       });
   }
 
@@ -40,8 +40,11 @@ export default function AlterarMaquina({ params: { id } }) {
       maqDescricao: maquinaDescricao,
       maqInativo: maquinaInativoRef.current.value,
       maqHorasUso: maquinaHorasUsoRef.current.value,
-      equipamentoStatus: equipamentoStatusRef.current.value
+      maqPrecoVenda: maquinaPrecoVendaRef.current.value,
+      maqPrecoHora: maquinaPrecoHoraRef.current.value,
     };
+
+    console.log(dados)
 
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
@@ -63,7 +66,6 @@ export default function AlterarMaquina({ params: { id } }) {
             else{
               alertMsg.current.className = 'alertError';
             }
-
             alertMsg.current.style.display = 'block';
             alertMsg.current.textContent = r.msg;
           }, 100);
@@ -78,7 +80,7 @@ export default function AlterarMaquina({ params: { id } }) {
   };
 
   const handleCustomEditorChange = (data) => {
-    setMaquinaDescricao(data); // Atualiza o valor do editor no estado
+    setMaquinaDescricao(data);
   };
 
   return (
@@ -89,98 +91,99 @@ export default function AlterarMaquina({ params: { id } }) {
 
       <article ref={alertMsg}></article>
 
-      <article>
+      <form>
         {maquinaSelecionada && (
-          <article className="container-forms">
-            <form>
-              <section>
-                <label htmlFor="maqNome">Nome da máquina</label>
-                <input 
-                  type="text" 
-                  id="maqNome" 
-                  name="maqNome" 
-                  defaultValue={maquinaSelecionada.maqNome} 
-                  ref={maquinaNomeRef} 
-                  required 
-                />
-              </section>
+          <section>
+            <section>
+              <label htmlFor="maqNome">Nome da Máquina</label>
+              <input
+                type="text"
+                id="maqNome"
+                defaultValue={maquinaSelecionada.maqNome}
+                ref={maquinaNomeRef}
+              />
+            </section>
 
+            <section className="input-group">
               <section>
                 <label htmlFor="maqDataAquisicao">Data de Aquisição</label>
-                <input 
-                  type="date" 
-                  id="maqDataAquisicao" 
-                  name="maqDataAquisicao" 
-                  defaultValue={maquinaSelecionada.maqDataAquisicao} 
-                  ref={maquinaDataAquisicaoRef} 
-                  required 
+                <input
+                  type="date"
+                  id="maqDataAquisicao"
+                  defaultValue={maquinaSelecionada.maqDataAquisicao}
+                  ref={maquinaDataAquisicaoRef}
                 />
               </section>
 
               <section>
-                  <label htmlFor="maqTipo">Tipo da Máquina</label>
-                  <select 
-                      id="maqTipo" 
-                      name="maqTipo" 
-                      defaultValue={maquinaSelecionada.maqTipo === "Semi-Nova" ? "1" : "0"} 
-                      ref={maquinaTipoRef} 
-                      required
-                  >
-                      <option value="Nova">Nova</option>
-                      <option value="Semi-Nova">Semi-Nova</option>
-                  </select>
-              </section>
-
-
-              <section>
-                <label htmlFor="equipamentoStatus">Status do Equipamento</label>
-                <select 
-                  id="equipamentoStatus" 
-                  name="equipamentoStatus" 
-                  defaultValue={maquinaSelecionada.eqpStaDescricao} // Use a descrição do status
-                  ref={equipamentoStatusRef} 
-                  required
+                <label htmlFor="maqTipo">Tipo da Máquina</label>
+                <select
+                  id="maqTipo"
+                  defaultValue={maquinaSelecionada.maqTipo === "Semi-Nova" ? "Semi-Nova" : "Nova"}
+                  ref={maquinaTipoRef}
                 >
-                  <option value={maquinaSelecionada.maqStatus}>
-                    {maquinaSelecionada.eqpStaDescricao} {/* Exibe a descrição do status */}
-                  </option>
-                </select>
-              </section>
-
-              <section>
-                <label htmlFor="maqInativo">Máquina Inativa</label>
-                <select 
-                  id="maqInativo" 
-                  name="maqInativo" 
-                  defaultValue={maquinaSelecionada.maqInativo} 
-                  ref={maquinaInativoRef} 
-                  required
-                >
-                  <option value="1">Sim</option>
-                  <option value="0">Não</option>
+                  <option value="Nova">Nova</option>
+                  <option value="Semi-Nova">Semi-Nova</option>
                 </select>
               </section>
 
               <section>
                 <label htmlFor="maqHorasUso">Horas de Uso</label>
-                <input 
-                  type="number" 
-                  id="maqHorasUso" 
-                  name="maqHorasUso" 
-                  defaultValue={maquinaSelecionada.maqHorasUso} 
-                  ref={maquinaHorasUsoRef} 
+                <input
+                  type="number"
+                  id="maqHorasUso"
+                  defaultValue={maquinaSelecionada.maqHorasUso}
+                  ref={maquinaHorasUsoRef}
+                />
+              </section>
+            </section>
+
+            <section className="input-group">
+              <section>
+                <label htmlFor="maqPrecoVenda">Preço de Venda</label>
+                <input
+                  type="number"
+                  id="maqPrecoVenda"
+                  defaultValue={maquinaSelecionada.maqPrecoVenda}
+                  ref={maquinaPrecoVendaRef}
+                  step="0.01"
                 />
               </section>
 
-              {/* Editor Customizado */}
-              <CustomEditor 
-                onChange={handleCustomEditorChange} 
-                initialValue={maquinaDescricao} // Usa o valor armazenado no estado
+              <section>
+                <label htmlFor="maqPrecoHora">Preço por Hora</label>
+                <input
+                  type="number"
+                  id="maqPrecoHora"
+                  defaultValue={maquinaSelecionada.maqPrecoHora}
+                  ref={maquinaPrecoHoraRef}
+                  step="0.01"
+                />
+              </section>
+
+              <section>
+                <label htmlFor="maqInativo">Exibir nos Classificados</label>
+                <select
+                  id="maqInativo"
+                  defaultValue={maquinaSelecionada.maqInativo}
+                  ref={maquinaInativoRef}
+                >
+                  <option value="0">Sim</option>
+                  <option value="1">Não</option>
+                </select>
+              </section>
+            </section>
+
+            <section>
+              <label htmlFor="maqDescricao">Descrição da Máquina</label>
+              <CustomEditor
+                onChange={handleCustomEditorChange}
+                initialValue={maquinaDescricao}
               />
-            </form>
-          </article>
+            </section>
+          </section>
         )}
-      </article>
+      </form>
 
       <article className="container-btn">
         <CriarBotao value='Voltar' href='/maquina' class='btn-voltar'></CriarBotao>

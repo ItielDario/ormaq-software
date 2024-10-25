@@ -9,7 +9,8 @@ export default function AlterarImplemento({ params: { id } }) {
 
   const impNomeRef = useRef(null);
   const impDataAquisicaoRef = useRef(null);
-  const equipamentoStatusRef = useRef(null);
+  const impPrecoVendaRef = useRef(null);
+  const impPrecoHoraRef = useRef(null);
   const impInativoRef = useRef(null);
 
   const [impDescricao, setImpDescricao] = useState('');
@@ -25,7 +26,7 @@ export default function AlterarImplemento({ params: { id } }) {
       .then(r => {
         r.impDataAquisicao = new Date(r.impDataAquisicao).toISOString().split('T')[0];
         setImplementoSelecionado(r);
-        setImpDescricao(r.impDescricao); // Inicializa o valor do editor
+        setImpDescricao(r.impDescricao);
       });
   }
 
@@ -35,8 +36,9 @@ export default function AlterarImplemento({ params: { id } }) {
       impNome: impNomeRef.current.value,
       impDataAquisicao: impDataAquisicaoRef.current.value,
       impDescricao: impDescricao,
+      impPrecoVenda: impPrecoVendaRef.current.value,
+      impPrecoHora: impPrecoHoraRef.current.value,
       impInativo: impInativoRef.current.value,
-      equipamentoStatus: equipamentoStatusRef.current.value
     };
 
     if (verificaCampoVazio(dados)) {
@@ -45,25 +47,26 @@ export default function AlterarImplemento({ params: { id } }) {
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-    } else {
+    } 
+    else {
+      var status = null;
+      
       httpClient.put(`/implemento`, dados)
-      .then((r) => { 
-        status = r.status;
-        return r.json();
-      })
-      .then(r => {
-        setTimeout(() => {
-          if(status == 201){
-            alertMsg.current.className = 'alertSuccess';
-          }
-          else{
-            alertMsg.current.className = 'alertError';
-          }
-
-          alertMsg.current.style.display = 'block';
-          alertMsg.current.textContent = r.msg;
-        }, 100);
-      });
+        .then((r) => {
+          status = r.status;
+          return r.json();
+        })
+        .then(r => {
+          setTimeout(() => {
+            if (status === 200) {
+              alertMsg.current.className = 'alertSuccess';
+            } else {
+              alertMsg.current.className = 'alertError';
+            }
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = r.msg;
+          }, 100);
+        });
     }
 
     document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
@@ -74,7 +77,7 @@ export default function AlterarImplemento({ params: { id } }) {
   };
 
   const handleCustomEditorChange = (data) => {
-    setImpDescricao(data); // Atualiza o valor do editor no estado
+    setImpDescricao(data);
   };
 
   return (
@@ -101,52 +104,69 @@ export default function AlterarImplemento({ params: { id } }) {
                 />
               </section>
 
+              <section className="input-group">
+                <section>
+                  <label htmlFor="impDataAquisicao">Data de Aquisição</label>
+                  <input 
+                    type="date" 
+                    id="impDataAquisicao" 
+                    name="impDataAquisicao" 
+                    defaultValue={implementoSelecionado.impDataAquisicao} 
+                    ref={impDataAquisicaoRef} 
+                    required 
+                  />
+                </section>
+
+                <section>
+                  <label htmlFor="impPrecoVenda">Preço de Venda</label>
+                  <input 
+                    type="number" 
+                    id="impPrecoVenda" 
+                    name="impPrecoVenda" 
+                    defaultValue={implementoSelecionado.impPrecoVenda} 
+                    ref={impPrecoVendaRef} 
+                    step="0.01" 
+                    required 
+                  />
+                </section>
+              </section>
+
+              <section className="input-group">
+                <section>
+                  <label htmlFor="impPrecoHora">Preço por Hora</label>
+                  <input 
+                    type="number" 
+                    id="impPrecoHora" 
+                    name="impPrecoHora" 
+                    defaultValue={implementoSelecionado.impPrecoHora} 
+                    ref={impPrecoHoraRef} 
+                    step="0.01" 
+                    required 
+                  />
+                </section>
+
+                <section>
+                  <label htmlFor="impInativo">Exibir nos classificados</label>
+                  <select 
+                    id="impInativo" 
+                    name="impInativo" 
+                    defaultValue={implementoSelecionado.impInativo} 
+                    ref={impInativoRef} 
+                    required
+                  >
+                    <option value="0">Sim</option>
+                    <option value="1">Não</option>
+                  </select>
+                </section>
+              </section>
+
               <section>
-                <label htmlFor="impDataAquisicao">Data de Aquisição</label>
-                <input 
-                  type="date" 
-                  id="impDataAquisicao" 
-                  name="impDataAquisicao" 
-                  defaultValue={implementoSelecionado.impDataAquisicao} 
-                  ref={impDataAquisicaoRef} 
-                  required 
+                <label htmlFor="impDescricao">Descrição do Implemento</label>
+                <CustomEditor 
+                  onChange={handleCustomEditorChange} 
+                  initialValue={impDescricao} 
                 />
               </section>
-
-              <section>
-                <label htmlFor="equipamentoStatus">Status do Equipamento</label>
-                <select 
-                  id="equipamentoStatus" 
-                  name="equipamentoStatus" 
-                  defaultValue={implementoSelecionado.eqpStaDescricao} // Use a descrição do status
-                  ref={equipamentoStatusRef} 
-                  required
-                >
-                  <option value={implementoSelecionado.impStatus}>
-                    {implementoSelecionado.eqpStaDescricao} {/* Exibe a descrição do status */}
-                  </option>
-                </select>
-              </section>
-
-              <section>
-                <label htmlFor="impInativo">Implemento Inativo</label>
-                <select 
-                  id="impInativo" 
-                  name="impInativo" 
-                  defaultValue={implementoSelecionado.impInativo} 
-                  ref={impInativoRef} 
-                  required
-                >
-                  <option value="1">Sim</option>
-                  <option value="0">Não</option>
-                </select>
-              </section>
-
-              {/* Editor Customizado */}
-              <CustomEditor 
-                onChange={handleCustomEditorChange} 
-                initialValue={impDescricao} // Usa o valor armazenado no estado
-              />
             </form>
           </article>
         )}

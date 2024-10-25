@@ -33,10 +33,10 @@ export default class pecaController {
 
     async cadastrarPeca(req, res) {
         try {
-            let { pecaNome, pecaDataAquisicao, pecaDescricao, pecaInativo, equipamentoStatus} = req.body;
+            let { pecaNome, pecaDataAquisicao, pecaDescricao, pecaInativo, pecaPrecoHora, pecaPrecoVenda} = req.body;
 
-            if(pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaInativo != "" && equipamentoStatus != "") {
-                let peca = new PecaModel(0, pecaNome, pecaDescricao, pecaDataAquisicao, equipamentoStatus, pecaInativo);
+            if(pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaInativo != "" && pecaPrecoHora != "" && pecaPrecoVenda != "") {
+                let peca = new PecaModel(0, pecaNome, pecaDescricao, pecaDataAquisicao, 1, pecaInativo, pecaPrecoVenda, pecaPrecoHora);
 
                 let result  = await peca.gravar();
 
@@ -59,10 +59,10 @@ export default class pecaController {
 
     async alterarPeca(req, res) {
         try {
-            let { pecaId, pecaNome, pecaDataAquisicao, pecaDescricao, pecaInativo, equipamentoStatus } = req.body;
+            let { pecaId, pecaNome, pecaDataAquisicao, pecaDescricao, pecaInativo, pecaPrecoHora, pecaPrecoVenda} = req.body;
 
-            if(pecaId != "" && pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaInativo != "" && equipamentoStatus != "") {
-                let peca = new PecaModel(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, equipamentoStatus, pecaInativo);
+            if(pecaId != "" && pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaInativo != "" && pecaPrecoHora != "" && pecaPrecoVenda != "") {
+                let peca = new PecaModel(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, 1, pecaInativo, pecaPrecoVenda, pecaPrecoHora);
 
                 let result  = await peca.gravar();
 

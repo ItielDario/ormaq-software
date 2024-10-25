@@ -10,6 +10,8 @@ export default class PecaModel {
     #pecaDescricao;
     #pecaInativo;
     #equipamentoStatus;
+    #pecaPrecoVenda;
+    #pecaPrecoHora;
 
     get pecaId() { return this.#pecaId; }
     set pecaId(pecaId) { this.#pecaId = pecaId; }
@@ -29,13 +31,21 @@ export default class PecaModel {
     get equipamentoStatus() { return this.#equipamentoStatus; }
     set equipamentoStatus(equipamentoStatus) { this.#equipamentoStatus = equipamentoStatus; }
 
-    constructor(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, equipamentoStatus, pecaInativo) {
+    get pecaPrecoVenda() { return this.#pecaPrecoVenda; }
+    set pecaPrecoVenda(pecaPrecoVenda) { this.#pecaPrecoVenda = pecaPrecoVenda; }
+
+    get pecaPrecoHora() { return this.#pecaPrecoHora; }
+    set pecaPrecoHora(pecaPrecoHora) { this.#pecaPrecoHora = pecaPrecoHora; }
+
+    constructor(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, equipamentoStatus, pecaInativo, pecaPrecoVenda, pecaPrecoHora) {
         this.#pecaId = pecaId;
         this.#pecaNome = pecaNome;
         this.#pecaDataAquisicao = pecaDataAquisicao;
         this.#pecaDescricao = pecaDescricao;
-        this.#equipamentoStatus = equipamentoStatus; 
+        this.#equipamentoStatus = equipamentoStatus;
         this.#pecaInativo = pecaInativo;
+        this.#pecaPrecoVenda = pecaPrecoVenda;
+        this.#pecaPrecoHora = pecaPrecoHora;
     }
 
     toJSON() {
@@ -45,7 +55,9 @@ export default class PecaModel {
             "pecaDataAquisicao": this.#pecaDataAquisicao,
             "pecaDescricao": this.#pecaDescricao,
             "pecaInativo": this.#pecaInativo,
-            "equipamentoStatus": this.#equipamentoStatus
+            "equipamentoStatus": this.#equipamentoStatus,
+            "pecaPrecoVenda": this.#pecaPrecoVenda,
+            "pecaPrecoHora": this.#pecaPrecoHora
         };
     }
 
@@ -53,19 +65,20 @@ export default class PecaModel {
         const listaPecas = [];
 
         rows.forEach(peca => {
-            // Criando o objeto EquipamentoStatus
             const equipamentoStatus = new EquipamentoStatusModel(
-                peca["equipamentoStatusId"], 
-                peca["eqpStaDescricao"] // Adicionando a descrição do status aqui
+                peca["equipamentoStatusId"],
+                peca["eqpStaDescricao"]
             );
 
             listaPecas.push(new PecaModel(
-                peca["pecId"],                   // ID da peça
-                peca["pecNome"],                 // Nome da peça
-                peca["pecDescricao"],            // Descrição da peça
-                peca["pecDataAquisicao"],        // Data de aquisição
-                equipamentoStatus,               // Status do equipamento como objeto
-                peca["pecInativo"]               // Se a peça está inativa
+                peca["pecId"],
+                peca["pecNome"],
+                peca["pecDescricao"],
+                peca["pecDataAquisicao"],
+                equipamentoStatus,
+                peca["pecInativo"],
+                peca["pecPrecoVenda"],
+                peca["pecPrecoHora"]
             ));
         });
         return listaPecas;
@@ -73,7 +86,9 @@ export default class PecaModel {
 
     async listarPecas() {
         const sql = `
-            SELECT p.pecId, p.pecNome, p.pecDataAquisicao, p.pecDescricao, p.pecInativo, es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
+            SELECT p.pecId, p.pecNome, p.pecDataAquisicao, p.pecDescricao, p.pecInativo, 
+                   p.pecPrecoVenda, p.pecPrecoHora,
+                   es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Peca p
             JOIN Equipamento_Status es ON p.pecStatus = es.eqpStaId;`;
 
@@ -89,12 +104,14 @@ export default class PecaModel {
 
         if (this.#pecaId == 0 || this.#pecaId == null) {
             // Inserção
-            sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecStatus, pecInativo) VALUES (?, ?, ?, ?, ?)`;
-            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#equipamentoStatus, this.#pecaInativo];
+            sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecInativo, pecPrecoVenda, pecPrecoHora, pecStatus) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaInativo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.equipamentoStatus];
         } else {
             // Alteração
-            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecInativo = ? WHERE pecId = ?`;
-            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaInativo, this.#pecaId];
+            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecInativo = ?, 
+                   pecPrecoVenda = ?, pecPrecoHora = ? WHERE pecId = ?`;
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.equipamentoStatus, this.#pecaInativo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.#pecaId];
         }
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
@@ -102,9 +119,11 @@ export default class PecaModel {
     }
 
     async obter(id) {
-        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecInativo, Peca.pecStatus,Equipamento_Status.eqpStaDescricao
-                    FROM Peca INNER JOIN Equipamento_Status
-                    ON Peca.pecStatus = Equipamento_Status.eqpStaId
+        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecInativo, 
+                          Peca.pecPrecoVenda, Peca.pecPrecoHora, Peca.pecStatus,
+                          Equipamento_Status.eqpStaDescricao
+                    FROM Peca 
+                    INNER JOIN Equipamento_Status ON Peca.pecStatus = Equipamento_Status.eqpStaId
                     WHERE Peca.pecId = ?;`;
         let valores = [id];
 

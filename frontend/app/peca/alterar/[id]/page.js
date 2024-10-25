@@ -9,7 +9,8 @@ export default function AlterarPeca({ params: { id } }) {
 
   const pecaNomeRef = useRef(null);
   const pecaDataAquisicaoRef = useRef(null);
-  const equipamentoStatusRef = useRef(null);
+  const pecaPrecoVendaRef = useRef(null);
+  const pecaPrecoHoraRef = useRef(null);
   const pecaInativoRef = useRef(null);
 
   const [pecaDescricao, setPecaDescricao] = useState('');
@@ -25,7 +26,7 @@ export default function AlterarPeca({ params: { id } }) {
       .then(r => {
         r.pecDataAquisicao = new Date(r.pecDataAquisicao).toISOString().split('T')[0];
         setPecaSelecionada(r);
-        setPecaDescricao(r.pecDescricao); // Inicializa o valor do editor
+        setPecaDescricao(r.pecDescricao);
       });
   }
 
@@ -35,8 +36,9 @@ export default function AlterarPeca({ params: { id } }) {
       pecaNome: pecaNomeRef.current.value,
       pecaDataAquisicao: pecaDataAquisicaoRef.current.value,
       pecaDescricao: pecaDescricao,
+      pecaPrecoVenda: pecaPrecoVendaRef.current.value,
+      pecaPrecoHora: pecaPrecoHoraRef.current.value,
       pecaInativo: pecaInativoRef.current.value,
-      equipamentoStatus: equipamentoStatusRef.current.value
     };
 
     if (verificaCampoVazio(dados)) {
@@ -45,25 +47,27 @@ export default function AlterarPeca({ params: { id } }) {
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-    } else {
+    } 
+    else {
+      var status = null;
+      
       httpClient.put(`/peca`, dados)
-      .then((r) => { 
-        status = r.status;
-        return r.json()}
-      )
-      .then(r => {
-        setTimeout(() => {
-          if(status == 201){
-            alertMsg.current.className = 'alertSuccess';
-          }
-          else{
-            alertMsg.current.className = 'alertError';
-          }
-
-          alertMsg.current.style.display = 'block';
-          alertMsg.current.textContent = r.msg;
-        }, 100);
-      });
+        .then((r) => {
+          status = r.status;
+          return r.json();
+        })
+        .then(r => {
+          setTimeout(() => {
+            if(status == 201){
+              alertMsg.current.className = 'alertSuccess';
+            }
+            else{
+              alertMsg.current.className = 'alertError';
+            }
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = r.msg;
+          }, 100);
+        });
     }
 
     document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
@@ -74,7 +78,7 @@ export default function AlterarPeca({ params: { id } }) {
   };
 
   const handleCustomEditorChange = (data) => {
-    setPecaDescricao(data); // Atualiza o valor do editor no estado
+    setPecaDescricao(data);
   };
 
   return (
@@ -101,53 +105,69 @@ export default function AlterarPeca({ params: { id } }) {
                 />
               </section>
 
+              <section className="input-group">
+                <section>
+                  <label htmlFor="pecaDataAquisicao">Data de Aquisição</label>
+                  <input 
+                    type="date" 
+                    id="pecaDataAquisicao" 
+                    name="pecaDataAquisicao" 
+                    defaultValue={pecaSelecionada.pecDataAquisicao} 
+                    ref={pecaDataAquisicaoRef} 
+                    required 
+                  />
+                </section>
+
+                <section>
+                  <label htmlFor="pecaPrecoVenda">Preço de Venda</label>
+                  <input 
+                    type="number" 
+                    id="pecaPrecoVenda" 
+                    name="pecaPrecoVenda" 
+                    defaultValue={pecaSelecionada.pecPrecoVenda} 
+                    ref={pecaPrecoVendaRef} 
+                    step="0.01" 
+                    required 
+                  />
+                </section>
+              </section>
+
+              <section className="input-group">
+                <section>
+                  <label htmlFor="pecaPrecoHora">Preço por Hora</label>
+                  <input 
+                    type="number" 
+                    id="pecaPrecoHora" 
+                    name="pecaPrecoHora" 
+                    defaultValue={pecaSelecionada.pecPrecoHora} 
+                    ref={pecaPrecoHoraRef} 
+                    step="0.01" 
+                    required 
+                  />
+                </section>
+
+                <section>
+                  <label htmlFor="pecaInativo">Exibir nos classificados</label>
+                  <select 
+                    id="pecaInativo" 
+                    name="pecaInativo" 
+                    defaultValue={pecaSelecionada.pecInativo} 
+                    ref={pecaInativoRef} 
+                    required
+                  >
+                    <option value="0">Sim</option>
+                    <option value="1">Não</option>
+                  </select>
+                </section>
+              </section>
+
               <section>
-                <label htmlFor="pecaDataAquisicao">Data de Aquisição</label>
-                <input 
-                  type="date" 
-                  id="pecaDataAquisicao" 
-                  name="pecaDataAquisicao" 
-                  defaultValue={pecaSelecionada.pecDataAquisicao} 
-                  ref={pecaDataAquisicaoRef} 
-                  required 
+                <label htmlFor="pecaDescricao">Descrição da Peça</label>
+                <CustomEditor 
+                  onChange={handleCustomEditorChange} 
+                  initialValue={pecaDescricao} 
                 />
               </section>
-
-              <section>
-                <label htmlFor="equipamentoStatus">Status do Equipamento</label>
-                <select 
-                  id="equipamentoStatus" 
-                  name="equipamentoStatus" 
-                  defaultValue={pecaSelecionada.eqpStaDescricao} // Use a descrição do status
-                  ref={equipamentoStatusRef} 
-                  required
-                >
-                  <option value={pecaSelecionada.pecStatus}>
-                    {pecaSelecionada.eqpStaDescricao} {/* Exibe a descrição do status */}
-                  </option>
-                </select>
-              </section>
-
-
-              <section>
-                <label htmlFor="pecaInativo">Peça Inativa</label>
-                <select 
-                  id="pecaInativo" 
-                  name="pecaInativo" 
-                  defaultValue={pecaSelecionada.pecInativo} 
-                  ref={pecaInativoRef} 
-                  required
-                >
-                  <option value="1">Sim</option>
-                  <option value="0">Não</option>
-                </select>
-              </section>
-
-              {/* Editor Customizado */}
-              <CustomEditor 
-                onChange={handleCustomEditorChange} 
-                initialValue={pecaDescricao} // Usa o valor armazenado no estado
-              />
             </form>
           </article>
         )}

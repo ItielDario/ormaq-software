@@ -248,7 +248,10 @@
                   "pecaInativo": {
                     "example": "any"
                   },
-                  "equipamentoStatus": {
+                  "pecaPrecoHora": {
+                    "example": "any"
+                  },
+                  "pecaPrecoVenda": {
                     "example": "any"
                   }
                 }
@@ -349,7 +352,10 @@
                   "pecaInativo": {
                     "example": "any"
                   },
-                  "equipamentoStatus": {
+                  "pecaPrecoHora": {
+                    "example": "any"
+                  },
+                  "pecaPrecoVenda": {
                     "example": "any"
                   }
                 }
@@ -382,8 +388,8 @@
         "summary": "Alterar um implemento",
         "description": "",
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request"
@@ -413,7 +419,10 @@
                   "impInativo": {
                     "example": "any"
                   },
-                  "equipamentoStatus": {
+                  "impPrecoHora": {
+                    "example": "any"
+                  },
+                  "impPrecoVenda": {
                     "example": "any"
                   }
                 }
@@ -443,6 +452,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -514,7 +526,10 @@
                   "impInativo": {
                     "example": "any"
                   },
-                  "equipamentoStatus": {
+                  "impPrecoHora": {
+                    "example": "any"
+                  },
+                  "impPrecoVenda": {
                     "example": "any"
                   }
                 }

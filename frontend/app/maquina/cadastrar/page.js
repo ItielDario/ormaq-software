@@ -35,7 +35,10 @@ export default function CadastrarMaquina() {
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-    } else {
+    } 
+    else {
+      var status = null;
+      
       httpClient.post("/maquina/cadastrar", dados)
         .then((r) => {
           status = r.status;

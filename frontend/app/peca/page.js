@@ -75,11 +75,13 @@ export default function Peca() {
 
             <article className="container-table">
                 <MontarTabela
-                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Status', 'Ações']}
+                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Preço Venda', 'Preço / Hora', 'Status', 'Ações']}
                     listaDados={listaPecas.map(peca => ({
                         id: peca.pecaId,
                         Nome: peca.pecaNome,
                         'Data de Aquisição': peca.pecaDataAquisicao,
+                        'Preço Venda': `R$ ${peca.pecaPrecoVenda}`,
+                        'Preço / Hora': `R$ ${peca.pecaPrecoHora}`,
                         Status: peca.equipamentoStatus.equipamentoStatusDescricao                    
                     }))}
                     renderActions={(peca) => (

@@ -44,15 +44,15 @@ export default function AlterarMaquina({ params: { id } }) {
       maqPrecoHora: maquinaPrecoHoraRef.current.value,
     };
 
-    console.log(dados)
-
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-    } else {
+    } 
+    else {
+      var status = null;
       httpClient.put(`/maquina`, dados)
         .then((r) => { 
           status = r.status;

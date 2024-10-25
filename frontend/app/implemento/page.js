@@ -75,11 +75,13 @@ export default function Implemento() {
 
             <article className="container-table">
                 <MontarTabela
-                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Status', 'Ações']}
+                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Preço Venda', 'Preço / Hora', 'Status', 'Ações']}
                     listaDados={listaImplementos.map(implemento => ({
                         id: implemento.impId,
                         Nome: implemento.impNome,
                         'Data de Aquisição': implemento.impDataAquisicao,
+                        'Preço Venda': `R$ ${implemento.impPrecoVenda}`,
+                        'Preço / Hora': `R$ ${implemento.impPrecoHora}`,
                         Status: implemento.equipamentoStatus.equipamentoStatusDescricao
                     }))}
                     renderActions={(implemento) => (

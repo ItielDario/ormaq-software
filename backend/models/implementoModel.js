@@ -10,6 +10,8 @@ export default class ImplementoModel {
     #impDescricao;
     #impInativo;
     #equipamentoStatus;
+    #impPrecoVenda;
+    #impPrecoHora;
 
     get impId() { return this.#impId; }
     set impId(impId) { this.#impId = impId; }
@@ -29,13 +31,21 @@ export default class ImplementoModel {
     get equipamentoStatus() { return this.#equipamentoStatus; }
     set equipamentoStatus(equipamentoStatus) { this.#equipamentoStatus = equipamentoStatus; }
 
-    constructor(impId, impNome, impDescricao, impDataAquisicao, equipamentoStatus, impInativo) {
+    get impPrecoVenda() { return this.#impPrecoVenda; }
+    set impPrecoVenda(impPrecoVenda) { this.#impPrecoVenda = impPrecoVenda; }
+
+    get impPrecoHora() { return this.#impPrecoHora; }
+    set impPrecoHora(impPrecoHora) { this.#impPrecoHora = impPrecoHora; }
+
+    constructor(impId, impNome, impDescricao, impDataAquisicao, equipamentoStatus, impInativo, impPrecoVenda, impPrecoHora) {
         this.#impId = impId;
         this.#impNome = impNome;
         this.#impDataAquisicao = impDataAquisicao;
         this.#impDescricao = impDescricao;
-        this.#equipamentoStatus = equipamentoStatus; 
+        this.#equipamentoStatus = equipamentoStatus;
         this.#impInativo = impInativo;
+        this.#impPrecoVenda = impPrecoVenda;
+        this.#impPrecoHora = impPrecoHora;
     }
 
     toJSON() {
@@ -45,7 +55,9 @@ export default class ImplementoModel {
             "impDataAquisicao": this.#impDataAquisicao,
             "impDescricao": this.#impDescricao,
             "impInativo": this.#impInativo,
-            "equipamentoStatus": this.#equipamentoStatus
+            "equipamentoStatus": this.#equipamentoStatus,
+            "impPrecoVenda": this.#impPrecoVenda,
+            "impPrecoHora": this.#impPrecoHora
         };
     }
 
@@ -53,19 +65,20 @@ export default class ImplementoModel {
         const listaImplementos = [];
 
         rows.forEach(implemento => {
-            // Criando o objeto EquipamentoStatus
             const equipamentoStatus = new EquipamentoStatusModel(
-                implemento["impStatus"], 
+                implemento["equipamentoStatusId"],
                 implemento["eqpStaDescricao"]
             );
 
             listaImplementos.push(new ImplementoModel(
-                implemento["impId"],                   // ID do implemento
-                implemento["impNome"],                 // Nome do implemento
-                implemento["impDescricao"],            // Descrição do implemento
-                implemento["impDataAquisicao"],        // Data de aquisição
-                equipamentoStatus,                     // Status do equipamento como objeto
-                implemento["impInativo"]               // Se o implemento está inativo
+                implemento["impId"],
+                implemento["impNome"],
+                implemento["impDescricao"],
+                implemento["impDataAquisicao"],
+                equipamentoStatus,
+                implemento["impInativo"],
+                implemento["impPrecoVenda"],
+                implemento["impPrecoHora"]
             ));
         });
         return listaImplementos;
@@ -73,7 +86,9 @@ export default class ImplementoModel {
 
     async listarImplementos() {
         const sql = `
-            SELECT i.impId, i.impNome, i.impDataAquisicao, i.impDescricao, i.impInativo, es.eqpStaId AS impStatus, es.eqpStaDescricao
+            SELECT i.impId, i.impNome, i.impDataAquisicao, i.impDescricao, i.impInativo, 
+                   i.impPrecoVenda, i.impPrecoHora,
+                   es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Implemento i
             JOIN Equipamento_Status es ON i.impStatus = es.eqpStaId;`;
 
@@ -89,12 +104,14 @@ export default class ImplementoModel {
 
         if (this.#impId == 0 || this.#impId == null) {
             // Inserção
-            sql = `INSERT INTO Implemento (impNome, impDescricao, impDataAquisicao, impStatus, impInativo) VALUES (?, ?, ?, ?, ?)`;
-            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#equipamentoStatus, this.#impInativo, this.#impId];
+            sql = `INSERT INTO Implemento (impNome, impDescricao, impDataAquisicao, impInativo, impPrecoVenda, impPrecoHora, impStatus) 
+                   VALUES (?, ?, ?, ?, ?, ?, ?)`;
+            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#impInativo, this.#impPrecoVenda, this.#impPrecoHora, this.equipamentoStatus];
         } else {
             // Alteração
-            sql = `UPDATE Implemento SET impNome = ?, impDescricao = ?, impDataAquisicao = ?, impInativo = ? WHERE impId = ?`;
-            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#impInativo, this.#impId];
+            sql = `UPDATE Implemento SET impNome = ?, impDescricao = ?, impDataAquisicao = ?, impStatus = ?, impInativo = ?, 
+                   impPrecoVenda = ?, impPrecoHora = ? WHERE impId = ?`;
+            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.equipamentoStatus, this.#impInativo, this.#impPrecoVenda, this.#impPrecoHora, this.#impId];
         }
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
@@ -102,10 +119,12 @@ export default class ImplementoModel {
     }
 
     async obter(id) {
-        let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impDataAquisicao, Implemento.impDescricao, Implemento.impStatus, Implemento.impInativo, Equipamento_Status.eqpStaDescricao
-                    FROM Implemento INNER JOIN Equipamento_Status
-                    ON Implemento.impStatus = Equipamento_Status.eqpStaId
-                    WHERE Implemento.impId = ?`;
+        let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impDataAquisicao, Implemento.impDescricao, Implemento.impInativo, 
+                          Implemento.impPrecoVenda, Implemento.impPrecoHora, Implemento.impStatus,
+                          Equipamento_Status.eqpStaDescricao
+                    FROM Implemento 
+                    INNER JOIN Equipamento_Status ON Implemento.impStatus = Equipamento_Status.eqpStaId
+                    WHERE Implemento.impId = ?;`;
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
@@ -120,7 +139,7 @@ export default class ImplementoModel {
                     FROM Implemento
                     WHERE Implemento.impStatus = 2
                     AND Implemento.impId = ?`;
-        let valores = [idImplemento]
+        let valores = [idImplemento];
 
         let rows = await db.ExecutaComando(sql, valores);
         return rows.length > 0;

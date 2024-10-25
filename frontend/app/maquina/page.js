@@ -24,7 +24,6 @@ export default function Maquina() {
         httpClient.get("/maquina")
         .then(r => r.json())
         .then((r) => {
-            console.log(r)
             r.map(maquina => maquina.maqDataAquisicao = new Date(maquina.maqDataAquisicao).toLocaleDateString()) // Formatando a data
             setListaMaquinas(r)
         })

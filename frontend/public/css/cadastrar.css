@@ -141,6 +141,7 @@ input::placeholder{
     gap: 0.4vw;
     align-items: center;
     font-size: 1.3vw;
+    color: #1d1d1d;
 }
   
 .valor-total-box{

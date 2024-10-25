@@ -67,14 +67,14 @@ export default function CadastrarLocacao() {
       if(tipoEquipamento == "Máquina"){
         equipamentoNome = maquina.map(maq => maq.maqNome);
         equipamentoDados = maquina.filter(value => value.maqNome == equipamentoIdRef.current.value)
-
         if(equipamentoDados.length > 0){
           result = true;
           equipamentoDados = {
             'id': equipamentoDados[0].maqId,
+            'tipo': 'Máquina',
             'nome': equipamentoDados[0].maqNome,
-            'data': equipamentoDados[0].maqDataAquisicao,
-            'preco': equipamentoDados[0].maqPrecoUnitario,
+            'data': new Date(equipamentoDados[0].maqDataAquisicao).toLocaleDateString(),
+            'preco': equipamentoDados[0].maqPrecoHora,
             'quantidade': quantidadeRef.current.value,
           }
         }
@@ -82,14 +82,15 @@ export default function CadastrarLocacao() {
       else if(tipoEquipamento == "Peça"){
         equipamentoNome = peca.map(pec => pec.pecaNome);
         equipamentoDados = peca.filter(value => value.pecaNome == equipamentoIdRef.current.value)
-
+        console.log(equipamentoDados)
         if(equipamentoDados.length > 0){
           result = true;
           equipamentoDados = {
             'id': equipamentoDados[0].pecaId,
+            'tipo': 'Peça',
             'nome': equipamentoDados[0].pecaNome,
-            'data': equipamentoDados[0].pecaDataAquisicao,
-            'preco': '',
+            'data': new Date(equipamentoDados[0].pecaDataAquisicao).toLocaleDateString(),
+            'preco': equipamentoDados[0].pecaPrecoHora,
             'quantidade': quantidadeRef.current.value,
           }
         }
@@ -102,9 +103,10 @@ export default function CadastrarLocacao() {
           result = true;
           equipamentoDados = {
             'id': equipamentoDados[0].impId,
+            'tipo': 'Implemento',
             'nome': equipamentoDados[0].impNome,
-            'data': equipamentoDados[0].impDataAquisicao,
-            'preco': '',
+            'data': new Date(equipamentoDados[0].impDataAquisicao).toLocaleDateString(),
+            'preco': equipamentoDados[0].impPrecoHora,
             'quantidade': quantidadeRef.current.value,
           }
         }
@@ -312,6 +314,7 @@ export default function CadastrarLocacao() {
             <thead>
               <tr className="thead-itens-locacao">
                 <th>ID</th>
+                <th>Tipo Equipamento</th>
                 <th>Nome</th>
                 <th>Data de Aquisição</th>
                 <th>Preço / Hora</th>
@@ -323,6 +326,7 @@ export default function CadastrarLocacao() {
               {itensLocacao.map((item, index) => (
                 <tr key={index}>
                   <td>{item.id}</td>
+                  <td>{item.tipo}</td>
                   <td>{item.nome}</td>
                   <td>{item.data}</td>
                   <td>{item.preco}</td>

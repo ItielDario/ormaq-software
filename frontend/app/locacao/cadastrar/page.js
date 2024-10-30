@@ -6,40 +6,38 @@ import httpClient from "@/app/utils/httpClient.js";
 export default function CadastrarLocacao() {
   const formRef = useRef(null);
   const alertMsg = useRef(null);
-  const alertMsgEqp = useRef(null);
 
   // Campos do formulário
   const clienteIdRef = useRef(null);
   const dataInicioRef = useRef(null);
   const dataFinalPrevistaRef = useRef(null);
-  const dataFinalEntregaRef = useRef(null);
-  const valorTotalRef = useRef(null);
-  const descontoRef = useRef(null);
   const valorFinalRef = useRef(null);
-  const usuarioIdRef = useRef(null);
-  const statusRef = useRef(null);
+  const descontoRef = useRef(null);
 
   // Itens de locação
   const tipoEquipemantoRef = useRef(null);
   const equipamentoIdRef = useRef(null);
   const quantidadeRef = useRef(null);
+  const valorTotalRef = useRef(null);
 
   const [clientes, setClientes] = useState([]);
   const [maquina, setMaquina] = useState([]);
   const [peca, setPeca] = useState([]);
   const [implemento, setImplemento] = useState([]);
   const [itensLocacao, setItensLocacao] = useState([]);
-  const [tipoEquipamento, setTipoEquipamento] = useState(''); // Armazena o tipo selecionado
+  const [tipoEquipamento, setTipoEquipamento] = useState('');
+
+  //Variaveis Auxiliares
+  const [valorTotal, setvalorTotal] = useState('');
+  const containerValorTotalRef = useRef(null);
 
   useEffect(() => {
-    // Clientes
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
-    httpClient.get("/maquina").then(r => r.json()).then(r => {setMaquina(r); console.log(r)});
+    httpClient.get("/maquina").then(r => r.json()).then(r => setMaquina(r));
     httpClient.get("/peca").then(r => r.json()).then(r => setPeca(r));
     httpClient.get("/implemento").then(r => r.json()).then(r => setImplemento(r));
   }, []);
   
-
   const verificaClienteExiste = () => {
     if (clienteIdRef.current.value.length > 0) {
       const clienteNome = clientes.map(cli => cli.cliNome);
@@ -57,142 +55,183 @@ export default function CadastrarLocacao() {
   };
 
   const adicionarItemLocacao = () => {
-    alertMsgEqp.current.style.display = 'none';
-    let result = false
-
+    alertMsg.current.style.display = 'none';
+    let result = false;
+  
     if (equipamentoIdRef.current.value.length > 0 && quantidadeRef.current.value > 0) {
       let equipamentoNome = [];
       let equipamentoDados = '';
-
-      if(tipoEquipamento == "Máquina"){
+  
+      if (tipoEquipamento === "Máquina") { // VERIFICA SE O EQUIPAMENTO É UMA MÁQUINA
         equipamentoNome = maquina.map(maq => maq.maqNome);
-        equipamentoDados = maquina.filter(value => value.maqNome == equipamentoIdRef.current.value)
-        if(equipamentoDados.length > 0){
+        equipamentoDados = maquina.filter(value => value.maqNome === equipamentoIdRef.current.value);
+        if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            'id': equipamentoDados[0].maqId,
-            'tipo': 'Máquina',
-            'nome': equipamentoDados[0].maqNome,
-            'data': new Date(equipamentoDados[0].maqDataAquisicao).toLocaleDateString(),
-            'preco': equipamentoDados[0].maqPrecoHora,
-            'quantidade': quantidadeRef.current.value,
-          }
+            id: equipamentoDados[0].maqId,
+            tipo: 'Máquina',
+            nome: equipamentoDados[0].maqNome,
+            data: new Date(equipamentoDados[0].maqDataAquisicao).toLocaleDateString(),
+            preco: equipamentoDados[0].maqPrecoHora,
+            quantidade: quantidadeRef.current.value,
+          };
         }
-      }
-      else if(tipoEquipamento == "Peça"){
+      } 
+      else if (tipoEquipamento === "Peça") { // VERIFICA SE O EQUIPAMENTO É UMA PEÇA
         equipamentoNome = peca.map(pec => pec.pecaNome);
-        equipamentoDados = peca.filter(value => value.pecaNome == equipamentoIdRef.current.value)
-        console.log(equipamentoDados)
-        if(equipamentoDados.length > 0){
+        equipamentoDados = peca.filter(value => value.pecaNome === equipamentoIdRef.current.value);
+        if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            'id': equipamentoDados[0].pecaId,
-            'tipo': 'Peça',
-            'nome': equipamentoDados[0].pecaNome,
-            'data': new Date(equipamentoDados[0].pecaDataAquisicao).toLocaleDateString(),
-            'preco': equipamentoDados[0].pecaPrecoHora,
-            'quantidade': quantidadeRef.current.value,
-          }
+            id: equipamentoDados[0].pecaId,
+            tipo: 'Peça',
+            nome: equipamentoDados[0].pecaNome,
+            data: new Date(equipamentoDados[0].pecaDataAquisicao).toLocaleDateString(),
+            preco: equipamentoDados[0].pecaPrecoHora,
+            quantidade: quantidadeRef.current.value,
+          };
         }
-      }
-      else if(tipoEquipamento == "Implemento"){
+      } 
+      else if (tipoEquipamento === "Implemento") { // VERIFICA SE O EQUIPAMENTO É UM IMPLEMENTO
         equipamentoNome = implemento.map(imp => imp.impNome);
-        equipamentoDados = implemento.filter(value => value.impNome == equipamentoIdRef.current.value)
-        
-        if(equipamentoDados.length > 0){
+        equipamentoDados = implemento.filter(value => value.impNome === equipamentoIdRef.current.value);
+  
+        if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            'id': equipamentoDados[0].impId,
-            'tipo': 'Implemento',
-            'nome': equipamentoDados[0].impNome,
-            'data': new Date(equipamentoDados[0].impDataAquisicao).toLocaleDateString(),
-            'preco': equipamentoDados[0].impPrecoHora,
-            'quantidade': quantidadeRef.current.value,
-          }
+            id: equipamentoDados[0].impId,
+            tipo: 'Implemento',
+            nome: equipamentoDados[0].impNome,
+            data: new Date(equipamentoDados[0].impDataAquisicao).toLocaleDateString(),
+            preco: equipamentoDados[0].impPrecoHora,
+            quantidade: quantidadeRef.current.value,
+          };
         }
       }
-
+  
       if (result) {
-        setItensLocacao([...itensLocacao, equipamentoDados]);
+        const listaItensAuxiliar = [...itensLocacao, equipamentoDados];
+        setItensLocacao(listaItensAuxiliar);
+  
+        let valorTotal = listaItensAuxiliar.reduce((total, equip) => total + equip.preco * equip.quantidade, 0);
+        valorTotalRef.current.innerHTML = `R$ ${valorTotal.toFixed(2)}`;       
+        setvalorTotal(valorTotal);
+  
+        // Executa a função calcularValorFinal sempre que um item é adicionado
+        calcularValorFinal(descontoRef.current.value, valorTotal);
+  
+        setTipoEquipamento('');
+        equipamentoIdRef.current.value = '';
+        quantidadeRef.current.value = '';
+  
         setTimeout(() => {
-          alertMsgEqp.current.className = 'alertSuccess';
-          alertMsgEqp.current.style.display = 'block';
-          alertMsgEqp.current.textContent = `${tipoEquipamento} inserido na lista com sucesso!`;
+          alertMsg.current.className = 'alertSuccess';
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = `${tipoEquipamento} inserido na lista com sucesso!`;
         }, 100);
-        setTipoEquipamento('')
-        equipamentoIdRef.current.value = ''
-        quantidadeRef.current.value = ''
+      } else {
+        setTimeout(() => {
+          alertMsg.current.className = 'alertError';
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = `${tipoEquipamento} não cadastrado!`;
+        }, 100);
       }
-      else {
-        setTimeout(() => {
-          alertMsgEqp.current.className = 'alertError';
-          alertMsgEqp.current.style.display = 'block';
-          alertMsgEqp.current.textContent = `${tipoEquipamento} não cadastrado!`;
-        }, 100);
-      }      
-    }
-    else{
+    } else {
       setTimeout(() => {
-        alertMsgEqp.current.className = 'alertError';
-        alertMsgEqp.current.style.display = 'block';
-        alertMsgEqp.current.textContent = `Por favor, digite um equipemento e sua quantidade!`;
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = `Por favor, digite um equipamento e sua quantidade!`;
       }, 100);
     }
-    
-  };
+
+    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+  };  
 
   const excluirItem = (index) => {
+    // Remove o item da lista de itens de locação
     const novaLista = itensLocacao.filter((item, i) => i !== index);
     setItensLocacao(novaLista);
+  
+    // Recalcula o valor total com base na nova lista
+    let novoValorTotal = novaLista.reduce((total, item) => total + item.preco * item.quantidade, 0);
+    setvalorTotal(novoValorTotal);
+    valorTotalRef.current.innerHTML = `R$ ${novoValorTotal.toFixed(2)}`;
+  
+    // Recalcula o valor final com o desconto
+    calcularValorFinal(descontoRef.current.value, novoValorTotal);
   };
-
+  
   const cadastrarLocacao = () => {
-  alertMsg.current.style.display = 'none';
+    alertMsg.current.style.display = 'none';
+    let status = 0;
 
-  const dados = {
-    locDataInicio: dataInicioRef.current.value,
-    locDataFinalPrevista: dataFinalPrevistaRef.current.value,
-    locDataFinalEntrega: dataFinalEntregaRef.current.value,
-    locValorTotal: valorTotalRef.current.value,
-    locDesconto: descontoRef.current.value,
-    locValorFinal: valorFinalRef.current.value,
-    locCliId: clienteIdRef.current.value,
-    locUsuId: usuarioIdRef.current.value,
-    locStatus: statusRef.current.value,
-    itens: itensLocacao, // Array de itens da locação
-  };
+    const dados = {
+      locDataInicio: dataInicioRef.current.value,
+      locDataFinalPrevista: dataFinalPrevistaRef.current.value,
+      locValorTotal: valorTotal,
+      locDesconto: descontoRef.current.value,
+      locValorFinal: parseFloat(valorFinalRef.current.innerHTML.replace('R$ ', '').replace(',', '.')),
+      locCliId: clienteIdRef.current.value,
+      itens: itensLocacao, // Array de itens da locação
+    };
 
-  if (verificaCampoVazio(dados)) {
-    setTimeout(() => {
+    console.log(dados)
+  
+    // Validação de campos vazios
+    if (verificaCampoVazio(dados) || itensLocacao.length === 0) {
+      console.log('aaaaaaaaaaaaaaaa')
       alertMsg.current.className = 'alertError';
       alertMsg.current.style.display = 'block';
-      alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
-    }, 100);
-  } else {
-    httpClient.post("/locacao/cadastrar", dados)
+      alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!';
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    }
+  
+    // Validação de data
+    const dataInicio = new Date(dataInicioRef.current.value);
+    const dataFinalPrevista = new Date(dataFinalPrevistaRef.current.value);
+    
+    if (dataInicio >= dataFinalPrevista) {
+      alertMsg.current.className = 'alertError';
+      alertMsg.current.style.display = 'block';
+      alertMsg.current.textContent = 'A data de início deve ser anterior à data de término.';
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    }
+  
+    // Validação do valor de desconto
+    if (parseFloat(descontoRef.current.value) > valorTotal) {
+      alertMsg.current.className = 'alertError';
+      alertMsg.current.style.display = 'block';
+      alertMsg.current.textContent = 'O valor do desconto deve ser maior que o valor total.';
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    }
+  
+    httpClient.post("/locacao/cadastrar", dados) 
       .then((r) => {
         status = r.status;
         return r.json();
       })
       .then(r => {
         setTimeout(() => {
-          if (status == 201) {
-            alertMsg.current.className = 'alertSuccess';
-          } else {
-            alertMsg.current.className = 'alertError';
-          }
-
+          alertMsg.current.className = status === 201 ? 'alertSuccess' : 'alertError';
           alertMsg.current.style.display = 'block';
           alertMsg.current.textContent = r.msg;
-          
-          formRef.current.reset();
-          setTipoEquipamento(''); // Isso desmarca os radio buttons
-          setItensLocacao([]);
+  
+          if (status === 201) {
+            formRef.current.reset();
+            setTipoEquipamento('');
+            setItensLocacao([]);
+            setvalorTotal(0);
+            valorTotalRef.current.innerHTML = 'R$ 00,00';
+            valorFinalRef.current.innerHTML = '0';
+          }
         }, 100);
       });
-  }
-  document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
-};
+      
+    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+  };  
 
   const verificaCampoVazio = (dados) => {
     return Object.values(dados).some(value => value === '' || value === null || value === undefined);
@@ -218,7 +257,15 @@ export default function CadastrarLocacao() {
       </datalist>
     );
   };   
-  
+
+  const calcularValorFinal = (valorDesconto, valorTotal) => {
+    if(valorDesconto >= 0){
+      valorFinalRef.current.innerHTML = `R$ ${(valorTotal - descontoRef.current.value).toFixed(2)}`
+      containerValorTotalRef.current.style.display = 'flex'
+      descontoRef.current.style.width = '95%'
+    }
+  };   
+
   return (
     <section className="content-main-children-cadastrar">
       <article className="title">
@@ -242,7 +289,7 @@ export default function CadastrarLocacao() {
           </section>
 
           <article className="box-cadastrar-cliente">
-            <a href={`/locacao/alterar/`}><i className="nav-icon fas fa-plus-circle"></i></a>
+            <a href={`/cliente/cadastrar/`}><i className="nav-icon fas fa-plus-circle"></i></a>
           </article>
         </section>
 
@@ -263,8 +310,6 @@ export default function CadastrarLocacao() {
             <p>Itens da Locação</p>
             <button type="button" className='btn-add' onClick={adicionarItemLocacao}>Adicionar Item</button>
           </article>
-
-          <article ref={alertMsgEqp}></article>
           
           <section>
             <article>
@@ -286,7 +331,6 @@ export default function CadastrarLocacao() {
               </select>
             </article>
           </section>
-
 
           <section className="input-group-equipamento">
             <section className="input-equipamento">
@@ -314,8 +358,8 @@ export default function CadastrarLocacao() {
             <thead>
               <tr className="thead-itens-locacao">
                 <th>ID</th>
-                <th>Tipo Equipamento</th>
                 <th>Nome</th>
+                <th>Tipo Equipamento</th>
                 <th>Data de Aquisição</th>
                 <th>Preço / Hora</th>
                 <th>Quantidade</th>
@@ -326,8 +370,8 @@ export default function CadastrarLocacao() {
               {itensLocacao.map((item, index) => (
                 <tr key={index}>
                   <td>{item.id}</td>
-                  <td>{item.tipo}</td>
                   <td>{item.nome}</td>
+                  <td>{item.tipo}</td>
                   <td>{item.data}</td>
                   <td>{item.preco}</td>
                   <td>{item.quantidade}</td>
@@ -339,13 +383,20 @@ export default function CadastrarLocacao() {
 
           <article className="itens-locacao-footer">
             <strong>Valor total: </strong>
-            <strong className="valor-total-box">R$ 00,00</strong>
+            <strong className="valor-total-box" ref={valorTotalRef}>R$ 00,00</strong>
           </article>
         </section>
 
-        <section>
-          <label>Desconto</label>
-          <input type="number" name="locDesconto" ref={descontoRef} />
+        <section className="container-valor-final">
+          <article className="box-desconto">
+            <label>Desconto</label>
+            <input type="number" onChange={(e) => calcularValorFinal(e.target.value, valorTotal)}  name="locDesconto" ref={descontoRef} defaultValue={0}/>
+          </article>
+
+          <article ref={containerValorTotalRef} className="box-valor-final">
+            <strong>Valor Final com Desconto: </strong>
+            <strong className="valor-total-box" ref={valorFinalRef}>0</strong>
+          </article>
         </section>
 
         <section className="container-btn">

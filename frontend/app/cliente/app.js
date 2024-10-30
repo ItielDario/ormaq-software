@@ -1,4 +1,4 @@
-export default function Relatorio() {
+export default function Cliente() {
     return (
       <section className="content-main-children">
         <article className="title">

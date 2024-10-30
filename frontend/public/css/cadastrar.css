@@ -127,7 +127,7 @@ input::placeholder{
 .msg-obs{
     font-weight: bold;
     font-size: 1vw;
-    color: rgb(194, 142, 0);
+    color: rgb(180, 15, 15);
     margin-top: 0.5vw;
 }
 
@@ -148,6 +148,24 @@ input::placeholder{
     padding: 0.4vw 0.7vw;
     border: 0.1vw solid rgb(126, 126, 126);
     border-radius: 0.4vw;
+}
+
+.container-valor-final{
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+}
+
+.box-desconto{
+    width: 100%;
+}
+
+.box-valor-final{
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    width: 50%;
+    font-size: 1.3vw;
 }
 
 .content-main-children-cadastrar .container-btn{

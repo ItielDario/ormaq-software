@@ -46,7 +46,7 @@ export default function RootLayout({ children }) {
                   <a href="/maquina"><li className="itens"><i className="nav-icon fas fa-tractor"></i>Máquinas</li></a>
                   <a href="/peca"><li className="itens"><i className="nav-icon fas fa-tools"></i>Peças</li></a>
                   <a href="/implemento"><li className="itens"><i className="nav-icon fas fa-cogs"></i>Implementos</li></a>
-                  <a href="/implemento"><li className="itens"><i className="nav-icon fas fa-address-book"></i>Clientes</li></a>
+                  <a href="/cliente"><li className="itens"><i className="nav-icon fas fa-address-book"></i>Clientes</li></a>
                   <a href="/locacao"><li className="itens"><i className="nav-icon fas fa-truck"></i>Locações</li></a>
                   <a href="/manutencao"><li className="itens"><i className="nav-icon fas fa-wrench"></i>Manutenções</li></a>
                   <a href="/relatorio"><li className="itens"><i className="nav-icon fas fa-file-alt"></i>Relatórios</li></a>

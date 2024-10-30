@@ -105,7 +105,7 @@ CREATE TABLE Locacao (
   locId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   locDataInicio DATE NOT NULL,
   locDataFinalPrevista DATE NOT NULL,
-  locDataFinalEntrega DATE NOT NULL,
+  locDataFinalEntrega DATE NULL,
   locValorTotal DECIMAL(10, 2) NOT NULL,
   locDesconto DECIMAL(10, 2) NULL,
   locValorFinal DECIMAL(10, 2) NOT NULL,

@@ -148,23 +148,24 @@ export default class LocacaoModel {
 
     async obter(id) {
         let sql = `
-            SELECT l.locId, l.locDataInicio, l.locDataFinalPrevista, l.locDataFinalEntrega, l.locValorTotal, l.locDesconto, l.locValorFinal,
-                   c.cliId, c.cliNome, c.cliCPF_CNPJ, c.cliTelefone, c.cliEmail, 
-                   u.usuId, u.usuNome, u.usuTelefone, u.usuEmail, u.usuPerfil,
-                   ls.locStaId, ls.locStaDescricao
+            SELECT l.locDataInicio, l.locDataFinalPrevista, l.locValorTotal, l.locDesconto,
+                c.cliId, c.cliNome, c.cliCPF_CNPJ, li.iteLocQuantidade, li.iteLocValorUnitario,
+                COALESCE(m.maqId, p.pecId, i.impId) AS iteLocId,
+                COALESCE(m.maqNome, p.pecNome, i.impNome) AS iteLocNome
             FROM Locacao l
             JOIN Cliente c ON l.locCliId = c.cliId
             JOIN Usuario u ON l.locUsuId = u.usuId
             JOIN Locacao_Status ls ON l.locStatus = ls.locStaId
+            JOIN Itens_Locacao li ON li.IteLocLocacaoId = l.locId
+            LEFT JOIN Maquina m ON li.iteLocMaqId = m.maqId
+            LEFT JOIN Peca p ON li.iteLocPecId = p.pecId
+            LEFT JOIN Implemento i ON li.iteLocImpId = i.impId
             WHERE l.locId = ?;
         `;
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
-        if (rows.length > 0) {
-            return this.toMAP(rows)[0]; // Retorna apenas a primeira locação encontrada
-        }
-        return null;
+        return rows;
     }
 
     async excluir(idLocacao) {

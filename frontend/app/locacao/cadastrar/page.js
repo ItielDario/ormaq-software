@@ -363,7 +363,6 @@ export default function CadastrarLocacao() {
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Tipo Equipamento</th>
-                <th>Data de Aquisição</th>
                 <th>Preço / Hora</th>
                 <th>Quantidade</th>
                 <th>Ações</th>
@@ -375,7 +374,6 @@ export default function CadastrarLocacao() {
                   <td>{item.id}</td>
                   <td>{item.nome}</td>
                   <td>{item.tipo}</td>
-                  <td>{item.data}</td>
                   <td>{item.preco}</td>
                   <td>{item.quantidade}</td>
                   <td><a onClick={() => excluirItem(index)}><i className="nav-icon fas fa-trash"></i></a></td>

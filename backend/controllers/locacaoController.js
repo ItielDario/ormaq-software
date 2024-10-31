@@ -16,6 +16,7 @@ export default class locacaoController {
     async obterLocacao(req, res) {
         try {
             let { id } = req.params;
+            console.log(id)
             let locacao = new LocacaoModel();
             locacao = await locacao.obter(id);
 

@@ -120,21 +120,31 @@ export default class LocacaoModel {
     async gravar() {
         let sql = "";
         let valores = [];
-
+        let result;
+    
         if (this.#locId == 0 || this.#locId == null) {
             // Inserção
             sql = `INSERT INTO Locacao (locDataInicio, locDataFinalPrevista, locDataFinalEntrega, locValorTotal, locDesconto, locValorFinal, locCliId, locUsuId, locStatus) 
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
             valores = [this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#cliente, this.#usuario, this.#locacaoStatus];
+    
+            // Executa o comando e recupera o ID da última inserção
+            result = await db.ExecutaComandoNonQuery(sql, valores);
+            if (result) {
+                const lastId = await db.ExecutaComando(`SELECT LAST_INSERT_ID() AS locId`);
+                return lastId[0].locId;
+            }
         } else {
             // Alteração
             sql = `UPDATE Locacao SET locDataInicio = ?, locDataFinalPrevista = ?, locDataFinalEntrega = ?, locValorTotal = ?, locDesconto = ?, locValorFinal = ?, locStatus = ? WHERE locId = ?`;
             valores = [this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#locacaoStatus, this.#locId];
+    
+            result = await db.ExecutaComandoNonQuery(sql, valores);
+            return result;
         }
 
-        let result = await db.ExecutaComandoNonQuery(sql, valores);
-        return result;
-    }
+        return null;
+    }    
 
     async obter(id) {
         let sql = `

@@ -127,9 +127,9 @@ CREATE TABLE Itens_Locacao (
   iteLocId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   iteLocQuantidade INT NOT NULL,
   iteLocValorUnitario DECIMAL(10, 2) NOT NULL,
-  iteLocPecId INT NOT NULL,
-  iteLocImpId INT NOT NULL,
-  iteLocMaqId INT NOT NULL,
+  iteLocPecId INT NULL,
+  iteLocImpId INT NULL,
+  iteLocMaqId INT NULL,
   IteLocLocacaoId INT NOT NULL,
   CONSTRAINT iteLocPecId
     FOREIGN KEY (iteLocPecId)
@@ -227,8 +227,8 @@ VALUES
 
 INSERT INTO Itens_Locacao (iteLocId, iteLocQuantidade, iteLocValorUnitario, iteLocPecId, iteLocImpId, iteLocMaqId, IteLocLocacaoId)
 VALUES
-  (1, 1, 1000.00, 1, 1, 1, 1),
-  (2, 2, 1500.00, 2, 2, 2, 2);
+  (1, 1, 1000.00, 1, null, null, 1),
+  (2, 2, 1500.00, null, 2, null, 2);
 
 SELECT * FROM Equipamento_Status;
 SELECT * FROM Locacao_Status;

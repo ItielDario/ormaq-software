@@ -4,8 +4,6 @@ import CriarBotao from "../../components/criarBotao.js";
 import httpClient from "@/app/utils/httpClient.js";
 
 export default function CadastrarLocacao() {
-  const formRef = useRef(null);
-  const alertMsg = useRef(null);
 
   // Campos do formulário
   const clienteIdRef = useRef(null);
@@ -20,16 +18,17 @@ export default function CadastrarLocacao() {
   const quantidadeRef = useRef(null);
   const valorTotalRef = useRef(null);
 
+  //Variaveis Auxiliares
   const [clientes, setClientes] = useState([]);
   const [maquina, setMaquina] = useState([]);
   const [peca, setPeca] = useState([]);
   const [implemento, setImplemento] = useState([]);
   const [itensLocacao, setItensLocacao] = useState([]);
   const [tipoEquipamento, setTipoEquipamento] = useState('');
-
-  //Variaveis Auxiliares
   const [valorTotal, setvalorTotal] = useState('');
   const containerValorTotalRef = useRef(null);
+  const formRef = useRef(null);
+  const alertMsg = useRef(null);
 
   useEffect(() => {
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
@@ -40,11 +39,12 @@ export default function CadastrarLocacao() {
   
   const verificaClienteExiste = () => {
     if (clienteIdRef.current.value.length > 0) {
-      const clienteNome = clientes.map(cli => cli.cliNome);
-      const result = clienteNome.some((value) => value == clienteIdRef.current.value);
-      alertMsg.current.style.display = 'none';
-
-      if (!result) {
+      const cliente = clientes.find(cli => cli.cliNome === clienteIdRef.current.value);
+      
+      if (cliente) {
+        alertMsg.current.style.display = 'none';
+        clienteIdRef.current.dataset.clienteId = cliente.cliId;
+      } else {
         setTimeout(() => {
           alertMsg.current.className = 'alertError';
           alertMsg.current.style.display = 'block';
@@ -52,6 +52,10 @@ export default function CadastrarLocacao() {
         }, 100);
       }
     }
+  };
+
+  const obterClienteIdSelecionado = () => { // Função para retornar o ID do cliente selecionado
+    return clienteIdRef.current.dataset.clienteId || null;
   };
 
   const adicionarItemLocacao = () => {
@@ -171,15 +175,12 @@ export default function CadastrarLocacao() {
       locValorTotal: valorTotal,
       locDesconto: descontoRef.current.value,
       locValorFinal: parseFloat(valorFinalRef.current.innerHTML.replace('R$ ', '').replace(',', '.')),
-      locCliId: clienteIdRef.current.value,
+      locCliId: obterClienteIdSelecionado(), // Usa o ID do cliente
       itens: itensLocacao, // Array de itens da locação
     };
-
-    console.log(dados)
   
     // Validação de campos vazios
     if (verificaCampoVazio(dados) || itensLocacao.length === 0) {
-      console.log('aaaaaaaaaaaaaaaa')
       alertMsg.current.className = 'alertError';
       alertMsg.current.style.display = 'block';
       alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!';
@@ -194,7 +195,7 @@ export default function CadastrarLocacao() {
     if (dataInicio >= dataFinalPrevista) {
       alertMsg.current.className = 'alertError';
       alertMsg.current.style.display = 'block';
-      alertMsg.current.textContent = 'A data de início deve ser anterior à data de término.';
+      alertMsg.current.textContent = 'A data de início da locação deve ser anterior à data de término!';
       document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
       return;
     }
@@ -203,7 +204,7 @@ export default function CadastrarLocacao() {
     if (parseFloat(descontoRef.current.value) > valorTotal) {
       alertMsg.current.className = 'alertError';
       alertMsg.current.style.display = 'block';
-      alertMsg.current.textContent = 'O valor do desconto deve ser maior que o valor total.';
+      alertMsg.current.textContent = 'O valor do desconto não pode ser maior que o valor total.';
       document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
       return;
     }
@@ -226,6 +227,8 @@ export default function CadastrarLocacao() {
             setvalorTotal(0);
             valorTotalRef.current.innerHTML = 'R$ 00,00';
             valorFinalRef.current.innerHTML = '0';
+            containerValorTotalRef.current.style.display = 'none'
+            descontoRef.current.style.width = '100%'
           }
         }, 100);
       });

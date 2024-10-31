@@ -578,16 +578,10 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "locId": {
-                    "example": "any"
-                  },
                   "locDataInicio": {
                     "example": "any"
                   },
                   "locDataFinalPrevista": {
-                    "example": "any"
-                  },
-                  "locDataFinalEntrega": {
                     "example": "any"
                   },
                   "locValorTotal": {
@@ -602,10 +596,7 @@
                   "locCliId": {
                     "example": "any"
                   },
-                  "locUsuId": {
-                    "example": "any"
-                  },
-                  "locStatus": {
+                  "itens": {
                     "example": "any"
                   }
                 }
@@ -712,10 +703,7 @@
                   "locCliId": {
                     "example": "any"
                   },
-                  "locUsuId": {
-                    "example": "any"
-                  },
-                  "locStatus": {
+                  "itens": {
                     "example": "any"
                   }
                 }

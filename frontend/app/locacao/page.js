@@ -24,7 +24,6 @@ export default function Locacao() {
         httpClient.get("/locacao")
         .then(r => r.json())
         .then((r) => {
-          console.log(r)
             r.map(locacao => {
                 locacao.locDataInicio = new Date(locacao.locDataInicio).toLocaleDateString();
                 locacao.locDataFinalPrevista = new Date(locacao.locDataFinalPrevista).toLocaleDateString();

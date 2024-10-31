@@ -378,7 +378,7 @@ export default function AlterarLocacao({ params: { id } }) {
         <section className="container-valor-final">
           <article className="box-desconto">
             <label>Desconto</label>
-            <input defaultValue={locacaoSelecionada.locDesconto} type="number" onChange={(e) => calcularValorFinal(e.target.value, valorTotal)}  name="locDesconto" ref={descontoRef} defaultValue={0}/>
+            <input  type="number" onChange={(e) => calcularValorFinal(e.target.value, valorTotal)}  name="locDesconto" ref={descontoRef} defaultValue={0}/>
           </article>
 
           <article ref={containerValorTotalRef} className="box-valor-final">

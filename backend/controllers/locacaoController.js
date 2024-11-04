@@ -118,11 +118,14 @@ export default class locacaoController {
     async excluirLocacao(req, res) {
         try {
             let { id } = req.params;
+
+            let itemLocacao = new ItensLocacaoModel();
+            let itemLocacaoResult = await itemLocacao.excluir(id);
+
             let locacao = new LocacaoModel();
+            let locacaoResult = await locacao.excluir(id);
 
-            let result = await locacao.excluir(id);
-
-            if (result) {
+            if (locacaoResult && itemLocacaoResult) {
                 res.status(200).json({ msg: `Locação excluída com sucesso!` });
             } else {
                 res.status(500).json({ msg: "Erro durante a exclusão da locação" });

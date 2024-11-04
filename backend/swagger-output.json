@@ -874,6 +874,189 @@
           }
         }
       }
+    },
+    "/manutencao/": {
+      "get": {
+        "tags": [
+          "Manutenção"
+        ],
+        "summary": "Listar todas as manutenções cadastradas",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Manutenção"
+        ],
+        "summary": "Alterar uma manutenção existente",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "manId": {
+                    "example": "any"
+                  },
+                  "manDataInicio": {
+                    "example": "any"
+                  },
+                  "manDecricao": {
+                    "example": "any"
+                  },
+                  "manDataTermino": {
+                    "example": "any"
+                  },
+                  "manObservacao": {
+                    "example": "any"
+                  },
+                  "manStatus": {
+                    "example": "any"
+                  },
+                  "manMaqId": {
+                    "example": "any"
+                  },
+                  "manImpId": {
+                    "example": "any"
+                  },
+                  "manPecId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/manutencao/{id}": {
+      "get": {
+        "tags": [
+          "Manutenção"
+        ],
+        "summary": "Obter uma manutenção específica",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Manutenção"
+        ],
+        "summary": "Excluir uma manutenção pelo id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/manutencao/cadastrar": {
+      "post": {
+        "tags": [
+          "Manutenção"
+        ],
+        "summary": "Cadastrar uma nova manutenção",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "manDataInicio": {
+                    "example": "any"
+                  },
+                  "manDecricao": {
+                    "example": "any"
+                  },
+                  "manDataTermino": {
+                    "example": "any"
+                  },
+                  "manObservacao": {
+                    "example": "any"
+                  },
+                  "manStatus": {
+                    "example": "any"
+                  },
+                  "manMaqId": {
+                    "example": "any"
+                  },
+                  "manImpId": {
+                    "example": "any"
+                  },
+                  "manPecId": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

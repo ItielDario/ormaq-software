@@ -53,13 +53,13 @@ CREATE TABLE Peca (
 CREATE TABLE Manutencao_Equipamento (
   manId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
   manDataInicio DATE NOT NULL,
-  manDecricao VARCHAR(150) NOT NULL,
+  manDescricao VARCHAR(150) NOT NULL,
   manDataTermino DATE NULL,
   manObservacao VARCHAR(150) NULL,
   manStatus VARCHAR(10) NOT NULL,
-  manMaqId INT NOT NULL,
-  manImpId INT NOT NULL,
-  manPecId INT NOT NULL,
+  manMaqId INT NULL,
+  manImpId INT NULL,
+  manPecId INT NULL,
   CONSTRAINT manMaqId
     FOREIGN KEY (manMaqId)
     REFERENCES Maquina (maqId),
@@ -210,10 +210,10 @@ VALUES
   (1, 'João Silva', '123.456.789-00', '(11)91234-5678', 'joao.silva@email.com'),
   (2, 'Maria Oliveira', '987.654.321-00', '(11)98765-4321', 'maria.oliveira@email.com');
 
-INSERT INTO Manutencao_Equipamento (manId, manDataInicio, manDecricao, manDataTermino, manObservacao, manStatus, manMaqId, manImpId, manPecId)
+INSERT INTO Manutencao_Equipamento (manId, manDataInicio, manDescricao, manDataTermino, manObservacao, manStatus, manMaqId, manImpId, manPecId)
 VALUES
-  (1, '2024-01-10', 'Troca de óleo', '2024-01-15', 'Óleo trocado com sucesso', 'Concluído', 1, 1, 1),
-  (2, '2024-02-20', 'Reparo nas correias', '2024-02-25', 'Correias substituídas', 'Concluído', 2, 2, 2);
+  (1, '2024-01-10', 'Troca de óleo', '2024-01-15', 'Óleo trocado com sucesso', 'Concluído', 1, null, null),
+  (2, '2024-02-20', 'Reparo nas correias', '2024-02-25', 'Correias substituídas', 'Concluído', null, 2, null);
 
 INSERT INTO Usuario (usuId, usuNome, usuSenha, usuTelefone, usuEmail, usuPerfil)
 VALUES

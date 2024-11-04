@@ -10,6 +10,7 @@ import PecasRoute from './routes/pecasRoute.js';
 import ImplementoRoute from './routes/implementoRoute.js';
 import LocacaoRoute from './routes/locacaoRouter.js';
 import ClienteRoute from './routes/clienteRoute.js';
+import ManuetencaoRoute from './routes/manutencaoRoute.js';
 
 const app = express();
 app.listen(5000);
@@ -42,4 +43,9 @@ app.use('/locacao',
 app.use('/cliente', 
     // #swagger.tags = ['Clientes']
     ClienteRoute
+);
+
+app.use('/manutencao', 
+    // #swagger.tags = ['Manutenção']
+    ManuetencaoRoute
 );

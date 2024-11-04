@@ -84,9 +84,9 @@ export default class ItensLocacaoModel {
         return result;
     }
 
-    async excluir() {
-        const sql = "DELETE FROM Itens_Locacao WHERE iteLocId = ?";
-        const valores = [this.#iteLocId];
+    async excluir(idLocacao) {
+        const sql = "DELETE FROM Itens_Locacao WHERE IteLocLocacaoId = ?";
+        const valores = [idLocacao];
 
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
@@ -100,5 +100,27 @@ export default class ItensLocacaoModel {
         `;
         const rows = await db.ExecutaComando(sql, [locacaoId]);
         return this.toMAP(rows);
+    }
+
+    async obter(id) {
+        let sql = `
+            SELECT li.iteLocQuantidade, li.iteLocValorUnitario,
+                COALESCE(m.maqId, p.pecId, i.impId) AS iteLocId,
+                COALESCE(m.maqNome, p.pecNome, i.impNome) AS iteLocNome,
+            CASE 
+                WHEN m.maqId IS NOT NULL THEN 'Máquina'
+                WHEN p.pecId IS NOT NULL THEN 'Peça'
+                WHEN i.impId IS NOT NULL THEN 'Implemento'
+            END AS iteLocTipo
+            FROM Itens_Locacao li
+            LEFT JOIN Maquina m ON li.iteLocMaqId = m.maqId
+            LEFT JOIN Peca p ON li.iteLocPecId = p.pecId
+            LEFT JOIN Implemento i ON li.iteLocImpId = i.impId
+            WHERE li.IteLocLocacaoId = ?;
+        `;
+        let valores = [id];
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows;
     }
 }

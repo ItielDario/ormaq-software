@@ -16,14 +16,16 @@ export default class locacaoController {
     async obterLocacao(req, res) {
         try {
             let { id } = req.params;
-            console.log(id)
             let locacao = new LocacaoModel();
             locacao = await locacao.obter(id);
+
+            let itensLocacao = new ItensLocacaoModel();
+            itensLocacao = await itensLocacao.obter(id);
 
             if (locacao == null) {
                 res.status(404).json({ msg: `Locação com o ID ${id} não encontrada!` });
             } else {
-                res.status(200).json(locacao[0]);
+                res.status(200).json({locacao: locacao[0], itensLocacao:  itensLocacao});
             }
         } catch (ex) {
             console.log(ex);
@@ -37,9 +39,9 @@ export default class locacaoController {
     
             if (locDataInicio && locDataFinalPrevista && locValorTotal && locDesconto && locValorFinal && locCliId && itens && itens.length > 0) {
                 let locacao = new LocacaoModel(0, locDataInicio, locDataFinalPrevista, null, locValorTotal, locDesconto, locValorFinal, locCliId, 1, 1);
-                let locacaoResult = await locacao.gravar();
+                let locacaoId = await locacao.gravar();
     
-                if (locacaoResult) {
+                if (locacaoId) {
                     // Cadastra cada item individualmente
                     for (const item of itens) {
                         const { quantidade, preco, tipo, id } = item;
@@ -49,7 +51,7 @@ export default class locacaoController {
                         let iteLocImpId = tipo === "Implemento" ? id : null;
                         let iteLocMaqId = tipo === "Máquina" ? id : null;
     
-                        let itemLocacao = new ItensLocacaoModel(0, quantidade, preco, iteLocPecId, iteLocImpId, iteLocMaqId, locacaoResult);
+                        let itemLocacao = new ItensLocacaoModel(0, quantidade, preco, iteLocPecId, iteLocImpId, iteLocMaqId, locacaoId);
     
                         const itemResult = await itemLocacao.gravar();
                         if (!itemResult) {
@@ -72,19 +74,40 @@ export default class locacaoController {
 
     async alterarLocacao(req, res) {
         try {
-            let {locDataInicio, locDataFinalPrevista, locValorTotal, locDesconto, locValorFinal, locCliId, itens} = req.body;
+            let { locId, locDataInicio, locDataFinalPrevista, locValorTotal, locDesconto, locValorFinal, locCliId, itens } = req.body;
+    
+            if (locId && locDataInicio && locDataFinalPrevista && locValorTotal && locDesconto && locValorFinal && locCliId && itens && itens.length > 0) {
+                let locacao = new LocacaoModel(locId, locDataInicio, locDataFinalPrevista, null, locValorTotal, locDesconto, locValorFinal, locCliId, 1, 1);
+                let locacaoId = await locacao.gravar();
+    
+                if (locacaoId) {
+                    // Exclui todos os itens dessa locação
+                    let intanciaAux = new ItensLocacaoModel();
+                    const exclusaoResult = await intanciaAux.excluir(locId);
 
-            if (locDataInicio && locDataFinalPrevista && locValorTotal && locDesconto && locValorFinal && locCliId && itens) {
-                let locacao = new LocacaoModel(0, locDataInicio, locDataFinalPrevista, null, locValorTotal, locDesconto, locValorFinal, locCliId, 1, 1);
-                let result = await locacao.gravar();
+                    // Cadastra novamente cada item individualmente
+                    for (const item of itens) {
+                        const { iteLocQuantidade, iteLocValorUnitario, iteLocTipo, iteLocId } = item;
 
-                if (result) {
-                    res.status(200).json({ msg: "Locação alterada com sucesso!" });
+                        // Define os IDs específicos com base no tipo do item
+                        let iteLocPecId = iteLocTipo === "Peça" ? iteLocId : null;
+                        let iteLocImpId = iteLocTipo === "Implemento" ? iteLocId : null;
+                        let iteLocMaqId = iteLocTipo === "Máquina" ? iteLocId : null;
+
+                        let itemLocacao = new ItensLocacaoModel(0, iteLocQuantidade, iteLocValorUnitario, iteLocPecId, iteLocImpId, iteLocMaqId, locId);
+
+                        const itemResult = await itemLocacao.gravar();
+                        if (!itemResult) {
+                            throw new Error(`Erro ao alterar item de locação: ${item.nome}`);
+                        }
+                    }
+
+                    res.status(201).json({ msg: "Locação alterada com sucesso!" });
                 } else {
-                    res.status(500).json({ msg: "Erro durante a alteração da locação" });
+                    res.status(500).json({ msg: "Erro durante a alteração da locação!" });
                 }
             } else {
-                res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios corretamente!" });
+                res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!" });
             }
         } catch (ex) {
             console.log(ex);

@@ -32,7 +32,6 @@ export default function AlterarLocacao({ params: { id } }) {
   const alertMsg = useRef(null);
 
   useEffect(() => {
-    // Busca os dados necessários
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
     httpClient.get("/maquina").then(r => r.json()).then(r => setMaquina(r));
     httpClient.get("/peca").then(r => r.json()).then(r => setPeca(r));
@@ -40,11 +39,19 @@ export default function AlterarLocacao({ params: { id } }) {
 
     httpClient.get(`/locacao/${id}`)
     .then(r => r.json())
-    .then(locacao => {
-      console.log(locacao); 
-      locacao.locDataInicio = new Date(locacao.locDataInicio).toISOString().split('T')[0];
-      locacao.locDataFinalPrevista = new Date(locacao.locDataFinalPrevista).toISOString().split('T')[0];
-      setlocacaoSelecionada(locacao)
+    .then((r) => {
+      r.locacao.locDataInicio = new Date(r.locacao.locDataInicio).toISOString().split('T')[0];
+      r.locacao.locDataFinalPrevista = new Date(r.locacao.locDataFinalPrevista).toISOString().split('T')[0];
+      let valorTotalAux = r.itensLocacao.reduce((total, equip) => total + equip.iteLocValorUnitario * equip.iteLocQuantidade, 0);
+      valorTotalRef.current.innerHTML = `R$ ${valorTotalAux.toFixed(2)}`;
+      clienteIdRef.current.dataset.clienteId = r.locacao.cliId
+
+      setlocacaoSelecionada(r.locacao);
+      setItensLocacao(r.itensLocacao);
+      setvalorTotal(valorTotalAux);
+      
+      calcularValorFinal(r.locacao.locDesconto, valorTotalAux);
+      
     });
   }, [id]);
 
@@ -65,10 +72,6 @@ export default function AlterarLocacao({ params: { id } }) {
     }
   };
 
-  const obterClienteIdSelecionado = () => {
-    return clienteIdRef.current.dataset.clienteId || null;
-  };
-
   const adicionarItemLocacao = () => {
     alertMsg.current.style.display = 'none';
     let result = false;
@@ -83,12 +86,11 @@ export default function AlterarLocacao({ params: { id } }) {
         if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            id: equipamentoDados[0].maqId,
-            tipo: 'Máquina',
-            nome: equipamentoDados[0].maqNome,
-            data: new Date(equipamentoDados[0].maqDataAquisicao).toLocaleDateString(),
-            preco: equipamentoDados[0].maqPrecoHora,
-            quantidade: quantidadeRef.current.value,
+            iteLocId: equipamentoDados[0].maqId,
+            iteLocTipo: 'Máquina',
+            iteLocNome: equipamentoDados[0].maqNome,
+            iteLocValorUnitario: equipamentoDados[0].maqPrecoHora,
+            iteLocQuantidade: quantidadeRef.current.value,
           };
         }
       } 
@@ -98,12 +100,11 @@ export default function AlterarLocacao({ params: { id } }) {
         if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            id: equipamentoDados[0].pecaId,
-            tipo: 'Peça',
-            nome: equipamentoDados[0].pecaNome,
-            data: new Date(equipamentoDados[0].pecaDataAquisicao).toLocaleDateString(),
-            preco: equipamentoDados[0].pecaPrecoHora,
-            quantidade: quantidadeRef.current.value,
+            iteLocId: equipamentoDados[0].pecaId,
+            iteLocTipo: 'Peça',
+            iteLocNome: equipamentoDados[0].pecaNome,
+            iteLocValorUnitario: equipamentoDados[0].pecaPrecoHora,
+            iteLocQuantidade: quantidadeRef.current.value,
           };
         }
       } 
@@ -114,12 +115,11 @@ export default function AlterarLocacao({ params: { id } }) {
         if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            id: equipamentoDados[0].impId,
-            tipo: 'Implemento',
-            nome: equipamentoDados[0].impNome,
-            data: new Date(equipamentoDados[0].impDataAquisicao).toLocaleDateString(),
-            preco: equipamentoDados[0].impPrecoHora,
-            quantidade: quantidadeRef.current.value,
+            iteLocId: equipamentoDados[0].impId,
+            iteLocTipo: 'Implemento',
+            iteLocNome: equipamentoDados[0].impNome,
+            iteLocValorUnitario: equipamentoDados[0].impPrecoHora,
+            iteLocQuantidade: quantidadeRef.current.value,
           };
         }
       }
@@ -128,7 +128,7 @@ export default function AlterarLocacao({ params: { id } }) {
         const listaItensAuxiliar = [...itensLocacao, equipamentoDados];
         setItensLocacao(listaItensAuxiliar);
 
-        let valorTotal = listaItensAuxiliar.reduce((total, equip) => total + equip.preco * equip.quantidade, 0);
+        let valorTotal = listaItensAuxiliar.reduce((total, equip) => total + equip.iteLocValorUnitario * equip.iteLocQuantidade, 0);
         valorTotalRef.current.innerHTML = `R$ ${valorTotal.toFixed(2)}`;
         setvalorTotal(valorTotal);
 
@@ -165,7 +165,7 @@ export default function AlterarLocacao({ params: { id } }) {
     const novaLista = itensLocacao.filter((item, i) => i !== index);
     setItensLocacao(novaLista);
     
-    let novoValorTotal = novaLista.reduce((total, item) => total + item.preco * item.quantidade, 0);
+    let novoValorTotal = novaLista.reduce((total, item) => total + item.iteLocValorUnitario * item.iteLocQuantidade, 0);
     setvalorTotal(novoValorTotal);
     valorTotalRef.current.innerHTML = `R$ ${novoValorTotal.toFixed(2)}`;
 
@@ -177,12 +177,13 @@ export default function AlterarLocacao({ params: { id } }) {
     let status = 0;
 
     const dados = {
+      locId: id,
       locDataInicio: dataInicioRef.current.value,
       locDataFinalPrevista: dataFinalPrevistaRef.current.value,
       locValorTotal: valorTotal,
       locDesconto: descontoRef.current.value,
       locValorFinal: parseFloat(valorFinalRef.current.innerHTML.replace('R$ ', '').replace(',', '.')),
-      locCliId: obterClienteIdSelecionado(),
+      locCliId: clienteIdRef.current.dataset.clienteId,
       itens: itensLocacao,
     };
 
@@ -205,29 +206,34 @@ export default function AlterarLocacao({ params: { id } }) {
       return;
     }
 
-    httpClient.put(`/locacao/${id}`, dados)
+    httpClient.put(`/locacao`, dados)
+      .then((r) => {
+        status = r.status;
+        return r.json();
+      })
       .then(r => {
-        if (r.ok) {
-          alertMsg.current.className = 'alertSuccess';
+        setTimeout(() => {
+          if(status == 201){
+            alertMsg.current.className = 'alertSuccess';
+          }
+          else{
+            alertMsg.current.className = 'alertError';
+          }
           alertMsg.current.style.display = 'block';
-          alertMsg.current.textContent = 'Locação alterada com sucesso!';
-          setTimeout(() => {
-            window.location.href = '/locacao';
-          }, 1000);
-        } else {
-          alertMsg.current.className = 'alertError';
-          alertMsg.current.style.display = 'block';
-          alertMsg.current.textContent = 'Erro ao alterar a locação. Tente novamente.';
-        }
+          alertMsg.current.textContent = r.msg;
+        }, 100);
       });
+
+    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
   };
 
-  const calcularValorFinal = (desconto, valorTotal) => {
-    let valorDesconto = valorTotal * (parseFloat(desconto) / 100);
-    let valorFinal = valorTotal - valorDesconto;
-
-    valorFinalRef.current.innerHTML = `R$ ${valorFinal.toFixed(2)}`;
-  };
+  const calcularValorFinal = (valorDesconto, valorTotal) => {
+    if(valorDesconto >= 0){
+      valorFinalRef.current.innerHTML = `R$ ${(valorTotal - valorDesconto).toFixed(2)}`
+      containerValorTotalRef.current.style.display = 'flex'
+      descontoRef.current.style.width = '95%'
+    }
+  }; 
 
   const verificaCampoVazio = (dados) => {
     return Object.values(dados).some(value => value === '' || value === null || value === undefined);
@@ -252,6 +258,10 @@ export default function AlterarLocacao({ params: { id } }) {
         ))}
       </datalist>
     );
+  };
+
+  const obterClienteIdSelecionado = () => { // Função para retornar o ID do cliente selecionado
+    return clienteIdRef.current.dataset.clienteId || null;
   };
 
   return (
@@ -348,7 +358,6 @@ export default function AlterarLocacao({ params: { id } }) {
                 <th>ID</th>
                 <th>Nome</th>
                 <th>Tipo Equipamento</th>
-                <th>Data de Aquisição</th>
                 <th>Preço / Hora</th>
                 <th>Quantidade</th>
                 <th>Ações</th>
@@ -357,12 +366,11 @@ export default function AlterarLocacao({ params: { id } }) {
             <tbody className="tbody-itens-locacao">
               {itensLocacao.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.id}</td>
-                  <td>{item.nome}</td>
-                  <td>{item.tipo}</td>
-                  <td>{item.data}</td>
-                  <td>{item.preco}</td>
-                  <td>{item.quantidade}</td>
+                  <td>{item.iteLocId}</td>
+                  <td>{item.iteLocNome}</td>
+                  <td>{item.iteLocTipo}</td>
+                  <td>{item.iteLocValorUnitario}</td>
+                  <td>{item.iteLocQuantidade}</td>
                   <td><a onClick={() => excluirItem(index)}><i className="nav-icon fas fa-trash"></i></a></td>
                 </tr>
               ))}
@@ -378,7 +386,7 @@ export default function AlterarLocacao({ params: { id } }) {
         <section className="container-valor-final">
           <article className="box-desconto">
             <label>Desconto</label>
-            <input  type="number" onChange={(e) => calcularValorFinal(e.target.value, valorTotal)}  name="locDesconto" ref={descontoRef} defaultValue={0}/>
+            <input type="number" onChange={(e) => calcularValorFinal(e.target.value, valorTotal)} defaultValue={locacaoSelecionada.locDesconto} name="locDesconto" ref={descontoRef}/>
           </article>
 
           <article ref={containerValorTotalRef} className="box-valor-final">
@@ -389,7 +397,7 @@ export default function AlterarLocacao({ params: { id } }) {
 
         <section className="container-btn">
           <CriarBotao value='Voltar' href='/locacao' class='btn-voltar'></CriarBotao>
-          <button type="button" className='btn-cadastrar' onClick={alterarLocacao}>Cadastrar Locação</button>
+          <button type="button" className='btn-cadastrar' onClick={alterarLocacao}>Alterar Locação</button>
         </section>
       </form>
     </section>

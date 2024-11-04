@@ -85,7 +85,7 @@ export default function Locacao() {
                       'CPF/CNPJ': locacao.cliCPF_CNPJ,
                       'Data de Início': locacao.locDataInicio,
                       'Data Final Prevista': locacao.locDataFinalPrevista,
-                      'Valor': locacao.locValorFinal ? parseFloat(locacao.locValorFinal).toFixed(2) : 'N/A',
+                      'Valor': `R$ ${locacao.locValorFinal ? parseFloat(locacao.locValorFinal).toFixed(2) : 'N/A'}`,
                       Status: locacao.locStaDescricao
                     }))}                  
                     renderActions={(locacao) => (

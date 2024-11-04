@@ -75,7 +75,6 @@ export default function CadastrarLocacao() {
             id: equipamentoDados[0].maqId,
             tipo: 'Máquina',
             nome: equipamentoDados[0].maqNome,
-            data: new Date(equipamentoDados[0].maqDataAquisicao).toLocaleDateString(),
             preco: equipamentoDados[0].maqPrecoHora,
             quantidade: quantidadeRef.current.value,
           };
@@ -90,7 +89,6 @@ export default function CadastrarLocacao() {
             id: equipamentoDados[0].pecaId,
             tipo: 'Peça',
             nome: equipamentoDados[0].pecaNome,
-            data: new Date(equipamentoDados[0].pecaDataAquisicao).toLocaleDateString(),
             preco: equipamentoDados[0].pecaPrecoHora,
             quantidade: quantidadeRef.current.value,
           };
@@ -106,7 +104,6 @@ export default function CadastrarLocacao() {
             id: equipamentoDados[0].impId,
             tipo: 'Implemento',
             nome: equipamentoDados[0].impNome,
-            data: new Date(equipamentoDados[0].impDataAquisicao).toLocaleDateString(),
             preco: equipamentoDados[0].impPrecoHora,
             quantidade: quantidadeRef.current.value,
           };

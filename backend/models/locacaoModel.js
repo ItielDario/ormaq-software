@@ -136,8 +136,8 @@ export default class LocacaoModel {
             }
         } else {
             // Alteração
-            sql = `UPDATE Locacao SET locDataInicio = ?, locDataFinalPrevista = ?, locDataFinalEntrega = ?, locValorTotal = ?, locDesconto = ?, locValorFinal = ?, locStatus = ? WHERE locId = ?`;
-            valores = [this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#locacaoStatus, this.#locId];
+            sql = `UPDATE Locacao SET locDataInicio = ?, locDataFinalPrevista = ?, locDataFinalEntrega = ?, locValorTotal = ?, locDesconto = ?, locValorFinal = ?, locStatus = ?, locCliId = ? WHERE locId = ?`;
+            valores = [this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#locacaoStatus, this.#cliente, this.#locId];
     
             result = await db.ExecutaComandoNonQuery(sql, valores);
             return result;
@@ -148,18 +148,10 @@ export default class LocacaoModel {
 
     async obter(id) {
         let sql = `
-            SELECT l.locDataInicio, l.locDataFinalPrevista, l.locValorTotal, l.locDesconto,
-                c.cliId, c.cliNome, c.cliCPF_CNPJ, li.iteLocQuantidade, li.iteLocValorUnitario,
-                COALESCE(m.maqId, p.pecId, i.impId) AS iteLocId,
-                COALESCE(m.maqNome, p.pecNome, i.impNome) AS iteLocNome
+            SELECT l.locId,  l.locDataInicio,  l.locDataFinalPrevista,  l.locValorTotal, 
+                l.locDesconto, c.cliId,  c.cliNome, c.cliCPF_CNPJ
             FROM Locacao l
             JOIN Cliente c ON l.locCliId = c.cliId
-            JOIN Usuario u ON l.locUsuId = u.usuId
-            JOIN Locacao_Status ls ON l.locStatus = ls.locStaId
-            JOIN Itens_Locacao li ON li.IteLocLocacaoId = l.locId
-            LEFT JOIN Maquina m ON li.iteLocMaqId = m.maqId
-            LEFT JOIN Peca p ON li.iteLocPecId = p.pecId
-            LEFT JOIN Implemento i ON li.iteLocImpId = i.impId
             WHERE l.locId = ?;
         `;
         let valores = [id];

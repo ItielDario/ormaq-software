@@ -562,8 +562,8 @@
         "summary": "Alterar uma locação",
         "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Bad Request"
@@ -578,6 +578,9 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "locId": {
+                    "example": "any"
+                  },
                   "locDataInicio": {
                     "example": "any"
                   },

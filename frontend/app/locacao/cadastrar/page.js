@@ -178,10 +178,12 @@ export default function CadastrarLocacao() {
   
     // Validação de campos vazios
     if (verificaCampoVazio(dados) || itensLocacao.length === 0) {
-      alertMsg.current.className = 'alertError';
-      alertMsg.current.style.display = 'block';
-      alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!';
-      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!';
+        document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      }, 100);
       return;
     }
   
@@ -190,19 +192,23 @@ export default function CadastrarLocacao() {
     const dataFinalPrevista = new Date(dataFinalPrevistaRef.current.value);
     
     if (dataInicio >= dataFinalPrevista) {
-      alertMsg.current.className = 'alertError';
-      alertMsg.current.style.display = 'block';
-      alertMsg.current.textContent = 'A data de início da locação deve ser anterior à data de término!';
-      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'A data de início da locação deve ser anterior à data de término!';
+        document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      }, 100);
       return;
     }
   
     // Validação do valor de desconto
     if (parseFloat(descontoRef.current.value) > valorTotal) {
-      alertMsg.current.className = 'alertError';
-      alertMsg.current.style.display = 'block';
-      alertMsg.current.textContent = 'O valor do desconto não pode ser maior que o valor total.';
-      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'O valor do desconto não pode ser maior que o valor total.';
+        document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      }, 100);
       return;
     }
   

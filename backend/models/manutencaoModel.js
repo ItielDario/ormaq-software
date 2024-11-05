@@ -8,7 +8,7 @@ const db = new Database();
 export default class ManutencaoModel {
     #manId;
     #manDataInicio;
-    #manDataConclusao;
+    #manDataTermino;
     #manDescricao;
     #peca;         // ID da peça relacionada, se aplicável
     #implemento;   // ID do implemento relacionado, se aplicável
@@ -21,8 +21,8 @@ export default class ManutencaoModel {
     get manDataInicio() { return this.#manDataInicio; }
     set manDataInicio(manDataInicio) { this.#manDataInicio = manDataInicio; }
 
-    get manDataConclusao() { return this.#manDataConclusao; }
-    set manDataConclusao(manDataConclusao) { this.#manDataConclusao = manDataConclusao; }
+    get manDataTermino() { return this.#manDataTermino; }
+    set manDataTermino(manDataTermino) { this.#manDataTermino = manDataTermino; }
 
     get manDescricao() { return this.#manDescricao; }
     set manDescricao(manDescricao) { this.#manDescricao = manDescricao; }
@@ -39,10 +39,10 @@ export default class ManutencaoModel {
     get manStatus() { return this.#manStatus; }
     set manStatus(manStatus) { this.#manStatus = manStatus; }
 
-    constructor(manId, manDataInicio, manDataConclusao, manDescricao, peca, implemento, maquina, manStatus) {
+    constructor(manId, manDataInicio, manDataTermino, manDescricao, peca, implemento, maquina, manStatus) {
         this.#manId = manId;
         this.#manDataInicio = manDataInicio;
-        this.#manDataConclusao = manDataConclusao;
+        this.#manDataTermino = manDataTermino;
         this.#manDescricao = manDescricao;
         this.#peca = peca;
         this.#implemento = implemento;
@@ -54,7 +54,7 @@ export default class ManutencaoModel {
         return {
             "manId": this.#manId,
             "manDataInicio": this.#manDataInicio,
-            "manDataConclusao": this.#manDataConclusao,
+            "manDataTermino": this.#manDataTermino,
             "manDescricao": this.#manDescricao,
             "peca": this.#peca,
             "implemento": this.#implemento,
@@ -88,11 +88,11 @@ export default class ManutencaoModel {
         let result;
 
         if (this.#manId == 0 || this.#manId == null) {
-            sql = `INSERT INTO Manutencao (manDataInicio, manDataConclusao, manDescricao, manPecId, manImpId, manMaqId, manStatus) 
+            sql = `INSERT INTO Manutencao_Equipamento  (manDataInicio, manDataTermino, manDescricao, manPecId, manImpId, manMaqId, manStatus) 
                    VALUES (?, ?, ?, ?, ?, ?, ?)`;
             valores = [
                 this.#manDataInicio, 
-                this.#manDataConclusao, 
+                this.#manDataTermino, 
                 this.#manDescricao, 
                 this.#peca, 
                 this.#implemento, 
@@ -106,12 +106,12 @@ export default class ManutencaoModel {
                 return lastId[0].manId;
             }
         } else {
-            sql = `UPDATE Manutencao SET manDataInicio = ?, manDataConclusao = ?, manDescricao = ?, 
+            sql = `UPDATE Manutencao_Equipamento  SET manDataInicio = ?, manDataTermino = ?, manDescricao = ?, 
                    manPecId = ?, manImpId = ?, manMaqId = ?, manStatus = ? 
                    WHERE manId = ?`;
             valores = [
                 this.#manDataInicio, 
-                this.#manDataConclusao, 
+                this.#manDataTermino, 
                 this.#manDescricao, 
                 this.#peca, 
                 this.#implemento, 
@@ -129,13 +129,19 @@ export default class ManutencaoModel {
 
     async obter(id) {
         const sql = `
-            SELECT m.manId, m.manDataInicio, m.manDataConclusao, m.manDescricao, 
-                   p.pecId AS peca, i.impId AS implemento, ma.maqId AS maquina, m.manStatus
-            FROM Manutencao m
+            SELECT m.manId, m.manDataInicio, m.manDataTermino, m.manDescricao, m.manStatus,
+                COALESCE(ma.maqId, p.pecId, i.impId) AS manEqpId,
+                COALESCE(ma.maqNome, p.pecNome, i.impNome) AS manEqpNome,
+            CASE 
+                WHEN ma.maqId IS NOT NULL THEN 'Máquina'
+                WHEN p.pecId IS NOT NULL THEN 'Peça'
+                WHEN i.impId IS NOT NULL THEN 'Implemento'
+            END AS maqEqpTipo
+            FROM Manutencao_Equipamento m
             LEFT JOIN Peca p ON m.manPecId = p.pecId
             LEFT JOIN Implemento i ON m.manImpId = i.impId
             LEFT JOIN Maquina ma ON m.manMaqId = ma.maqId
-            WHERE m.manId = ?;`;
+            WHERE m.manId = ?`;
         
         const valores = [id];
         const rows = await db.ExecutaComando(sql, valores);
@@ -143,7 +149,7 @@ export default class ManutencaoModel {
     }
 
     async excluir(idManutencao) {
-        const sql = "DELETE FROM Manutencao WHERE manId = ?";
+        const sql = "DELETE FROM Manutencao_Equipamento  WHERE manId = ?";
         const valores = [idManutencao];
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;

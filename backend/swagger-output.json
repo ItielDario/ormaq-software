@@ -898,8 +898,8 @@
         "summary": "Alterar uma manutenção existente",
         "description": "",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Bad Request"
@@ -920,25 +920,13 @@
                   "manDataInicio": {
                     "example": "any"
                   },
-                  "manDecricao": {
+                  "manDescricao": {
                     "example": "any"
                   },
-                  "manDataTermino": {
+                  "manMaqTipo": {
                     "example": "any"
                   },
-                  "manObservacao": {
-                    "example": "any"
-                  },
-                  "manStatus": {
-                    "example": "any"
-                  },
-                  "manMaqId": {
-                    "example": "any"
-                  },
-                  "manImpId": {
-                    "example": "any"
-                  },
-                  "manPecId": {
+                  "manEqpId": {
                     "example": "any"
                   }
                 }
@@ -1030,25 +1018,13 @@
                   "manDataInicio": {
                     "example": "any"
                   },
-                  "manDecricao": {
+                  "manDescricao": {
                     "example": "any"
                   },
-                  "manDataTermino": {
+                  "manMaqTipo": {
                     "example": "any"
                   },
-                  "manObservacao": {
-                    "example": "any"
-                  },
-                  "manStatus": {
-                    "example": "any"
-                  },
-                  "manMaqId": {
-                    "example": "any"
-                  },
-                  "manImpId": {
-                    "example": "any"
-                  },
-                  "manPecId": {
+                  "manEqpId": {
                     "example": "any"
                   }
                 }

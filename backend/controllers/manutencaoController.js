@@ -21,7 +21,7 @@ export default class manutencaoController {
             if (!manutencao) {
                 res.status(404).json({ msg: `Manutenção com o ID ${id} não encontrada!` });
             } else {
-                res.status(200).json(manutencao);
+                res.status(200).json(manutencao[0]);
             }
         } catch (ex) {
             console.log(ex);
@@ -31,10 +31,15 @@ export default class manutencaoController {
 
     async cadastrarManutencao(req, res) {
         try {
-            let { manDataInicio, manDecricao, manDataTermino, manObservacao, manStatus, manMaqId, manImpId, manPecId } = req.body;
+            let { manDataInicio, manDescricao, manMaqTipo, manEqpId} = req.body;
     
-            if (manDataInicio && manDecricao && manStatus) {
-                let manutencao = new ManutencaoModel(0, manDataInicio, manDecricao, manDataTermino, manObservacao, manStatus, manMaqId, manImpId, manPecId);
+            if (manDataInicio && manDescricao && manMaqTipo && manEqpId) {
+
+                let manPecId = manMaqTipo === "Peça" ? manEqpId : null;
+                let manLocImpId = manMaqTipo === "Implemento" ? manEqpId : null;
+                let manLocMaqId = manMaqTipo === "Máquina" ? manEqpId : null;
+
+                let manutencao = new ManutencaoModel(0, manDataInicio, null, manDescricao, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
                 let manutencaoId = await manutencao.gravar();
     
                 if (manutencaoId) {
@@ -52,17 +57,23 @@ export default class manutencaoController {
     }
 
     async alterarManutencao(req, res) {
+        
         try {
-            let { manId, manDataInicio, manDecricao, manDataTermino, manObservacao, manStatus, manMaqId, manImpId, manPecId } = req.body;
+            let { manId, manDataInicio, manDescricao, manMaqTipo, manEqpId} = req.body;
     
-            if (manId && manDataInicio && manDecricao && manStatus) {
-                let manutencao = new ManutencaoModel(manId, manDataInicio, manDecricao, manDataTermino, manObservacao, manStatus, manMaqId, manImpId, manPecId);
+            if (manId && manDataInicio && manDescricao && manMaqTipo && manEqpId) {
+
+                let manPecId = manMaqTipo === "Peça" ? manEqpId : null;
+                let manLocImpId = manMaqTipo === "Implemento" ? manEqpId : null;
+                let manLocMaqId = manMaqTipo === "Máquina" ? manEqpId : null;
+
+                let manutencao = new ManutencaoModel(manId, manDataInicio, null, manDescricao, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
                 let manutencaoId = await manutencao.gravar();
     
                 if (manutencaoId) {
-                    res.status(200).json({ msg: "Manutenção alterada com sucesso!" });
+                    res.status(201).json({ msg: "Manutenção alterada com sucesso!" });
                 } else {
-                    res.status(500).json({ msg: "Erro durante a alteração da manutenção!" });
+                    res.status(500).json({ msg: "Erro durante a alteração da manutenção." });
                 }
             } else {
                 res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios!" });

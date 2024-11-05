@@ -56,7 +56,7 @@ CREATE TABLE Manutencao_Equipamento (
   manDescricao VARCHAR(150) NOT NULL,
   manDataTermino DATE NULL,
   manObservacao VARCHAR(150) NULL,
-  manStatus VARCHAR(10) NOT NULL,
+  manStatus VARCHAR(15) NOT NULL,
   manMaqId INT NULL,
   manImpId INT NULL,
   manPecId INT NULL,

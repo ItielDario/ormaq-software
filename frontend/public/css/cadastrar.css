@@ -103,6 +103,10 @@ input::placeholder{
     width: 80% !important;
 }
 
+.input-equipamento-width-100{
+    width: 100% !important;
+}
+
 .input-quantidade{
     width: 20% !important;
 }

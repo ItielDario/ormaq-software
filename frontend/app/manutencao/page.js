@@ -24,7 +24,6 @@ export default function Manutencao() {
         httpClient.get("/manutencao")
             .then(r => r.json())
             .then((r) => {
-              console.log(r)
                 r.map(manutencao => {
                     manutencao.manDataInicio = new Date(manutencao.manDataInicio).toLocaleDateString();
                     manutencao.manDataTermino = manutencao.manDataTermino ? new Date(manutencao.manDataTermino).toLocaleDateString() : "Aguardando finalização";

@@ -139,7 +139,7 @@ tr:hover {
     background-color: #fff;
     border-radius: 1vw;
     width: 90%;
-    max-width: 40vw;
+    max-width: 48vw;
     padding: 1.5vw;
     box-shadow: 0 0.4vw 0.8vw rgba(0, 0, 0, 0.2);
     position: relative;
@@ -168,6 +168,7 @@ tr:hover {
 /* Body */
 .modal-body {
     margin-top: 1vw;
+    margin-bottom: 1.5vw;
 }
 
 .modal-data{
@@ -175,6 +176,7 @@ tr:hover {
     padding: 1vw 1vw 0.5vw 1vw;
     background-color: #e4e4e4;
     border-radius: 0.4vw;
+    margin-bottom: 1vw;
 }
 
 .modal-body p {
@@ -183,7 +185,7 @@ tr:hover {
 }
 
 .modal-form{
-    margin-top: 2vw;
+    margin-top: 1.5vw;
 }
 
 .modal-body label {

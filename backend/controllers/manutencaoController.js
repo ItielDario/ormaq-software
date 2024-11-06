@@ -39,7 +39,7 @@ export default class manutencaoController {
                 let manLocImpId = manMaqTipo === "Implemento" ? manEqpId : null;
                 let manLocMaqId = manMaqTipo === "Máquina" ? manEqpId : null;
 
-                let manutencao = new ManutencaoModel(0, manDataInicio, null, manDescricao, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
+                let manutencao = new ManutencaoModel(0, manDataInicio, null, manDescricao, null, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
                 let manutencaoId = await manutencao.gravar();
     
                 if (manutencaoId) {
@@ -57,7 +57,6 @@ export default class manutencaoController {
     }
 
     async alterarManutencao(req, res) {
-        
         try {
             let { manId, manDataInicio, manDescricao, manMaqTipo, manEqpId} = req.body;
     
@@ -67,7 +66,7 @@ export default class manutencaoController {
                 let manLocImpId = manMaqTipo === "Implemento" ? manEqpId : null;
                 let manLocMaqId = manMaqTipo === "Máquina" ? manEqpId : null;
 
-                let manutencao = new ManutencaoModel(manId, manDataInicio, null, manDescricao, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
+                let manutencao = new ManutencaoModel(manId, manDataInicio, null, manDescricao, null, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
                 let manutencaoId = await manutencao.gravar();
     
                 if (manutencaoId) {
@@ -95,6 +94,29 @@ export default class manutencaoController {
                 res.status(200).json({ msg: `Manutenção excluída com sucesso!` });
             } else {
                 res.status(500).json({ msg: "Erro durante a exclusão da manutenção" });
+            }
+        } catch (ex) {
+            console.log(ex);
+            res.status(500).json({ msg: "Erro interno de servidor!" });
+        }
+    }
+
+    async finalizarManutencao(req, res) {
+        try {
+            let { manId, manObservacao, manDataTermino} = req.body;
+    
+            if (manId && manDataTermino) {
+
+                let manutencao = new ManutencaoModel(manId, null, manDataTermino, null, manObservacao, null, null, null, 'Finalizada');
+                let manutencaoId = await manutencao.finalizar();
+    
+                if (manutencaoId) {
+                    res.status(201).json({ msg: "Manutenção finalizada com sucesso!" });
+                } else {
+                    res.status(500).json({ msg: "Erro durante a filanização da manutenção." });
+                }
+            } else {
+                res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios!" });
             }
         } catch (ex) {
             console.log(ex);

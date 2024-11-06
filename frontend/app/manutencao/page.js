@@ -4,13 +4,18 @@ import CriarBotao from "../components/criarBotao.js";
 import httpClient from "../utils/httpClient.js";
 
 export default function Manutencao() {
+
+    // Campos do formulário
+    const observacaoRef = useRef(null);
+    const dataTerminoRef = useRef(null);
+
+    //Variaveis Auxiliares
     const [listaManutencoes, setListaManutencoes] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [observacao, setObservacao] = useState("");
-    const [dataTermino, setDataTermino] = useState("");
     const [manutencaoId, setManutencaoId] = useState(null);
     const [manutencaoSelecionada, setManutencaoSelecionada] = useState(null);
     const alertMsg = useRef(null);
+    const alertMsgModal = useRef(null);
     let timeoutId = null;
 
     useEffect(() => {
@@ -73,37 +78,76 @@ export default function Manutencao() {
 
     function fecharModal() {
         setShowModal(false);
-        setObservacao("");
-        setDataTermino("");
+        observacaoRef.current.value = ''
+        dataTerminoRef.current.value = ''
         setManutencaoSelecionada(null);
     }
 
     function finalizarManutencao() {
-        const payload = {
-            manObservacao: observacao,
-            manDataTermino: dataTermino,
+        alertMsg.current.style.display = 'none';
+        alertMsgModal.current.style.display = 'none';
+        let status = 0;
+
+        const dados = {
+            manId: manutencaoId,
+            manObservacao: observacaoRef.current.value,
+            manDataTermino: dataTerminoRef.current.value,
         };
 
-        httpClient.put(`/manutencao/finalizar/${manutencaoId}`, payload)
-        .then(r => r.json())
-        .then((r) => {
-            carregarManutencoes();
-            fecharModal();
-            alertMsg.current.className = 'alertSuccess';
-            alertMsg.current.textContent = r.msg;
+        // Validação de campos vazios
+        if (dataTerminoRef.current.value == '' || dataTerminoRef.current.value == null || dataTerminoRef.current.value == undefined) {
+            setTimeout(() => {
+                alertMsgModal.current.className = 'alertError';
+                alertMsgModal.current.style.display = 'block';
+                alertMsgModal.current.textContent = 'Por favor, preencha a data de término corretamente!';
+                document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+            }, 100);
+            return;
+        }
 
-            alertMsg.current.style.display = 'block';
-            timeoutId = setTimeout(() => {
-                if (alertMsg.current) {
-                    alertMsg.current.style.display = 'none';
-                }
-            }, 6000);
+        const dataTermino = new Date(dataTerminoRef.current.value);
+        dataTermino.setDate(dataTermino.getDate() + 1);
+
+        const dataInicio = new Date(manutencaoSelecionada.manDataInicio);
+        const dataFinalPrevista = new Date(new Date(dataTermino.toLocaleDateString()));
+
+        // Validação de data de término
+        if (dataInicio > dataFinalPrevista) {
+            setTimeout(() => {
+                alertMsgModal.current.className = 'alertError';
+                alertMsgModal.current.style.display = 'block';
+                alertMsgModal.current.textContent = 'A data de término da manutenção deve ser após a data de início!';
+                document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+            }, 100);
+            return;
+        }
+
+        httpClient.put(`/manutencao/finalizar`, dados)
+        .then(r => {
+            status = r.status;
+            return r.json();
         })
-        .catch(() => {
-            alertMsg.current.className = 'alertError';
-            alertMsg.current.textContent = "Erro ao finalizar a manutenção.";
-            alertMsg.current.style.display = 'block';
-        });
+        .then((r) => {
+            console.log(r.msg)
+            if (status == 201) {
+                fecharModal()
+                carregarManutencoes();
+                alertMsg.current.className = 'alertSuccess';
+                alertMsg.current.style.display = 'block';
+                alertMsg.current.textContent = r.msg;
+
+                timeoutId = setTimeout(() => {
+                    if (alertMsg.current) {
+                        alertMsg.current.style.display = 'none';
+                    }
+                }, 6000);
+            } 
+            else {
+                alertMsgModal.current.className = 'alertError';
+                alertMsgModal.current.style.display = 'block';
+                alertMsgModal.current.textContent = r.msg;
+            }
+        })
     }
 
     return (
@@ -167,29 +211,20 @@ export default function Manutencao() {
                                 <p><strong>Data de Início da Manutenção:</strong> {manutencaoSelecionada.manDataInicio}</p>
                             </div>
 
+                            <article ref={alertMsgModal}></article>
+
                             <div className="modal-form">
                                 <label>Data de Término:</label>
-                                <input
-                                    type="date"
-                                    value={dataTermino}
-                                    onChange={(e) => setDataTermino(e.target.value)}
-                                    className="modal-input"
-                                />
+                                <input type="date" ref={dataTerminoRef} className="modal-input"/>
 
                                 <label>Observação:</label>
-                                <textarea
-                                    value={observacao}
-                                    onChange={(e) => setObservacao(e.target.value)}
-                                    placeholder="Digite uma observação"
-                                    className="modal-input"
-                                />
+                                <textarea ref={observacaoRef} placeholder="Digite uma observação" className="modal-input"/>
                             </div>
-                            
                         </div>
 
                         <div className="modal-footer">
                             <button type="button" className='btn-voltar' onClick={fecharModal}>Voltar</button>
-                            <button type="button" className='btn-cadastrar' >Finalizar Manutenção</button>
+                            <button type="button" className='btn-cadastrar' onClick={finalizarManutencao}>Finalizar Manutenção</button>
                         </div>
                     </div>
                 </div>

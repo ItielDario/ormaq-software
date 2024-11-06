@@ -212,8 +212,8 @@ VALUES
 
 INSERT INTO Manutencao_Equipamento (manId, manDataInicio, manDescricao, manDataTermino, manObservacao, manStatus, manMaqId, manImpId, manPecId)
 VALUES
-  (1, '2024-01-10', 'Troca de óleo', '2024-01-15', 'Óleo trocado com sucesso', 'Concluído', 1, null, null),
-  (2, '2024-02-20', 'Reparo nas correias', '2024-02-25', 'Correias substituídas', 'Concluído', null, 2, null);
+  (1, '2024-01-10', 'Troca de óleo', '2024-01-15', 'Óleo trocado com sucesso', 'Finalizada', 1, null, null),
+  (2, '2024-02-20', 'Reparo nas correias', '2024-02-25', 'Correias substituídas', 'Finalizada', null, 2, null);
 
 INSERT INTO Usuario (usuId, usuNome, usuSenha, usuTelefone, usuEmail, usuPerfil)
 VALUES

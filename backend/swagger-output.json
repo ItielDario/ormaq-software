@@ -1033,6 +1033,46 @@
           }
         }
       }
+    },
+    "/manutencao/finalizar": {
+      "put": {
+        "tags": [
+          "Manutenção"
+        ],
+        "summary": "Finaliza uma manutenção",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "manId": {
+                    "example": "any"
+                  },
+                  "manObservacao": {
+                    "example": "any"
+                  },
+                  "manDataTermino": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {

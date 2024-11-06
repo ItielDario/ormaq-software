@@ -29,4 +29,9 @@ router.delete("/:id", (req, res) => {
     ctrl.excluirManutencao(req, res);
 });
 
+router.put("/finalizar", (req, res) => {
+    // #swagger.summary = 'Finaliza uma manutenção'
+    ctrl.finalizarManutencao(req, res);
+});
+
 export default router;

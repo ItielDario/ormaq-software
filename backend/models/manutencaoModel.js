@@ -10,6 +10,7 @@ export default class ManutencaoModel {
     #manDataInicio;
     #manDataTermino;
     #manDescricao;
+    #manObservacao;
     #peca;         // ID da peça relacionada, se aplicável
     #implemento;   // ID do implemento relacionado, se aplicável
     #maquina;      // ID da máquina relacionada, se aplicável
@@ -27,6 +28,9 @@ export default class ManutencaoModel {
     get manDescricao() { return this.#manDescricao; }
     set manDescricao(manDescricao) { this.#manDescricao = manDescricao; }
 
+    get manObservacao() { return this.#manObservacao; }
+    set manObservacao(manObservacao) { this.#manObservacao = manObservacao; }
+
     get peca() { return this.#peca; }
     set peca(peca) { this.#peca = peca; }
 
@@ -39,11 +43,12 @@ export default class ManutencaoModel {
     get manStatus() { return this.#manStatus; }
     set manStatus(manStatus) { this.#manStatus = manStatus; }
 
-    constructor(manId, manDataInicio, manDataTermino, manDescricao, peca, implemento, maquina, manStatus) {
+    constructor(manId, manDataInicio, manDataTermino, manDescricao, manObservacao, peca, implemento, maquina, manStatus) {
         this.#manId = manId;
         this.#manDataInicio = manDataInicio;
         this.#manDataTermino = manDataTermino;
         this.#manDescricao = manDescricao;
+        this.#manObservacao = manObservacao;
         this.#peca = peca;
         this.#implemento = implemento;
         this.#maquina = maquina;
@@ -63,7 +68,7 @@ export default class ManutencaoModel {
         };
     }
 
-    async listarManutencoes() {
+    async listarManutencoes() { 
         const sql = `
             SELECT m.manId, m.manDataInicio, m.manDataTermino, m.manDescricao, m.manStatus,
                 COALESCE(ma.maqId, p.pecId, i.impId) AS manEqpId,
@@ -151,6 +156,13 @@ export default class ManutencaoModel {
     async excluir(idManutencao) {
         const sql = "DELETE FROM Manutencao_Equipamento  WHERE manId = ?";
         const valores = [idManutencao];
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
+
+    async finalizar() {
+        const sql = `UPDATE Manutencao_Equipamento  SET manDataTermino = ?, manObservacao = ?, manStatus = ? WHERE manId = ?`;
+        const valores = [this.#manDataTermino , this.#manObservacao, this.manStatus, this.#manId];
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }

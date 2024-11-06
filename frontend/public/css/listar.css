@@ -222,6 +222,8 @@ tr:hover {
     border-bottom: none
 }
 
+
+
 @media (max-width: 60vw) {
     table, thead, tbody, th, td, tr {
         display: block;

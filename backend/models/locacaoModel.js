@@ -148,10 +148,12 @@ export default class LocacaoModel {
 
     async obter(id) {
         let sql = `
-            SELECT l.locId,  l.locDataInicio,  l.locDataFinalPrevista,  l.locValorTotal, 
-                l.locDesconto, c.cliId,  c.cliNome, c.cliCPF_CNPJ
+            SELECT l.locId, l.locDataInicio, l.locDataFinalPrevista, l.locDataFinalEntrega, l.locValorTotal, l.locDesconto, l.locValorFinal, 
+                c.cliId, c.cliNome, c.cliCPF_CNPJ, c.cliTelefone, c.cliEmail,
+                ls.locStaId AS locStatusId, ls.locStaDescricao
             FROM Locacao l
             JOIN Cliente c ON l.locCliId = c.cliId
+            JOIN Locacao_Status ls ON l.locStatus = ls.locStaId
             WHERE l.locId = ?;
         `;
         let valores = [id];

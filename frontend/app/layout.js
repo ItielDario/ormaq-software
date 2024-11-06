@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="/css/layout.css"/>
         <link rel="stylesheet" href="/css/listar.css"/>
         <link rel="stylesheet" href="/css/cadastrar.css"/>
+        <link rel="stylesheet" href="/css/info.css"/>
       </head>
 
       <body className={``}>

@@ -170,12 +170,7 @@ export default function CadastrarManutencao() {
 
         <section>
           <label>Descrição da Manutenção</label>
-          <textarea 
-            name="manDescricao" 
-            ref={descricaoRef} 
-            maxLength="150" 
-            required 
-          />
+          <textarea name="manDescricao" ref={descricaoRef} maxLength="150" required />
         </section>
 
         <section className="container-btn">

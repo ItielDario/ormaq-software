@@ -164,4 +164,20 @@ export default class MaquinaModel {
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async atualizarHorasUso(maqId, maqHoras) {
+        const sql = `UPDATE Maquina SET maqHorasUso = ? WHERE maqId = ?`;
+        const valores = [maqHoras, maqId];
+
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
+
+    async atualizarStatus(maqId, status) {
+        const sql = `UPDATE Maquina SET maqStatus = ? WHERE maqId = ?;`;
+        const valores = [status, maqId];
+        
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
 }

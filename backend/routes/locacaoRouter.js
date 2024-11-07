@@ -29,4 +29,9 @@ router.delete("/:id", (req, res) => {
     ctrl.excluirLocacao(req, res);
 })
 
+router.put("/finalizar", (req, res) => {
+    // #swagger.summary = 'Finaliza uma locação'
+    ctrl.finalizarLocacao(req, res);
+});
+
 export default router;

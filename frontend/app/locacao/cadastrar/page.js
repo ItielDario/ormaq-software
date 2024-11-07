@@ -191,7 +191,7 @@ export default function CadastrarLocacao() {
     const dataInicio = new Date(dataInicioRef.current.value);
     const dataFinalPrevista = new Date(dataFinalPrevistaRef.current.value);
     
-    if (dataInicio >= dataFinalPrevista) {
+    if (dataInicio > dataFinalPrevista) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';

@@ -103,13 +103,19 @@ export default class LocacaoModel {
     async listarLocacoes() {
         const sql = `
             SELECT l.locId, l.locDataInicio, l.locDataFinalPrevista, l.locDataFinalEntrega, l.locValorTotal, l.locDesconto, l.locValorFinal, 
-                   c.cliId, c.cliNome, c.cliCPF_CNPJ, c.cliTelefone, c.cliEmail, 
-                   u.usuId, u.usuNome, u.usuTelefone, u.usuEmail, u.usuPerfil,
-                   ls.locStaId AS locStatusId, ls.locStaDescricao
+                c.cliId, c.cliNome, c.cliCPF_CNPJ, c.cliTelefone, c.cliEmail, 
+                u.usuId, u.usuNome, u.usuTelefone, u.usuEmail, u.usuPerfil,
+                ls.locStaId AS locStatusId, ls.locStaDescricao
             FROM Locacao l
             JOIN Cliente c ON l.locCliId = c.cliId
             JOIN Usuario u ON l.locUsuId = u.usuId
-            JOIN Locacao_Status ls ON l.locStatus = ls.locStaId;`;
+            JOIN Locacao_Status ls ON l.locStatus = ls.locStaId
+            ORDER BY 
+                CASE 
+                    WHEN ls.locStaId = 1 THEN 0 
+                    ELSE 1
+                END,
+            l.locDataInicio DESC`;
 
         const rows = await db.ExecutaComando(sql);
         // const listaLocacoes = this.toMAP(rows);
@@ -167,6 +173,14 @@ export default class LocacaoModel {
         let valores = [idLocacao];
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
+
+    async finalizar() {
+        const sql = `UPDATE Locacao SET locDataFinalEntrega = ?, locStatus = ? WHERE locId = ?`;
+        const valores = [this.#locDataFinalEntrega , this.locacaoStatus, this.#locId];
+        
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
 }

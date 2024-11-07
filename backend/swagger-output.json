@@ -716,6 +716,49 @@
         }
       }
     },
+    "/locacao/finalizar": {
+      "put": {
+        "tags": [
+          "Locações"
+        ],
+        "summary": "Finaliza uma locação",
+        "description": "",
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "locId": {
+                    "example": "any"
+                  },
+                  "locDataFinalEntrega": {
+                    "example": "any"
+                  },
+                  "maqHorasUso": {
+                    "example": "any"
+                  },
+                  "itensLocacao": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/cliente/": {
       "get": {
         "tags": [

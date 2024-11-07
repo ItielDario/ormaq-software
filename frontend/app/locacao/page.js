@@ -24,7 +24,7 @@ export default function Locacao() {
             r.map(locacao => {
                 locacao.locDataInicio = new Date(locacao.locDataInicio).toLocaleDateString();
                 locacao.locDataFinalPrevista = new Date(locacao.locDataFinalPrevista).toLocaleDateString();
-                locacao.locDataFinalEntrega = locacao.locDataFinalEntrega ? new Date(locacao.locDataFinalEntrega).toLocaleDateString() : "Não entregue";
+                locacao.locDataFinalEntrega = locacao.locDataFinalEntrega ? new Date(locacao.locDataFinalEntrega).toLocaleDateString() : " -";
             });
             setListaLocacoes(r);
         });
@@ -75,11 +75,10 @@ export default function Locacao() {
                     <thead>
                         <tr>
                             <th>Info</th>
-                            <th>ID</th>
                             <th>Cliente</th>
                             <th>CPF/CNPJ</th>
                             <th>Data de Início</th>
-                            <th>Data Final Prevista</th>
+                            <th>Data de Entrega</th>
                             <th>Valor</th>
                             <th>Status</th>
                             <th>Ações</th>
@@ -93,17 +92,20 @@ export default function Locacao() {
                                         <a href={`/locacao/informacao/${locacao.locId}`}><i className="nav-icon fas fa-info-circle"></i></a>
                                     </div>
                                 </td>
-                                <td>{locacao.locId}</td>
                                 <td>{locacao.cliNome}</td>
                                 <td>{locacao.cliCPF_CNPJ}</td>
                                 <td>{locacao.locDataInicio}</td>
-                                <td>{locacao.locDataFinalPrevista}</td>
+                                <td>{locacao.locDataFinalEntrega}</td>
                                 <td>R$ {locacao.locValorFinal ? parseFloat(locacao.locValorFinal).toFixed(2) : 'N/A'}</td>
                                 <td>{locacao.locStaDescricao}</td>
                                 <td>
-                                    <div>
-                                        <a href={`/locacao/finalizar/${locacao.locId}`}><i className="nav-icon fas fa-clipboard-check"></i></a>
-                                        <a href={`/locacao/alterar/${locacao.locId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                    <div className="btn-acoes">
+                                        {locacao.locStaDescricao !== 'Finalizada' && (
+                                            <div>
+                                                <a href={`/locacao/finalizar/${locacao.locId}`}><i className="nav-icon fas fa-clipboard-check"></i></a>
+                                                <a href={`/locacao/alterar/${locacao.locId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                            </div>
+                                        )}
                                         <a onClick={() => excluirLocacao(locacao.locId)}><i className="nav-icon fas fa-trash"></i></a>
                                     </div>
                                 </td>

@@ -41,8 +41,8 @@ export default function InfoLocacao({ params: { id } }) {
               <p className="data-info"><strong>Data de Início:</strong> {locacao.locDataInicio}</p>
               <p className="data-info"><strong>Data de Entrega Esperada:</strong> {locacao.locDataFinalPrevista}</p>
               <p className="data-info"><strong>Data de Entrega Realizada:</strong> {locacao.locDataFinalEntrega}</p>
-              <p className="data-info"><strong>Valor Total:</strong> R$ {locacao.locValorFinal ? parseFloat(locacao.locValorFinal).toFixed(2) : 'N/A'}</p>
-              <p className="data-info"><strong>Desconto:</strong> R$ {locacao.locValorFinal ? parseFloat(locacao.locDesconto).toFixed(2) : 'N/A'}</p>
+              <p className="data-info"><strong>Valor Final:</strong> R$ {locacao.locValorFinal ? parseFloat(locacao.locValorFinal).toFixed(2) : 'N/A'}</p>
+              <p className="data-info"><strong>Desconto:</strong> R$ {locacao.locDesconto ? parseFloat(locacao.locDesconto).toFixed(2) : '0,00'}</p>
               <p className="data-info data-info-ultimo"><strong>Status:</strong> {locacao.locStaDescricao}</p>
           </article>
 

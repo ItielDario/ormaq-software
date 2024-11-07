@@ -1,5 +1,8 @@
 import LocacaoModel from "../models/locacaoModel.js";
 import ItensLocacaoModel from "../models/itensLocacaoModel.js";
+import MaquinaModel from "../models/maquinaModel.js";
+import PecaModel from "../models/pecaModel.js";
+import ImplementoModel from "../models/implementoModel.js";
 
 export default class locacaoController {
     
@@ -135,4 +138,55 @@ export default class locacaoController {
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
+
+    async finalizarLocacao(req, res) {
+        // console.log(req.body); 
+        try {
+            let { locId, locDataFinalEntrega, maqHorasUso, itensLocacao } = req.body;
+            
+            if (locId && locDataFinalEntrega && maqHorasUso && itensLocacao) {
+    
+                let locacao = new LocacaoModel(locId, null, null, locDataFinalEntrega, null, null, null, null, null, 2);
+                let result = await locacao.finalizar();
+                
+                if (result) {
+                    
+                    let maquina = new MaquinaModel();
+                    let peca = new PecaModel();
+                    let implemento= new ImplementoModel();
+    
+                    for (const item of itensLocacao) {
+                        if (item.iteLocTipo === 'Máquina') {
+                            // Recupera as horas de uso do item da locação 
+                            const horasUso = maqHorasUso[item.iteLocId];
+        
+                            if (horasUso !== undefined) { 
+                                await maquina.atualizarHorasUso(item.iteLocId, horasUso); // Atualiza as horas de uso da máquina
+                                await maquina.atualizarStatus(item.iteLocId, 1);
+                            }
+                            else{
+                                res.status(400).json({ msg: "Preencha o campo Hora de Operação corretamente!" });
+                            }
+                        } 
+                        else if (item.iteLocTipo === 'Peça') {
+                            await peca.atualizarStatus(item.iteLocId, 1);
+                        } 
+                        else if (item.iteLocTipo === 'Implemento') {
+                            await implemento.atualizarStatus(item.iteLocId, 1);
+                        }
+                    }
+                    
+                    // Retorna sucesso
+                    res.status(201).json({ msg: "Locação finalizada com sucesso!" });
+                } else {
+                    res.status(500).json({ msg: "Erro durante a finalização da Locação." });
+                }
+            } else {
+                res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios!" });
+            }
+        } catch (ex) {
+            console.log(ex);
+            res.status(500).json({ msg: "Erro interno de servidor!" });
+        }
+    }    
 }

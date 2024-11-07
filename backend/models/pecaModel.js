@@ -152,4 +152,12 @@ export default class PecaModel {
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async atualizarStatus(pecId, status) {
+        const sql = `UPDATE Peca SET pecStatus = ? WHERE pecId = ?;`;
+        const valores = [status, pecId];
+        
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
 }

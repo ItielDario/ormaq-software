@@ -166,7 +166,7 @@ CREATE TABLE Imagens_Equipamento (
 INSERT INTO Locacao_Status (locStaId, locStaDescricao)
 VALUES
   (1, 'Em andamento'),
-  (2, 'Encerrada');
+  (2, 'Finalizada');
 
 INSERT INTO Usuario_Perfil (usuPerId, usuPerDescricao)
 VALUES
@@ -222,8 +222,8 @@ VALUES
 
 INSERT INTO Locacao (locId, locDataInicio, locDataFinalPrevista, locDataFinalEntrega, locValorTotal, locDesconto, locValorFinal, locCliId, locUsuId, locStatus)
 VALUES
-  (1, '2024-05-01', '2024-05-10', '2024-05-09', 10000.00, 500.00, 9500.00, 1, 1, 1),
-  (2, '2024-06-01', '2024-06-15', '2024-06-14', 15000.00, 750.00, 14250.00, 2, 2, 1);
+  (1, '2024-05-01', '2024-05-10', '2024-05-09', 10000.00, 500.00, 9500.00, 1, 1, 2),
+  (2, '2024-06-01', '2024-06-15', '2024-06-14', 15000.00, 750.00, 14250.00, 2, 2, 2);
 
 INSERT INTO Itens_Locacao (iteLocId, iteLocQuantidade, iteLocValorUnitario, iteLocPecId, iteLocImpId, iteLocMaqId, IteLocLocacaoId)
 VALUES

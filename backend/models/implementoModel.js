@@ -152,4 +152,12 @@ export default class ImplementoModel {
         let result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async atualizarStatus(impId, status) {
+        const sql = `UPDATE Implemento SET impStatus = ? WHERE impId = ?;`;
+        const valores = [status, impId];
+        
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
+    }
 }

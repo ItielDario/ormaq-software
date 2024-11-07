@@ -1,0 +1,28 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container-btn-finalizar{
+    display: flex;
+    justify-content: end;
+    margin: 2vw 0;
+    gap: 1.5vw;
+}
+
+.container-horas-usadas{
+    margin-top: 3vw;
+    border: 0.1vw solid rgb(173, 173, 173);
+    border-radius: 0.4vw;
+    padding: 2vw;
+}
+
+.container-horas-usadas h3{
+    font-size: 1.6vw;
+    margin-bottom: 2vw;
+}
+
+.input-horas-usadas{
+    margin: 3vw 0 1vw 0;
+}

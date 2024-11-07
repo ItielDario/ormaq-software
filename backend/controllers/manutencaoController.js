@@ -113,7 +113,7 @@ export default class manutencaoController {
                 if (manutencaoId) {
                     res.status(201).json({ msg: "Manutenção finalizada com sucesso!" });
                 } else {
-                    res.status(500).json({ msg: "Erro durante a filanização da manutenção." });
+                    res.status(500).json({ msg: "Erro durante a finalização da manutenção." });
                 }
             } else {
                 res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios!" });

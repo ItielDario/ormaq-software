@@ -1,7 +1,6 @@
 'use client';
 import CriarBotao from "../../../components/criarBotao.js";
 import httpClient from "@/app/utils/httpClient.js";
-import { cookies } from "next/headers.js";
 import { useRef, useState, useEffect } from "react";
 
 export default function AlterarCliente({ params: { id } }) {
@@ -12,6 +11,7 @@ export default function AlterarCliente({ params: { id } }) {
   const alertMsg = useRef(null);
 
   const [cpfCnpj, setCpfCnpj] = useState('');
+  const [telefone, setTelefone] = useState('');
   const [clienteSelecionado, setClienteSelecionado] = useState(null);
 
   useEffect(() => {
@@ -24,6 +24,7 @@ export default function AlterarCliente({ params: { id } }) {
       .then(r => {
         setClienteSelecionado(r);
         setCpfCnpj(mascaraCPF_CNPJ(r.cliCPF_CNPJ));
+        setTelefone(mascaraTelefone(r.cliTelefone));
       });
   }
 
@@ -40,6 +41,15 @@ export default function AlterarCliente({ params: { id } }) {
     }
   };
 
+  const mascaraTelefone = (valor) => {
+    valor = valor.replace(/\D/g, ""); // Remove caracteres não numéricos
+    if (valor.length <= 10) { // Telefone fixo
+      return valor.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    } else { // Celular
+      return valor.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    }
+  };
+
   const alterarCliente = () => {
     alertMsg.current.style.display = 'none';
     let status = 0;
@@ -48,7 +58,7 @@ export default function AlterarCliente({ params: { id } }) {
       cliId: id,
       cliNome: cliNomeRef.current.value,
       cliCPF_CNPJ: cpfCnpj,
-      cliTelefone: cliTelefoneRef.current.value || 'Sem Telefone',
+      cliTelefone: telefone || 'Sem Telefone',
       cliEmail: cliEmailRef.current.value || 'Sem Email'
     };
 
@@ -156,7 +166,13 @@ export default function AlterarCliente({ params: { id } }) {
           <section className="input-group">
             <section>
               <label htmlFor="cliTelefone">Telefone</label>
-              <input type="text" id="cliTelefone" defaultValue={clienteSelecionado.cliTelefone} ref={cliTelefoneRef}/>
+              <input 
+                type="text" 
+                id="cliTelefone" 
+                value={telefone}
+                onChange={(e) => setTelefone(mascaraTelefone(e.target.value))}
+                ref={cliTelefoneRef}
+              />
             </section>
 
             <section>

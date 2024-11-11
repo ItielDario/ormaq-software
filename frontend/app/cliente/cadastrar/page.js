@@ -11,10 +11,16 @@ export default function CadastrarCliente() {
   const alertMsg = useRef(null);
 
   const [cpfCnpj, setCpfCnpj] = useState('');
+  const [telefone, setTelefone] = useState('');
 
   const handleCpfCnpjChange = (e) => {
     const valor = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
     setCpfCnpj(mascaraCPF_CNPJ(valor));
+  };
+
+  const handleTelefoneChange = (e) => {
+    const valor = e.target.value.replace(/\D/g, ''); // Remove caracteres não numéricos
+    setTelefone(mascaraTelefone(valor));
   };
 
   const mascaraCPF_CNPJ = (valor) => {
@@ -25,6 +31,14 @@ export default function CadastrarCliente() {
     }
   };
 
+  const mascaraTelefone = (valor) => {
+    if (valor.length <= 10) { // Formato fixo
+      return valor.replace(/(\d{2})(\d{4})(\d{4})/, "($1) $2-$3");
+    } else { // Formato celular
+      return valor.replace(/(\d{2})(\d{5})(\d{4})/, "($1) $2-$3");
+    }
+  };
+
   const cadastrarCliente = () => {
     alertMsg.current.style.display = 'none';
     let status = 0;
@@ -32,7 +46,7 @@ export default function CadastrarCliente() {
     const dados = {
       cliNome: cliNomeRef.current.value,
       cliCPF_CNPJ: cpfCnpj,
-      cliTelefone: cliTelefoneRef.current.value || 'Sem Telefone',
+      cliTelefone: telefone || 'Sem Telefone',
       cliEmail: cliEmailRef.current.value || 'Sem Email'
     };
 
@@ -61,18 +75,17 @@ export default function CadastrarCliente() {
         return r.json();
       })
       .then((response) => {
-          setTimeout(() => {
-            console.log(status)
-            if(status == 201){
-              alertMsg.current.className =  'alertSuccess'
-              limparCampos()
-            }
-            else{
-              alertMsg.current.className =  'alertError'
-            }
+        setTimeout(() => {
+          console.log(status);
+          if (status == 201) {
+            alertMsg.current.className = 'alertSuccess';
+            limparCampos();
+          } else {
+            alertMsg.current.className = 'alertError';
+          }
 
-            alertMsg.current.style.display = 'block';
-            alertMsg.current.textContent = response.msg;
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = response.msg;
         }, 100);
       });
   };
@@ -84,7 +97,7 @@ export default function CadastrarCliente() {
   const limparCampos = () => {
     cliNomeRef.current.value = '';
     setCpfCnpj('');
-    cliTelefoneRef.current.value = '';
+    setTelefone('');
     cliEmailRef.current.value = '';
   };
 
@@ -161,7 +174,14 @@ export default function CadastrarCliente() {
         <section className="input-group">
           <section>
             <label htmlFor="cliTelefone">Telefone</label>
-            <input type="text" id="cliTelefone" ref={cliTelefoneRef} placeholder="(XX) XXXXX-XXXX" />
+            <input
+              type="text"
+              id="cliTelefone"
+              ref={cliTelefoneRef}
+              value={telefone}
+              onChange={handleTelefoneChange}
+              placeholder="(XX) XXXXX-XXXX"
+            />
           </section>
 
           <section>

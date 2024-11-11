@@ -98,8 +98,6 @@ export default function FinalizarLocacao({ params: { id } }) {
             itensLocacao: itensLocacao
         };
 
-        console.log(horasUso)
-
         httpClient.put(`/locacao/finalizar`, dados)
         .then(r => {
             status = r.status;

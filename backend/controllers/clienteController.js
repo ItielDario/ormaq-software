@@ -9,6 +9,7 @@ export default class clienteController {
             res.status(500).json(error);
         }
     }
+
     async obterCliente(req, res) {
         try {
             let { id } = req.params;
@@ -24,12 +25,21 @@ export default class clienteController {
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
+
     async cadastrarCliente(req, res) {
         try {
-            let { cliNome, cliCPF_CNPJ, usuTelefone, usuEmail } = req.body;
+            let { cliNome, cliCPF_CNPJ, cliTelefone, cliEmail } = req.body;
+    
             if (cliNome && cliCPF_CNPJ) {
-                let cliente = new ClienteModel(0, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail);
-                let result = await cliente.gravar();
+
+                const cliente = new ClienteModel(0, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail);
+                const clienteExistente = await cliente.existeClientePorCPF_CNPJ(cliCPF_CNPJ);
+    
+                if (clienteExistente) {// Verifica se o cliente já existe pelo CPF/CNPJ
+                    return res.status(400).json({ msg: "Já existe um cliente cadastrado com este CPF/CNPJ." });
+                }
+    
+                const result = await cliente.gravar();
                 if (result) {
                     res.status(201).json({ msg: "Cliente cadastrado com sucesso!" });
                 } else {
@@ -42,13 +52,17 @@ export default class clienteController {
             console.log(ex);
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
-    }
+    }    
+
     async alterarCliente(req, res) {
         try {
-            let { cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail } = req.body;
+            console.log(req.body)
+            let { cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail } = req.body;
             if (cliId && cliNome && cliCPF_CNPJ) {
-                let cliente = new ClienteModel(cliId, cliNome, cliCPF_CNPJ, usuTelefone, usuEmail);
+
+                let cliente = new ClienteModel(cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail);
                 let result = await cliente.gravar();
+
                 if (result) {
                     res.status(201).json({ msg: "Cliente alterado com sucesso!" });
                 } else {
@@ -62,6 +76,7 @@ export default class clienteController {
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
+
     async excluirCliente(req, res) {
         try {
             let { id } = req.params;

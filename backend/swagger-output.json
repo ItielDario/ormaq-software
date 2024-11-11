@@ -807,10 +807,10 @@
                   "cliCPF_CNPJ": {
                     "example": "any"
                   },
-                  "usuTelefone": {
+                  "cliTelefone": {
                     "example": "any"
                   },
-                  "usuEmail": {
+                  "cliEmail": {
                     "example": "any"
                   }
                 }
@@ -905,10 +905,10 @@
                   "cliCPF_CNPJ": {
                     "example": "any"
                   },
-                  "usuTelefone": {
+                  "cliTelefone": {
                     "example": "any"
                   },
-                  "usuEmail": {
+                  "cliEmail": {
                     "example": "any"
                   }
                 }

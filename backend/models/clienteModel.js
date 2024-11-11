@@ -59,10 +59,16 @@ export default class ClienteModel {
     }
 
     async listarClientes() {
-        const sql = `SELECT cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail FROM Cliente;`;
+        const sql = `SELECT cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail FROM Cliente ORDER BY cliNome ASC;`;
         const rows = await db.ExecutaComando(sql);
         const listaClientes = this.toMAP(rows);
         return listaClientes;
+    }
+
+    async existeClientePorCPF_CNPJ(cliCPF_CNPJ) {
+        const sql = `SELECT cliId FROM Cliente WHERE cliCPF_CNPJ = ?;`;
+        const rows = await db.ExecutaComando(sql, [cliCPF_CNPJ]);
+        return rows.length > 0; 
     }
 
     async gravar() {
@@ -77,6 +83,7 @@ export default class ClienteModel {
             // Alteração
             sql = `UPDATE Cliente SET cliNome = ?, cliCPF_CNPJ = ?, cliTelefone = ?, cliEmail = ? WHERE cliId = ?;`;
             valores = [this.#cliNome, this.#cliCPF_CNPJ, this.#cliTelefone, this.#cliEmail, this.#cliId];
+            console.log(valores);
         }
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);

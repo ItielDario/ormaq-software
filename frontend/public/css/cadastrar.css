@@ -33,6 +33,7 @@ label {
 input[type="text"],
 input[type="date"],
 input[type="number"],
+input[type="email"],
 select,
 textarea,
 .ck-editor__editable,
@@ -170,6 +171,7 @@ input::placeholder{
     justify-content: space-between;
     width: 50%;
     font-size: 1.3vw;
+    color: #1d1d1d;
 }
 
 .content-main-children-cadastrar .container-btn{

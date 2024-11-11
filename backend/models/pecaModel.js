@@ -160,4 +160,14 @@ export default class PecaModel {
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async listarPecasDisponiveis(idPeca) {
+        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecPrecoHora
+                    FROM Peca
+                    WHERE Peca.pecStatus = 1`;
+        let valores = [idPeca]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows;
+    }
 }

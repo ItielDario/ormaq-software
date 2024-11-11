@@ -29,4 +29,9 @@ router.delete("/:id", (req, res) => {
     ctrl.excluirMaquina(req, res);
 })
 
+router.get('/obter/disponivel', (req, res) => {
+    // #swagger.summary = 'Listar todas as máquinas cadastradas disponíveis'
+    ctrl.listarMaquinasDisponiveis(req, res)
+})
+
 export default router;

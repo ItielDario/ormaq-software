@@ -32,9 +32,9 @@ export default function CadastrarLocacao() {
 
   useEffect(() => {
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
-    httpClient.get("/maquina").then(r => r.json()).then(r => setMaquina(r));
-    httpClient.get("/peca").then(r => r.json()).then(r => setPeca(r));
-    httpClient.get("/implemento").then(r => r.json()).then(r => setImplemento(r));
+    httpClient.get("/maquina/obter/disponivel").then(r => r.json()).then(r => {setMaquina(r); console.log(r)});
+    httpClient.get("/peca/obter/disponivel").then(r => r.json()).then(r => {setPeca(r); console.log(r)});
+    httpClient.get("/implemento/obter/disponivel").then(r => r.json()).then(r => {setImplemento(r); console.log(r)});
   }, []);
   
   const verificaClienteExiste = () => {

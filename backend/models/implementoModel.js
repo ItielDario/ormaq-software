@@ -160,4 +160,14 @@ export default class ImplementoModel {
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async listarImplementosDisponiveis(idImplemento) {
+        let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impPrecoHora
+                    FROM Implemento
+                    WHERE Implemento.impStatus = 1`;
+        let valores = [idImplemento]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows;
+    }
 }

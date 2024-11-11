@@ -183,7 +183,7 @@ INSERT INTO Maquina (maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, ma
 VALUES
   (1, 'Escavadeira', '2022-05-15', 'Nova', 'Escavadeira de grande porte', 0, 1, 200, 150000.00, 500.00),
   (2, 'Retroescavadeira', '2023-03-10', 'Nova', 'Retroescavadeira compacta', 0, 1, 0, 80000.00, 300.00),
-  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 0, 2, 180, 250000.00, 600.00);
+  (3, 'Bulldozer', '2021-11-20', 'Semi-Nova', 'Bulldozer de alta performance', 0, 1, 180, 250000.00, 600.00);
 
 INSERT INTO Implemento (impId, impNome, impDataAquisicao, impDescricao, impInativo, impStatus, impPrecoVenda, impPrecoHora)
 VALUES

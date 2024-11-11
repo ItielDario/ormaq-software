@@ -180,4 +180,14 @@ export default class MaquinaModel {
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async listarMaquinasDisponiveis(idMaquina) {
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome, Maquina.maqPrecoHora, Maquina.maqTipo
+                    FROM Maquina
+                    WHERE Maquina.maqStatus = 1`;
+        let valores = [idMaquina]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows;
+    }
 }

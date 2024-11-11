@@ -115,4 +115,15 @@ export default class maquinaController {
             res.status(500).json({msg: "Erro interno de servidor!"});
         }
     }
+
+    async listarMaquinasDisponiveis(req, res){ 
+        try{
+            let maquinas = new MaquinaModel()
+            maquinas = await maquinas.listarMaquinasDisponiveis()
+            res.status(200).json(maquinas);
+        }
+        catch(error){
+            res.status(500).json(error)
+        }
+    }
 }

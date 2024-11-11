@@ -29,4 +29,9 @@ router.delete("/:id", (req, res) => {
     ctrl.excluirImplemento(req, res);
 })
 
+router.get('/obter/disponivel', (req, res) => {
+    // #swagger.summary = 'Listar todas os implementos cadastradas disponíveis'
+    ctrl.listarImplementosDisponiveis(req, res)
+})
+
 export default router;

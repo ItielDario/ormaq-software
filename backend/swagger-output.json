@@ -194,6 +194,23 @@
         }
       }
     },
+    "/maquina/obter/disponivel": {
+      "get": {
+        "tags": [
+          "Maquina"
+        ],
+        "summary": "Listar todas as máquinas cadastradas disponíveis",
+        "description": "Lista todas as máquinas.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/peca/": {
       "get": {
         "tags": [
@@ -361,6 +378,23 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/peca/obter/disponivel": {
+      "get": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Listar todas as peças cadastradas disponíveis",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -535,6 +569,23 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/implemento/obter/disponivel": {
+      "get": {
+        "tags": [
+          "Implementos"
+        ],
+        "summary": "Listar todas os implementos cadastradas disponíveis",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

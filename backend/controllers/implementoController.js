@@ -95,4 +95,15 @@ export default class ImplementoController {
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
+
+    async listarImplementosDisponiveis(req, res){ 
+        try{
+            let implemento = new ImplementoModel()
+            implemento = await implemento.listarImplementosDisponiveis()
+            res.status(200).json(implemento);
+        }
+        catch(error){
+            res.status(500).json(error)
+        }
+    }
 }

@@ -29,4 +29,9 @@ router.delete("/:id", (req, res) => {
     ctrl.excluirPeca(req, res);
 })
 
+router.get('/obter/disponivel', (req, res) => {
+    // #swagger.summary = 'Listar todas as peças cadastradas disponíveis'
+    ctrl.listarPecasDisponiveis(req, res)
+})
+
 export default router;

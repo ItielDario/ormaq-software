@@ -107,4 +107,15 @@ export default class pecaController {
             res.status(500).json({msg: "Erro interno de servidor!"});
         }
     }
+
+    async listarPecasDisponiveis(req, res){ 
+        try{
+            let pecas = new PecaModel()
+            pecas = await pecas.listarPecasDisponiveis()
+            res.status(200).json(pecas);
+        }
+        catch(error){
+            res.status(500).json(error)
+        }
+    }
 }

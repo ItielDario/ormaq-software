@@ -1017,7 +1017,7 @@
                   "manDescricao": {
                     "example": "any"
                   },
-                  "manMaqTipo": {
+                  "maqEqpTipo": {
                     "example": "any"
                   },
                   "manEqpId": {
@@ -1115,7 +1115,7 @@
                   "manDescricao": {
                     "example": "any"
                   },
-                  "manMaqTipo": {
+                  "maqEqpTipo": {
                     "example": "any"
                   },
                   "manEqpId": {
@@ -1159,6 +1159,12 @@
                     "example": "any"
                   },
                   "manDataTermino": {
+                    "example": "any"
+                  },
+                  "maqEqpTipo": {
+                    "example": "any"
+                  },
+                  "manEqpId": {
                     "example": "any"
                   }
                 }

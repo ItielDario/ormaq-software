@@ -98,9 +98,14 @@ export default function Manutencao() {
 
         const dados = {
             manId: manutencaoId,
+            manEqpId: manutencaoSelecionada.manEqpId,
+            maqEqpTipo: manutencaoSelecionada.maqEqpTipo,
             manObservacao: observacaoRef.current.value,
             manDataTermino: dataTerminoRef.current.value,
         };
+
+        console.log(manutencaoSelecionada)
+        console.log(dados)
 
         // Validação de campos vazios
         if (dataTerminoRef.current.value == '' || dataTerminoRef.current.value == null || dataTerminoRef.current.value == undefined) {

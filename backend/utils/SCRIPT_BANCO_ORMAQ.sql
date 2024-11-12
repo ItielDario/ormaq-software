@@ -177,7 +177,7 @@ INSERT INTO Equipamento_Status (eqpStaId, eqpStaDescricao)
 VALUES
   (1, 'Disponível'),
   (2, 'Locado'),
-  (3, 'Manutenção');
+  (3, 'Em Manutenção');
 
 INSERT INTO Maquina (maqId, maqNome, maqDataAquisicao, maqTipo, maqDescricao, maqInativo, maqStatus, maqHorasUso, maqPrecoVenda, maqPrecoHora)
 VALUES

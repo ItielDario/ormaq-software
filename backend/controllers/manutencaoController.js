@@ -1,4 +1,7 @@
 import ManutencaoModel from "../models/manutencaoModel.js";
+import MaquinaModel from "../models/maquinaModel.js";
+import PecaModel from "../models/pecaModel.js";
+import ImplementoModel from "../models/implementoModel.js";
 
 export default class manutencaoController {
     
@@ -31,18 +34,26 @@ export default class manutencaoController {
 
     async cadastrarManutencao(req, res) {
         try {
-            let { manDataInicio, manDescricao, manMaqTipo, manEqpId} = req.body;
+            let { manDataInicio, manDescricao, maqEqpTipo, manEqpId} = req.body;
     
-            if (manDataInicio && manDescricao && manMaqTipo && manEqpId) {
+            if (manDataInicio && manDescricao && maqEqpTipo && manEqpId) {
 
-                let manPecId = manMaqTipo === "Peça" ? manEqpId : null;
-                let manLocImpId = manMaqTipo === "Implemento" ? manEqpId : null;
-                let manLocMaqId = manMaqTipo === "Máquina" ? manEqpId : null;
+                let maquina = new MaquinaModel();
+                let peca = new PecaModel();
+                let implemento= new ImplementoModel();
 
-                let manutencao = new ManutencaoModel(0, manDataInicio, null, manDescricao, null, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
+                let manPecId = maqEqpTipo === "Peça" ? manEqpId : null;
+                let manImpId = maqEqpTipo === "Implemento" ? manEqpId : null;
+                let manMaqId = maqEqpTipo === "Máquina" ? manEqpId : null;
+
+                let manutencao = new ManutencaoModel(0, manDataInicio, null, manDescricao, null, manPecId, manImpId, manMaqId, 'Em Manutenção');
                 let manutencaoId = await manutencao.gravar();
     
                 if (manutencaoId) {
+                    if (maqEqpTipo === "Máquina") { await maquina.atualizarStatus(manMaqId, 3) } 
+                    else if (maqEqpTipo === "Peça") { await peca.atualizarStatus(manPecId, 3) } 
+                    else if (maqEqpTipo === "Implemento") { await implemento.atualizarStatus(manImpId, 3) }
+
                     res.status(201).json({ msg: "Manutenção cadastrada com sucesso!" });
                 } else {
                     res.status(500).json({ msg: "Erro durante o cadastro da manutenção." });
@@ -58,15 +69,15 @@ export default class manutencaoController {
 
     async alterarManutencao(req, res) {
         try {
-            let { manId, manDataInicio, manDescricao, manMaqTipo, manEqpId} = req.body;
+            let { manId, manDataInicio, manDescricao, maqEqpTipo, manEqpId} = req.body;
     
-            if (manId && manDataInicio && manDescricao && manMaqTipo && manEqpId) {
+            if (manId && manDataInicio && manDescricao && maqEqpTipo && manEqpId) {
 
-                let manPecId = manMaqTipo === "Peça" ? manEqpId : null;
-                let manLocImpId = manMaqTipo === "Implemento" ? manEqpId : null;
-                let manLocMaqId = manMaqTipo === "Máquina" ? manEqpId : null;
+                let manPecId = maqEqpTipo === "Peça" ? manEqpId : null;
+                let manImpId = maqEqpTipo === "Implemento" ? manEqpId : null;
+                let manMaqId = maqEqpTipo === "Máquina" ? manEqpId : null;
 
-                let manutencao = new ManutencaoModel(manId, manDataInicio, null, manDescricao, null, manPecId, manLocImpId, manLocMaqId, 'Em Manutenção');
+                let manutencao = new ManutencaoModel(manId, manDataInicio, null, manDescricao, null, manPecId, manImpId, manMaqId, 'Em Manutenção');
                 let manutencaoId = await manutencao.gravar();
     
                 if (manutencaoId) {
@@ -103,14 +114,26 @@ export default class manutencaoController {
 
     async finalizarManutencao(req, res) {
         try {
-            let { manId, manObservacao, manDataTermino} = req.body;
+            let { manId, manObservacao, manDataTermino, maqEqpTipo, manEqpId} = req.body;
     
-            if (manId && manDataTermino) {
+            if (manId && manDataTermino && maqEqpTipo && manEqpId) {
+
+                let maquina = new MaquinaModel();
+                let peca = new PecaModel();
+                let implemento= new ImplementoModel();
+
+                let manPecId = maqEqpTipo === "Peça" ? manEqpId : null;
+                let manImpId = maqEqpTipo === "Implemento" ? manEqpId : null;
+                let manMaqId = maqEqpTipo === "Máquina" ? manEqpId : null;
 
                 let manutencao = new ManutencaoModel(manId, null, manDataTermino, null, manObservacao, null, null, null, 'Finalizada');
                 let manutencaoId = await manutencao.finalizar();
     
                 if (manutencaoId) {
+                    if (maqEqpTipo === "Máquina") { await maquina.atualizarStatus(manMaqId, 1) } 
+                    else if (maqEqpTipo === "Peça") { await peca.atualizarStatus(manPecId, 1) } 
+                    else if (maqEqpTipo === "Implemento") { await implemento.atualizarStatus(manImpId, 1) }
+
                     res.status(201).json({ msg: "Manutenção finalizada com sucesso!" });
                 } else {
                     res.status(500).json({ msg: "Erro durante a finalização da manutenção." });

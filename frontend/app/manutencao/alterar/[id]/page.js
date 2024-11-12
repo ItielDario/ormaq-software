@@ -78,11 +78,9 @@ export default function AlterarManutencao({ params: { id } }) {
       manId: id,
       manDataInicio: dataInicioRef.current.value,
       manDescricao: descricaoRef.current.value,
-      manMaqTipo: tipoEquipamento,
+      maqEqpTipo: tipoEquipamento,
       manEqpId: equipamentoSelecionado
     };
-
-    console.log(dados)
 
     // Verifica campos vazios e existência do equipamento
     if (verificaCampoVazio(dados)) {

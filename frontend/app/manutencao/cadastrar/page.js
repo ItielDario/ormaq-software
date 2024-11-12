@@ -71,11 +71,9 @@ export default function CadastrarManutencao() {
     const dados = {
       manDataInicio: dataInicioRef.current.value,
       manDescricao: descricaoRef.current.value,
-      manMaqTipo: tipoEquipamento,
+      maqEqpTipo: tipoEquipamento,
       manEqpId: equipamentoSelecionado
     };
-
-    console.log(dados);
 
     // Verifica se os campos estão preenchidos
     if (verificaCampoVazio(dados)) {

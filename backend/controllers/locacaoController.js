@@ -45,6 +45,10 @@ export default class locacaoController {
                 let locacaoId = await locacao.gravar();
     
                 if (locacaoId) {
+                    let maquina = new MaquinaModel();
+                    let peca = new PecaModel();
+                    let implemento= new ImplementoModel();
+
                     // Cadastra cada item individualmente
                     for (const item of itens) {
                         const { quantidade, preco, tipo, id } = item;
@@ -60,6 +64,10 @@ export default class locacaoController {
                         if (!itemResult) {
                             throw new Error(`Erro ao cadastrar item de locação: ${item.nome}`);
                         }
+
+                        if (tipo === "Máquina") { await maquina.atualizarStatus(id, 2) } 
+                        else if (tipo === "Peça") { await peca.atualizarStatus(id, 2) } 
+                        else if (tipo === "Implemento") { await implemento.atualizarStatus(id, 2) }
                     }
     
                     res.status(201).json({ msg: "Locação cadastrada com sucesso!" });

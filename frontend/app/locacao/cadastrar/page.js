@@ -67,7 +67,6 @@ export default function CadastrarLocacao() {
       let equipamentoDados = '';
   
       if (tipoEquipamento === "Máquina") { // VERIFICA SE O EQUIPAMENTO É UMA MÁQUINA
-        equipamentoNome = maquina.map(maq => maq.maqNome);
         equipamentoDados = maquina.filter(value => value.maqNome === equipamentoIdRef.current.value);
         if (equipamentoDados.length > 0) {
           result = true;
@@ -81,23 +80,21 @@ export default function CadastrarLocacao() {
         }
       } 
       else if (tipoEquipamento === "Peça") { // VERIFICA SE O EQUIPAMENTO É UMA PEÇA
-        equipamentoNome = peca.map(pec => pec.pecaNome);
-        equipamentoDados = peca.filter(value => value.pecaNome === equipamentoIdRef.current.value);
+        console.log(equipamentoIdRef.current.value)
+        equipamentoDados = peca.filter(value => value.pecNome === equipamentoIdRef.current.value);
         if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            id: equipamentoDados[0].pecaId,
+            id: equipamentoDados[0].pecId,
             tipo: 'Peça',
-            nome: equipamentoDados[0].pecaNome,
-            preco: equipamentoDados[0].pecaPrecoHora,
+            nome: equipamentoDados[0].pecNome,
+            preco: equipamentoDados[0].pecPrecoHora,
             quantidade: quantidadeRef.current.value,
           };
         }
       } 
       else if (tipoEquipamento === "Implemento") { // VERIFICA SE O EQUIPAMENTO É UM IMPLEMENTO
-        equipamentoNome = implemento.map(imp => imp.impNome);
         equipamentoDados = implemento.filter(value => value.impNome === equipamentoIdRef.current.value);
-  
         if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {

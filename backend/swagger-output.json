@@ -1017,10 +1017,16 @@
                   "manDescricao": {
                     "example": "any"
                   },
-                  "maqEqpTipo": {
+                  "maqEqpTipoNovo": {
                     "example": "any"
                   },
-                  "manEqpId": {
+                  "manEqpIdNovo": {
+                    "example": "any"
+                  },
+                  "maqEqpTipoAntigo": {
+                    "example": "any"
+                  },
+                  "manEqpIdAntigo": {
                     "example": "any"
                   }
                 }

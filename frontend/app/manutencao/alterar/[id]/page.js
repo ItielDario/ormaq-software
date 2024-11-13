@@ -73,10 +73,6 @@ export default function AlterarManutencao({ params: { id } }) {
       'Implemento': implementos,
     };
 
-    console.log(listaEquipamentos)
-    console.log(tipoEquipamento)
-    console.log(listaEquipamentos[tipoEquipamento])
-
     const equipamentos = listaEquipamentos[tipoEquipamento] || [];
 
     return (
@@ -95,26 +91,22 @@ export default function AlterarManutencao({ params: { id } }) {
     alertMsg.current.style.display = 'none';
     let equipamentoSelecionado = 'nulo';
 
-    console.log(maquinas)
-    console.log(pecas)
-    console.log(implementos)
-
     if (tipoEquipamento === 'Máquina') {
       equipamentoSelecionado = maquinas.find(eqp => equipamentoIdRef.current.value === eqp.maqNome)?.maqId || 'nulo';
     } else if (tipoEquipamento === 'Implemento') {
       equipamentoSelecionado = implementos.find(eqp => equipamentoIdRef.current.value === eqp.impNome)?.impId || 'nulo';
     } else if (tipoEquipamento === 'Peça') {
-      equipamentoSelecionado = pecas.find(eqp => equipamentoIdRef.current.value === eqp.pecaNome)?.pecaId || 'nulo';
+      equipamentoSelecionado = pecas.find(eqp => equipamentoIdRef.current.value === eqp.pecNome)?.pecId || 'nulo';
     }
-
-    
 
     const dados = {
       manId: id,
       manDataInicio: dataInicioRef.current.value,
       manDescricao: descricaoRef.current.value,
-      maqEqpTipo: tipoEquipamento,
-      manEqpId: equipamentoSelecionado
+      maqEqpTipoNovo: tipoEquipamento,
+      manEqpIdNovo: equipamentoSelecionado,
+      maqEqpTipoAntigo: manutencaoSelecionada.maqEqpTipo,
+      manEqpIdAntigo: manutencaoSelecionada.manEqpId
     };
 
     if (verificaCampoVazio(dados)) {

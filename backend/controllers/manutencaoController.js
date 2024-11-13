@@ -69,18 +69,32 @@ export default class manutencaoController {
 
     async alterarManutencao(req, res) {
         try {
-            let { manId, manDataInicio, manDescricao, maqEqpTipo, manEqpId} = req.body;
+            let { manId, manDataInicio, manDescricao, maqEqpTipoNovo, manEqpIdNovo, maqEqpTipoAntigo, manEqpIdAntigo} = req.body;
     
-            if (manId && manDataInicio && manDescricao && maqEqpTipo && manEqpId) {
+            if (manId && manDataInicio && manDescricao && maqEqpTipoNovo && manEqpIdNovo && maqEqpTipoAntigo && manEqpIdAntigo) {
 
-                let manPecId = maqEqpTipo === "Peça" ? manEqpId : null;
-                let manImpId = maqEqpTipo === "Implemento" ? manEqpId : null;
-                let manMaqId = maqEqpTipo === "Máquina" ? manEqpId : null;
+                let manPecId = maqEqpTipoNovo === "Peça" ? manEqpIdNovo : null;
+                let manImpId = maqEqpTipoNovo === "Implemento" ? manEqpIdNovo : null;
+                let manMaqId = maqEqpTipoNovo === "Máquina" ? manEqpIdNovo : null;
 
                 let manutencao = new ManutencaoModel(manId, manDataInicio, null, manDescricao, null, manPecId, manImpId, manMaqId, 'Em Manutenção');
                 let manutencaoId = await manutencao.gravar();
-    
+
+                let maquina = new MaquinaModel();
+                let peca = new PecaModel();
+                let implemento= new ImplementoModel();
+
                 if (manutencaoId) {
+                    // Altera o status so antigo equipamento para "Disponível"
+                    if (maqEqpTipoAntigo === "Máquina") { await maquina.atualizarStatus(manEqpIdAntigo, 1) } 
+                    else if (maqEqpTipoAntigo === "Peça") { await peca.atualizarStatus(manEqpIdAntigo, 1) } 
+                    else if (maqEqpTipoAntigo === "Implemento") { await implemento.atualizarStatus(manEqpIdAntigo, 1) }
+
+                    // Altera o status so antigo equipamento para "Em Manutenção"
+                    if (maqEqpTipoNovo === "Máquina") { await maquina.atualizarStatus(manEqpIdNovo, 3) } 
+                    else if (maqEqpTipoNovo === "Peça") { await peca.atualizarStatus(manEqpIdNovo, 3) } 
+                    else if (maqEqpTipoNovo === "Implemento") { await implemento.atualizarStatus(manEqpIdNovo, 3) }
+
                     res.status(201).json({ msg: "Manutenção alterada com sucesso!" });
                 } else {
                     res.status(500).json({ msg: "Erro durante a alteração da manutenção." });
@@ -99,9 +113,18 @@ export default class manutencaoController {
             let { id } = req.params;
 
             let manutencao = new ManutencaoModel();
+            let manutencaoEquipamento = await manutencao.obter(id);
             let manutencaoResult = await manutencao.excluir(id);
 
+            let maquina = new MaquinaModel();
+            let peca = new PecaModel();
+            let implemento= new ImplementoModel();
+
             if (manutencaoResult) {
+                if (manutencaoEquipamento[0].maqEqpTipo === "Máquina") { await maquina.atualizarStatus(manutencaoEquipamento[0].manEqpId, 1) } 
+                else if (manutencaoEquipamento[0].maqEqpTipo === "Peça") { await peca.atualizarStatus(manutencaoEquipamento[0].manEqpId, 1) } 
+                else if (manutencaoEquipamento[0].maqEqpTipo === "Implemento") { await implemento.atualizarStatus(manutencaoEquipamento[0].manEqpId, 1) }
+
                 res.status(200).json({ msg: `Manutenção excluída com sucesso!` });
             } else {
                 res.status(500).json({ msg: "Erro durante a exclusão da manutenção" });

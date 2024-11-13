@@ -55,17 +55,15 @@ export default function CadastrarManutencao() {
     // Obtem os dados do equipamento selecionado
     if(tipoEquipamento === 'Máquina'){
       equipamentoSelecionado = maquinas.find(eqp => equipamentoIdRef.current.value == eqp.maqNome);
-      console.log(equipamentoSelecionado)
       equipamentoSelecionado = equipamentoSelecionado !== undefined ? equipamentoSelecionado.maqId : 'nulo';
-      console.log(equipamentoSelecionado)
     }
     else if(tipoEquipamento === 'Implemento'){
       equipamentoSelecionado = implementos.find(eqp => equipamentoIdRef.current.value == eqp.impNome);
       equipamentoSelecionado = equipamentoSelecionado !== undefined ? equipamentoSelecionado.impId : 'nulo';
     }
     else if(tipoEquipamento === 'Peça'){
-      equipamentoSelecionado = pecas.find(eqp => equipamentoIdRef.current.value == eqp.pecaNome);
-      equipamentoSelecionado = equipamentoSelecionado !== undefined ? equipamentoSelecionado.pecaId : 'nulo';
+      equipamentoSelecionado = pecas.find(eqp => equipamentoIdRef.current.value == eqp.pecNome);
+      equipamentoSelecionado = equipamentoSelecionado !== undefined ? equipamentoSelecionado.pecId : 'nulo';
     }
 
     const dados = {

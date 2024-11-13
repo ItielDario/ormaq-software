@@ -1,18 +1,14 @@
-'use client'; 
+'use client';
 import { useRef, useState, useEffect } from "react";
 import CriarBotao from "../../../components/criarBotao.js";
 import httpClient from "@/app/utils/httpClient.js";
 
 export default function AlterarManutencao({ params: { id } }) {
-  // Campos do formulário
   const dataInicioRef = useRef(null);
   const descricaoRef = useRef(null);
-  
-  // Campos dos Equipamentos
   const tipoEquipamentoRef = useRef(null);
   const equipamentoIdRef = useRef(null);
-  
-  // Variáveis Auxiliares
+
   const [maquinas, setMaquinas] = useState([]);
   const [pecas, setPecas] = useState([]);
   const [implementos, setImplementos] = useState([]);
@@ -22,23 +18,53 @@ export default function AlterarManutencao({ params: { id } }) {
   const formRef = useRef(null);
 
   useEffect(() => {
-    httpClient.get("/maquina").then(r => r.json()).then(r => setMaquinas(r));
-    httpClient.get("/peca").then(r => r.json()).then(r => setPecas(r));
-    httpClient.get("/implemento").then(r => r.json()).then(r => setImplementos(r));
-    
-    // Carregar os dados da manutenção selecionada
-    httpClient.get(`/manutencao/${id}`)
-    .then(r => r.json())
-    .then(data => {
-      console.log(data)
-      
-      setManutencaoSelecionada(data);
-      setTipoEquipamento(data.maqEqpTipo);
+    httpClient.get("/maquina/obter/disponivel").then(r => r.json()).then(r => setMaquinas(r));
+    httpClient.get("/peca/obter/disponivel").then(r => r.json()).then(r => setPecas(r));
+    httpClient.get("/implemento/obter/disponivel").then(r => r.json()).then(r => setImplementos(r));
 
-      dataInicioRef.current.value = new Date(data.manDataInicio).toISOString().split('T')[0];
-      descricaoRef.current.value = data.manDescricao;
-    });
+    httpClient.get(`/manutencao/${id}`)
+      .then(r => r.json())
+      .then(data => {
+        // Validação do tipo de equipamento e criação do objeto correspondente
+        let novoEquipamento;
+
+        // SE FEZ NECESSÁRIO POIS AO ENTRAR NESSA PÁGINA O USEEFFECT SELECIONA APENAS AS MÁQUINAS, PEÇA E IMPLEMENTOS COM STATUS 'DISPONIVEL' E O EQUIPAMENTO SELECIONADO PARA SER ALTERADO ESTÁ COM O STUATUS 'EM MANUTENÇÃO' E POR TANTO NÃO APARECERIA NA LISTA DE NOMES DOS EQUIPAMENTOS
+        if (data.maqEqpTipo === 'Máquina') {
+          novoEquipamento = {
+            maqId: data.manEqpId,
+            maqNome: data.manEqpNome,
+            maqPrecoHora: data.maqPrecoHora || null,
+            maqTipo: data.maqEqpTipo
+          };
+          setMaquinas(prevMaquinas => [...prevMaquinas, novoEquipamento]);
+          
+        } else if (data.maqEqpTipo === 'Peça') {
+          novoEquipamento = {
+            pecId: data.manEqpId,
+            pecNome: data.manEqpNome,
+            pecPrecoHora: data.maqPrecoHora || null,
+            pecTipo: data.maqEqpTipo
+          };
+          setPecas(prevPecas => [...prevPecas, novoEquipamento]);
+          
+        } else if (data.maqEqpTipo === 'Implemento') {
+          novoEquipamento = {
+            impId: data.manEqpId,
+            impNome: data.manEqpNome,
+            impPrecoHora: data.maqPrecoHora || null,
+            impTipo: data.maqEqpTipo
+          };
+          setImplementos(prevImplementos => [...prevImplementos, novoEquipamento]);
+        }
+
+        setManutencaoSelecionada(data);
+        setTipoEquipamento(data.maqEqpTipo);
+
+        dataInicioRef.current.value = new Date(data.manDataInicio).toISOString().split('T')[0];
+        descricaoRef.current.value = data.manDescricao;
+      });
   }, [id]);
+
 
   const verificaTipoEquipamento = () => {
     const listaEquipamentos = {
@@ -47,13 +73,18 @@ export default function AlterarManutencao({ params: { id } }) {
       'Implemento': implementos,
     };
 
+    console.log(listaEquipamentos)
+    console.log(tipoEquipamento)
+    console.log(listaEquipamentos[tipoEquipamento])
+
     const equipamentos = listaEquipamentos[tipoEquipamento] || [];
+
     return (
       <datalist id="equipamentos">
         {equipamentos.map(equipamento => (
           <option
-            key={equipamento[Object.keys(equipamento)[0]]}
-            value={equipamento[Object.keys(equipamento)[1]]}
+            key={equipamento[Object.keys(equipamento)[0]]} // Usa o primeiro valor como chave
+            value={equipamento[Object.keys(equipamento)[1]]} // Usa o segundo valor como nome
           />
         ))}
       </datalist>
@@ -62,17 +93,21 @@ export default function AlterarManutencao({ params: { id } }) {
 
   const alterarManutencao = () => {
     alertMsg.current.style.display = 'none';
-    let status = 0;
     let equipamentoSelecionado = 'nulo';
 
-    // Obtem os dados do equipamento selecionado
-    if(tipoEquipamento === 'Máquina') {
+    console.log(maquinas)
+    console.log(pecas)
+    console.log(implementos)
+
+    if (tipoEquipamento === 'Máquina') {
       equipamentoSelecionado = maquinas.find(eqp => equipamentoIdRef.current.value === eqp.maqNome)?.maqId || 'nulo';
-    } else if(tipoEquipamento === 'Implemento') {
+    } else if (tipoEquipamento === 'Implemento') {
       equipamentoSelecionado = implementos.find(eqp => equipamentoIdRef.current.value === eqp.impNome)?.impId || 'nulo';
-    } else if(tipoEquipamento === 'Peça') {
+    } else if (tipoEquipamento === 'Peça') {
       equipamentoSelecionado = pecas.find(eqp => equipamentoIdRef.current.value === eqp.pecaNome)?.pecaId || 'nulo';
     }
+
+    
 
     const dados = {
       manId: id,
@@ -82,41 +117,33 @@ export default function AlterarManutencao({ params: { id } }) {
       manEqpId: equipamentoSelecionado
     };
 
-    // Verifica campos vazios e existência do equipamento
     if (verificaCampoVazio(dados)) {
-      setTimeout(() => {
-        alertMsg.current.className = 'alertError';
-        alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios';
-      }, 100);
+      alertMsg.current.className = 'alertError';
+      alertMsg.current.style.display = 'block';
+      alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios';
       return;
     }
 
-    // Verifica se o equipamento está cadastrado
     if (equipamentoSelecionado === 'nulo') {
-      setTimeout(() => {
-        alertMsg.current.className = 'alertError';
-        alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = `${tipoEquipamento} não cadastrado`;
-      }, 100);
+      alertMsg.current.className = 'alertError';
+      alertMsg.current.style.display = 'block';
+      alertMsg.current.textContent = `${tipoEquipamento} não cadastrado`;
       return;
     }
 
-    // Enviar requisição para atualizar a manutenção
     httpClient.put("/manutencao", dados)
-    .then(r => {
-      status = r.status;
-      return r.json();
-    })
-    .then(r => {
-      setTimeout(() => {
+      .then(r => {
+        const status = r.status;
+        return r.json().then(data => ({
+          status,
+          data
+        }));
+      })
+      .then(({ status, data }) => {
         alertMsg.current.className = status === 201 ? 'alertSuccess' : 'alertError';
         alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = r.msg;
-      }, 100);
-    });
-
-    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+        alertMsg.current.textContent = data.msg;
+      });
   };
 
   const verificaCampoVazio = (dados) => {

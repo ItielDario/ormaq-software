@@ -22,9 +22,9 @@ export default function CadastrarManutencao() {
   const formRef = useRef(null);
 
   useEffect(() => {
-    httpClient.get("/maquina").then(r => r.json()).then(r => setMaquinas(r));
-    httpClient.get("/peca").then(r => r.json()).then(r => setPecas(r));
-    httpClient.get("/implemento").then(r => r.json()).then(r => setImplementos(r));
+    httpClient.get("/maquina/obter/disponivel").then(r => r.json()).then(r => setMaquinas(r));
+    httpClient.get("/peca/obter/disponivel").then(r => r.json()).then(r => setPecas(r));
+    httpClient.get("/implemento/obter/disponivel").then(r => r.json()).then(r => setImplementos(r));
   }, []);
 
   const verificaTipoEquipamento = () => {

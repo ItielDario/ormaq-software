@@ -33,9 +33,9 @@ export default function AlterarLocacao({ params: { id } }) {
 
   useEffect(() => {
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
-    httpClient.get("/maquina").then(r => r.json()).then(r => setMaquina(r));
-    httpClient.get("/peca").then(r => r.json()).then(r => setPeca(r));
-    httpClient.get("/implemento").then(r => r.json()).then(r => setImplemento(r));
+    httpClient.get("/maquina/obter/disponivel").then(r => r.json()).then(r => setMaquina(r));
+    httpClient.get("/peca/obter/disponivel").then(r => r.json()).then(r => setPeca(r));
+    httpClient.get("/implemento/obter/disponivel").then(r => r.json()).then(r => setImplemento(r));
 
     httpClient.get(`/locacao/${id}`)
     .then(r => r.json())
@@ -95,15 +95,15 @@ export default function AlterarLocacao({ params: { id } }) {
         }
       } 
       else if (tipoEquipamento === "Peça") {
-        equipamentoNome = peca.map(pec => pec.pecaNome);
-        equipamentoDados = peca.filter(value => value.pecaNome === equipamentoIdRef.current.value);
+        equipamentoNome = peca.map(pec => pec.pecNome);
+        equipamentoDados = peca.filter(value => value.pecNome === equipamentoIdRef.current.value);
         if (equipamentoDados.length > 0) {
           result = true;
           equipamentoDados = {
-            iteLocId: equipamentoDados[0].pecaId,
+            iteLocId: equipamentoDados[0].pecId,
             iteLocTipo: 'Peça',
-            iteLocNome: equipamentoDados[0].pecaNome,
-            iteLocValorUnitario: equipamentoDados[0].pecaPrecoHora,
+            iteLocNome: equipamentoDados[0].pecNome,
+            iteLocValorUnitario: equipamentoDados[0].pecPrecoHora,
             iteLocQuantidade: quantidadeRef.current.value,
           };
         }
@@ -198,7 +198,7 @@ export default function AlterarLocacao({ params: { id } }) {
     const dataInicio = new Date(dataInicioRef.current.value);
     const dataFinalPrevista = new Date(dataFinalPrevistaRef.current.value);
     
-    if (dataInicio >= dataFinalPrevista) {
+    if (dataInicio > dataFinalPrevista) {
       alertMsg.current.className = 'alertError';
       alertMsg.current.style.display = 'block';
       alertMsg.current.textContent = 'A data de início deve ser anterior à data final prevista!';

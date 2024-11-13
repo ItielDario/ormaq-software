@@ -32,7 +32,6 @@ export default function Manutencao() {
         httpClient.get("/manutencao")
         .then(r => r.json())
         .then((r) => {
-            console.log(r)
             r.map(manutencao => {
                 manutencao.manDataInicio = new Date(manutencao.manDataInicio).toLocaleDateString();
                 manutencao.manDataTermino = manutencao.manDataTermino ? new Date(manutencao.manDataTermino).toLocaleDateString() : " -";
@@ -103,9 +102,6 @@ export default function Manutencao() {
             manObservacao: observacaoRef.current.value,
             manDataTermino: dataTerminoRef.current.value,
         };
-
-        console.log(manutencaoSelecionada)
-        console.log(dados)
 
         // Validação de campos vazios
         if (dataTerminoRef.current.value == '' || dataTerminoRef.current.value == null || dataTerminoRef.current.value == undefined) {

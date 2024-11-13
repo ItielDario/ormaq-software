@@ -93,6 +93,10 @@ export default class locacaoController {
     
                 if (locacaoId) {
                     // Exclui todos os itens dessa locação
+                    let maquina = new MaquinaModel();
+                    let peca = new PecaModel();
+                    let implemento= new ImplementoModel();
+
                     let intanciaAux = new ItensLocacaoModel();
                     const exclusaoResult = await intanciaAux.excluir(locId);
 
@@ -111,6 +115,12 @@ export default class locacaoController {
                         if (!itemResult) {
                             throw new Error(`Erro ao alterar item de locação: ${item.nome}`);
                         }
+
+                        console.log(iteLocTipo)
+
+                        if (iteLocTipo === "Máquina") { await maquina.atualizarStatus(iteLocId, 2) } 
+                        else if (iteLocTipo === "Peça") { await peca.atualizarStatus(iteLocId, 2) } 
+                        else if (iteLocTipo === "Implemento") { await implemento.atualizarStatus(iteLocId, 2) }
                     }
 
                     res.status(201).json({ msg: "Locação alterada com sucesso!" });
@@ -131,10 +141,23 @@ export default class locacaoController {
             let { id } = req.params;
 
             let itemLocacao = new ItensLocacaoModel();
+            let itemLocacaoLista = await itemLocacao.obter(id);
             let itemLocacaoResult = await itemLocacao.excluir(id);
 
             let locacao = new LocacaoModel();
             let locacaoResult = await locacao.excluir(id);
+
+            let maquina = new MaquinaModel();
+            let peca = new PecaModel();
+            let implemento= new ImplementoModel();
+
+            for (const item of itemLocacaoLista) {
+                const { iteLocTipo, iteLocId } = item;
+
+                if (iteLocTipo === "Máquina") { await maquina.atualizarStatus(iteLocId, 1) } 
+                else if (iteLocTipo === "Peça") { await peca.atualizarStatus(iteLocId, 1) } 
+                else if (iteLocTipo === "Implemento") { await implemento.atualizarStatus(iteLocId, 1) }
+            }
 
             if (locacaoResult && itemLocacaoResult) {
                 res.status(200).json({ msg: `Locação excluída com sucesso!` });

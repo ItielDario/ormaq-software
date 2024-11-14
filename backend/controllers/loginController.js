@@ -9,12 +9,10 @@ export default class LoginController {
 
                 let { usuNome, usuSenha} = req.body;
                 let usuario = new LoginModel(usuNome, usuSenha)
+                let usuarioExiste = await usuario.autenticar()
 
-                if(usuario) {
+                if(usuarioExiste) {
                     usuario.usuSenha = "";
-
-                    console.log(usuario)
-                    console.log('-----------------')
 
                     let auth = new Autenticar();
                     let token = auth.gerarToken(usuario.toJSON())

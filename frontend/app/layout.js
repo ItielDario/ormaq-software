@@ -30,54 +30,11 @@ export default function RootLayout({ children }) {
         <link rel="stylesheet" href="/css/cadastrar.css"/>
         <link rel="stylesheet" href="/css/info.css"/>
         <link rel="stylesheet" href="/css/finalizar.css"/>
+        <link rel="stylesheet" href="/css/login.css"/>
       </head>
 
       <body className={``}>
-        <div id="topAnchor" style={{ position: 'relative', top: 0, height: 0 }}></div> {/* Âncora no topo */}
-        
-        <header>
-          <section className="container-header">
-            <figure>
-              <img src="/image/logo-ormaq-amarela.png"></img>
-            </figure>
-
-            <nav>
-              <ul className="itens-nav">
-                <article>
-                  <a href="/"><li className="itens"><i className="nav-icon fas fa-home"></i>Home</li></a>
-                  <a href="/maquina"><li className="itens"><i className="nav-icon fas fa-tractor"></i>Máquinas</li></a>
-                  <a href="/peca"><li className="itens"><i className="nav-icon fas fa-tools"></i>Peças</li></a>
-                  <a href="/implemento"><li className="itens"><i className="nav-icon fas fa-cogs"></i>Implementos</li></a>
-                  <a href="/cliente"><li className="itens"><i className="nav-icon fas fa-address-book"></i>Clientes</li></a>
-                  <a href="/locacao"><li className="itens"><i className="nav-icon fas fa-truck"></i>Locações</li></a>
-                  <a href="/manutencao"><li className="itens"><i className="nav-icon fas fa-wrench"></i>Manutenções</li></a>
-                  <a href="/relatorio"><li className="itens"><i className="nav-icon fas fa-file-alt"></i>Relatórios</li></a>
-                  <a href="/usuario"><li className="itens"><i className="nav-icon fas fa-user-shield"></i>Usuários</li></a>
-                </article>
-
-                <article>
-                  <li className="itens logout"><i className="nav-icon fas fa-sign-out-alt"></i>Sair</li>
-                </article>
-              </ul>
-            </nav>
-          </section>
-        </header>
-
-        <main>
-          <article className="top-bar">
-            
-          </article>
-
-          <section className="container-main">
-            <section className="content-main">
-              {children}
-
-              <article className="footer">
-                <p>© 2024 ORMAQ. Todos os direitos reservados.</p>
-              </article>
-            </section>
-          </section>
-        </main>
+        {children}  
       </body>
     </html>
   );

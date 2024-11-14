@@ -1,0 +1,149 @@
+/* Reset de estilo */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Estilos principais */
+.login-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw !important;
+    margin-left: 0vw;
+    background: linear-gradient(135deg, #ff9100, #fccd34);
+    font-family: "Roboto", sans-serif;
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.9);
+    width: 80vw;
+    max-width: 40vw;
+    padding: 5vh 4vw;
+    border-radius: 2vw;
+    box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+h1 {
+    font-size: 4vh;
+    margin-bottom: 4vh;
+    color: #4a4a4a;
+}
+
+.error-message {
+    color: #e63946;
+    font-size: 2vh;
+    margin-bottom: 2vh;
+}
+
+.success-message {
+    color: #2a9d8f;
+    font-size: 2vh;
+    margin-bottom: 2vh;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+}
+
+label {
+    font-size: 2vh;
+    color: #4b4b4b;
+    text-align: left;
+    display: block;
+}
+
+input {
+    width: 100%;
+    padding: 1.5vh 1vw;
+    font-size: 2vh;
+    border: 0.1vw solid #ccc;
+    border-radius: 0.5vw;
+}
+
+button {
+    padding: 2vh 0;
+    font-size: 2vh;
+    font-weight: bold;
+    letter-spacing: 0.1vw;
+    color: #fff;
+    background: #d58a00;
+    border: none;
+    border-radius: 0.5vw;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+button:hover {
+    background: #ba7900;
+}
+
+.links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2vh;
+}
+
+.links a {
+    font-size: 1.8vh;
+    color: #000000;
+    text-decoration: none;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+/* Estilos responsivos para tablets */
+@media (max-width: 768px) {
+    .login-box {
+        width: 90vw;
+        max-width: 60vw;
+        padding: 6vh 5vw;
+    }
+
+    h1 {
+        font-size: 5vh;
+    }
+
+    input, button {
+        font-size: 2.5vh;
+    }
+
+    .links a {
+        font-size: 2vh;
+    }
+}
+
+/* Estilos responsivos para celulares */
+@media (max-width: 480px) {
+    .login-box {
+        width: 90vw;
+        max-width: 80vw;
+        padding: 7vh 6vw;
+        border-radius: 4vw;
+    }
+
+    h1 {
+        font-size: 5vh;
+    }
+
+    input, button {
+        font-size: 2.5vh;
+        padding: 2vh 1.5vw;
+    }
+
+    .links {
+        flex-direction: column;
+        gap: 1vh;
+    }
+
+    .links a {
+        font-size: 2vh;
+    }
+}

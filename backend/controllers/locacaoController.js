@@ -92,13 +92,22 @@ export default class locacaoController {
                 let locacaoId = await locacao.gravar();
     
                 if (locacaoId) {
-                    // Exclui todos os itens dessa locação
                     let maquina = new MaquinaModel();
                     let peca = new PecaModel();
                     let implemento= new ImplementoModel();
 
-                    let intanciaAux = new ItensLocacaoModel();
-                    const exclusaoResult = await intanciaAux.excluir(locId);
+                    let itemLocacao = new ItensLocacaoModel();
+                    let itemLocacaoLista = await itemLocacao.obter(locId);
+                    const exclusaoResult = await itemLocacao.excluir(locId); // Exclui todos os itens dessa locação
+
+                    // Muda o status de todos os itens que estavam locados para 'Disponível'
+                    for (const item of itemLocacaoLista) {
+                        const { iteLocTipo, iteLocId } = item;
+        
+                        if (iteLocTipo === "Máquina") { await maquina.atualizarStatus(iteLocId, 1) } 
+                        else if (iteLocTipo === "Peça") { await peca.atualizarStatus(iteLocId, 1) } 
+                        else if (iteLocTipo === "Implemento") { await implemento.atualizarStatus(iteLocId, 1) }
+                    }
 
                     // Cadastra novamente cada item individualmente
                     for (const item of itens) {
@@ -115,8 +124,6 @@ export default class locacaoController {
                         if (!itemResult) {
                             throw new Error(`Erro ao alterar item de locação: ${item.nome}`);
                         }
-
-                        console.log(iteLocTipo)
 
                         if (iteLocTipo === "Máquina") { await maquina.atualizarStatus(iteLocId, 2) } 
                         else if (iteLocTipo === "Peça") { await peca.atualizarStatus(iteLocId, 2) } 
@@ -171,7 +178,6 @@ export default class locacaoController {
     }
 
     async finalizarLocacao(req, res) {
-        // console.log(req.body); 
         try {
             let { locId, locDataFinalEntrega, maqHorasUso, itensLocacao } = req.body;
             

@@ -19,40 +19,39 @@
 
 .login-box {
     background: rgba(255, 255, 255, 0.9);
-    width: 80vw;
-    max-width: 40vw;
-    padding: 5vh 4vw;
+    max-width: 50vw;
+    padding: 2vw 3vw;
     border-radius: 2vw;
     box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
 h1 {
-    font-size: 4vh;
-    margin-bottom: 4vh;
+    font-size: 2vw;
+    margin-bottom: 2vw;
     color: #4a4a4a;
 }
 
 .error-message {
     color: #e63946;
-    font-size: 2vh;
-    margin-bottom: 2vh;
+    font-size: 1.2vw;
+    margin-bottom: 1vw;
 }
 
 .success-message {
     color: #2a9d8f;
-    font-size: 2vh;
-    margin-bottom: 2vh;
+    font-size: 1.2vw;
+    margin-bottom: 1vw;
 }
 
 form {
     display: flex;
     flex-direction: column;
-    gap: 2vh;
+    gap: 1vw;
 }
 
 label {
-    font-size: 2vh;
+    font-size: 1.1vw;
     color: #4b4b4b;
     text-align: left;
     display: block;
@@ -60,15 +59,15 @@ label {
 
 input {
     width: 100%;
-    padding: 1.5vh 1vw;
-    font-size: 2vh;
+    padding: 1.5vw 1vw;
+    font-size: 1.2vw;
     border: 0.1vw solid #ccc;
     border-radius: 0.5vw;
 }
 
 button {
-    padding: 2vh 0;
-    font-size: 2vh;
+    padding: 1vw 0;
+    font-size: 1.3vw;
     font-weight: bold;
     letter-spacing: 0.1vw;
     color: #fff;
@@ -86,11 +85,11 @@ button:hover {
 .links {
     display: flex;
     justify-content: space-between;
-    margin-top: 2vh;
+    margin-top: 0.5vw;
 }
 
 .links a {
-    font-size: 1.8vh;
+    font-size: 1.1vw;
     color: #000000;
     text-decoration: none;
 }
@@ -104,19 +103,19 @@ button:hover {
     .login-box {
         width: 90vw;
         max-width: 60vw;
-        padding: 6vh 5vw;
+        padding: 6v 5vw;
     }
 
     h1 {
-        font-size: 5vh;
+        font-size: 5vw;
     }
 
     input, button {
-        font-size: 2.5vh;
+        font-size: 2.5vw;
     }
 
     .links a {
-        font-size: 2vh;
+        font-size: 2vw;
     }
 }
 
@@ -125,25 +124,25 @@ button:hover {
     .login-box {
         width: 90vw;
         max-width: 80vw;
-        padding: 7vh 6vw;
+        padding: 7vw 6vw;
         border-radius: 4vw;
     }
 
     h1 {
-        font-size: 5vh;
+        font-size: 5vw;
     }
 
     input, button {
-        font-size: 2.5vh;
-        padding: 2vh 1.5vw;
+        font-size: 2.5vw;
+        padding: 2vw 1.5vw;
     }
 
     .links {
         flex-direction: column;
-        gap: 1vh;
+        gap: 1vw;
     }
 
     .links a {
-        font-size: 2vh;
+        font-size: 2vw;
     }
 }

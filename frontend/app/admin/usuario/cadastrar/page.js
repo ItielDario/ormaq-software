@@ -88,13 +88,12 @@ export default function CadastrarUsuario() {
       <article ref={alertMsg}></article>
 
       <form>
-      <section>
-            <label htmlFor="usuNome">Nome do Usuário</label>
-            <input type="text" id="usuNome" ref={usuNomeRef} />
-          </section>
+        <section>
+          <label htmlFor="usuNome">Nome do Usuário</label>
+          <input type="text" id="usuNome" ref={usuNomeRef} />
+        </section>
+        
         <section className="input-group">
-          
-
           <section>
             <label htmlFor="usuSenha">Senha</label>
             <input type="password" id="usuSenha" ref={usuSenhaRef} />

@@ -3,6 +3,7 @@ import express from 'express';
 import swaggerUi from 'swagger-ui-express';
 import outputJson from "./swagger-output.json" assert { type: "json" };
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 
 // ROTAS
 import MaquinaRoute from './routes/maquinaRoute.js';
@@ -12,6 +13,7 @@ import LocacaoRoute from './routes/locacaoRouter.js';
 import ClienteRoute from './routes/clienteRoute.js';
 import ManuetencaoRoute from './routes/manutencaoRoute.js';
 import UsuarioRoute from './routes/usuarioRoute.js';
+import LoginRoute from './routes/loginRoute.js';
 
 const app = express();
 app.listen(5000);
@@ -20,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/docs', swaggerUi.serve, swaggerUi.setup(outputJson));
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cookieParser());
 
 app.use('/maquina', 
     // #swagger.tags = ['Maquina']
@@ -54,4 +57,9 @@ app.use('/manutencao',
 app.use('/usuario', 
     // #swagger.tags = ['Usuários']
     UsuarioRoute
+);
+
+app.use('/login', 
+    // #swagger.tags = ['Login']
+    LoginRoute
 );

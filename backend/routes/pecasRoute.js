@@ -1,8 +1,10 @@
 import express from 'express';
 import PecaController from '../controllers/pecaController.js'
+import Autenticar from '../middlewares/autenticar.js';
 
 const router = express.Router();
 const ctrl = new PecaController();
+let auth = new Autenticar()
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todas as peças cadastradas'

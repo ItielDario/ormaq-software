@@ -1,8 +1,10 @@
 import express from 'express';
 import manutencaoController from '../controllers/manutencaoController.js';
+import Autenticar from '../middlewares/autenticar.js';
 
 const router = express.Router();
 const ctrl = new manutencaoController();
+let auth = new Autenticar()
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todas as manutenções cadastradas'

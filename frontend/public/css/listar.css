@@ -224,6 +224,111 @@ tr:hover {
 }
 
 
+/* ------------------- CSS DE RELATÓRIOS ------------------- */
+
+
+/* Estilização do botão para impressão */
+.btn-imprimir,  .btn-limpar{
+    padding: 0.7vw 2vw;
+    cursor: pointer;
+    font-size: 1vw;
+    border-radius: 0.4vw;
+}
+
+.btn-imprimir{
+    background-color: #cfcfcf;
+    border: 0.1vw solid #898989 !important;
+    color: rgb(96, 96, 96);
+    border: none;
+}
+
+.btn-imprimir:hover {
+    background-color: #898989;
+    color: #fff;
+}
+
+.tabs{
+    display: flex;
+    padding-top: 1vw;
+}
+
+.title{
+    display: flex;
+    justify-content: space-between;
+}
+
+.box-type{
+    text-align: center;
+    width: 50%;
+    padding: 2vw 0 1.5vw 0;
+    cursor: pointer;
+    border-bottom:  0.2vw solid rgb(212, 212, 212);
+}
+
+.active{
+    background-color: rgb(241, 241, 241) ;
+    border-bottom:  0.3vw solid rgb(192, 149, 11) !important;
+}
+
+.active p{
+    color: rgb(192, 149, 11) !important;
+}
+
+.box-type:hover{
+    background-color: rgb(212, 212, 212) !important;
+}
+
+.box-type p {
+    color: #1d1d1d;
+    font-size: 1.5vw;
+    font-weight: bold;
+    line-height: 0.2vw;
+}
+
+.search-bar{
+    margin: 3vw 0;
+    display: flex;
+    gap: 2vw;
+    justify-content: space-between;
+}
+
+.search-bar input[type="text"], .search-bar input[type="date"]{
+    width: 23vw;
+}
+
+.btn-limpar {
+    background-color: #007bff;
+    color: #fff;
+    margin-top: 0.5vw;
+    margin-bottom: 1vw;
+    
+}
+
+.btn-limpar:hover {
+    background-color: #0056b3;
+}
+
+
+/* Esconde todos os elementos durante a impressão */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  #relatorio-tabela {
+    visibility: visible;
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .btn-imprimir {
+    display: none;
+  }
+}
+
+
+
 
 @media (max-width: 60vw) {
     table, thead, tbody, th, td, tr {

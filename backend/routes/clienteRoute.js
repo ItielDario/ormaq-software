@@ -1,8 +1,10 @@
 import express from 'express';
 import ClienteController from '../controllers/clienteController.js'
+import Autenticar from '../middlewares/autenticar.js';
 
 const router = express.Router();
 const ctrl = new ClienteController();
+let auth = new Autenticar()
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todas os clientes cadastradas'

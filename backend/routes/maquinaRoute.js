@@ -1,8 +1,10 @@
 import express from 'express';
 import MaquinaController from '../controllers/maquinaController.js';
+import Autenticar from '../middlewares/autenticar.js';
 
 const router = express.Router();
 const ctrl = new MaquinaController();
+let auth = new Autenticar();
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todas as máquinas cadastradas'

@@ -18,7 +18,7 @@ export default class Autenticar {
                 usuarioModel = await usuarioModel.obter(usuario.usuId);
 
                 if(usuarioModel != null) {
-                    req.usuarioLogado = usuarioModel;
+                    req.usuario = usuarioModel;
                     next();
                 }
                 else{
@@ -54,7 +54,6 @@ export default class Autenticar {
     }
 
     gerarToken(usuario) {
-        console.log(usuario)
         return jwt.sign(usuario, jwt_segredo, { expiresIn: 60 })
     }
 }

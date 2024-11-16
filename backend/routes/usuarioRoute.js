@@ -1,8 +1,10 @@
 import express from 'express';
 import UsuarioController from '../controllers/usuarioController.js';
+import Autenticar from '../middlewares/autenticar.js';
 
 const router = express.Router();
 const ctrl = new UsuarioController();
+let auth = new Autenticar()
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todos os usuários cadastrados'

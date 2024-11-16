@@ -1,8 +1,10 @@
 import express from 'express';
 import ImplementoController from '../controllers/implementoController.js'
+import Autenticar from '../middlewares/autenticar.js';
 
 const router = express.Router();
 const ctrl = new ImplementoController();
+let auth = new Autenticar()
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todos os Implementos cadastradas'

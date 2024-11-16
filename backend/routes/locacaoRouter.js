@@ -1,8 +1,10 @@
 import express from 'express';
 import locacaoController from '../controllers/locacaoController.js'
+import Autenticar from '../middlewares/autenticar.js';
 
 const router = express.Router();
 const ctrl = new locacaoController();
+let auth = new Autenticar()
 
 router.get('/', (req, res) => {
     // #swagger.summary = 'Listar todas as locações cadastradas'

@@ -58,8 +58,9 @@ export default function Relatorios() {
     return null; // Evita renderizar durante o SSR
   }
 
-  function filtrarItens(lista) {
-    const formatarData = (dataString) => {
+  function filtrarItens(lista) { 
+
+    const formatarData = (dataString) => { // Função para formatar a data em no padra mes-dia-ano
       if (!dataString) return null;
       const partes = dataString.includes("/") ? dataString.split("/") : dataString.split("-");
       return new Date(`${partes[2]}-${partes[1]}-${partes[0]}`);
@@ -67,25 +68,32 @@ export default function Relatorios() {
 
     const dataInicioValida = dataInicio ? new Date(dataInicio) : null;
     const dataFinalValida = dataFinal ? new Date(dataFinal) : null;
+    let dataFinalItem = null
 
-    return lista.filter((item) => {
+    return lista.filter((item) => { // Retorna um array de itens filtrados
       const dataInicioItem = formatarData(
         abaAtiva === "locacoes" ? item.locDataInicio : item.manDataInicio
       );
-      const dataFinalItem = abaAtiva === "locacoes" && item.locDataFinalEntrega
-        ? formatarData(item.locDataFinalEntrega)
-        : null;
 
+      if(abaAtiva === "locacoes"){
+        if(item.locDataFinalEntrega){ dataFinalItem = formatarData(item.locDataFinalEntrega) }
+        else{ dataFinalItem = null }
+      }
+      else{ dataFinalItem = formatarData(item.manDataTermino) }
+
+      // Valida a busca
       const filtroValido = filtro
         ? Object.values(item).some((val) =>
             String(val).toLowerCase().includes(filtro.toLowerCase())
           )
         : true;
 
+      // Valida a data de inicio
       const dataInicioValidaFiltro = dataInicioValida
         ? dataInicioItem && dataInicioItem >= dataInicioValida
         : true;
 
+      // Valida a data de término
       const dataFinalValidaFiltro = dataFinalValida
         ? dataFinalItem ? dataFinalItem <= dataFinalValida : true
         : true;
@@ -117,7 +125,7 @@ export default function Relatorios() {
     tabelaClone.querySelectorAll("thead tr").forEach((tr) => tr.deleteCell(0));
     tabelaClone.querySelectorAll("tbody tr").forEach((tr) => tr.deleteCell(0));
 
-    const titulo = isLocacoes ? "Relatório de Locações" : "Relatório de Manutenções";
+    const titulo = isLocacoes ? "Relatório de Locações" : "Relatório de Manutenções"; // Titulo da tabela
 
     const janela = window.open("", "_target");
     janela.document.write(`
@@ -158,7 +166,6 @@ export default function Relatorios() {
     janela.document.close();
     janela.print();
   }
-
 
   return (
     <section className="content-main-children-listar">

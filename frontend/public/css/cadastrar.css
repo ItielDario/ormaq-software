@@ -49,6 +49,13 @@ textarea,
     background-color: white;
     color: #1d1d1d;
 }
+
+/* Alterar cor do ícone de calendário */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    color: black; /* Define a cor */
+    filter: invert(0%) brightness(0%) contrast(100%); /* Garante que o ícone fique preto */
+    cursor: pointer; /* Mostra o cursor de clique */
+}
   
 textarea {
     height: 8vw;

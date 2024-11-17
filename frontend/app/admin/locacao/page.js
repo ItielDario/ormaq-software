@@ -58,6 +58,77 @@ export default function Locacao() {
         }
     }
 
+    function imprimirRelatorioLocacao() {
+        const tabela = document.getElementById("tabela-locacao");
+        if (!tabela) {
+            alert("Nenhuma tabela disponível para impressão.");
+            return;
+        }
+
+        const tabelaClone = tabela.cloneNode(true);
+        tabelaClone.querySelectorAll("thead tr").forEach((tr) => {
+            tr.deleteCell(0); // Remove coluna "Info"
+            tr.deleteCell(6); // Remove coluna "Ações"
+        });
+        tabelaClone.querySelectorAll("tbody tr").forEach((tr) => {
+            tr.deleteCell(0); // Remove coluna "Info"
+            tr.deleteCell(6); // Remove coluna "Ações"
+        });
+
+        const htmlImpressao = `
+            <html>
+            <head>
+                <title>Relatório de Máquinas</title>
+                <style>
+                    body {
+                        font-family: "Roboto", sans-serif;
+                        margin: 2vw;
+                    }
+                    h1 {
+                        text-align: center;
+                        font-size: 4vw;
+                    }
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        margin-top: 2vw;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 0.6vw;
+                        text-align: left;
+                        font-size: 2vw;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Relatório de Locações</h1>
+                <table>
+                    ${tabelaClone.innerHTML}
+                </table>
+            </body>
+            </html>
+        `;
+
+        const iframe = document.createElement("iframe");
+        iframe.style.position = "absolute";
+        iframe.style.top = "-10000px";
+        document.body.appendChild(iframe);
+
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(htmlImpressao);
+        doc.close();
+
+        iframe.onload = () => {
+            iframe.contentWindow.print();
+            document.body.removeChild(iframe);
+        };
+    }
+
     return (
         <section className="content-main-children-listar">
             <article className="title">
@@ -65,13 +136,14 @@ export default function Locacao() {
             </article>
 
             <article className="container-btn-cadastrar">
+                <button className="btn-imprimir" onClick={imprimirRelatorioLocacao}>Imprimir Relatório</button>
                 <CriarBotao value='Cadastrar' href='/admin/locacao/cadastrar' class='btn-cadastrar'></CriarBotao>
             </article>
 
             <article ref={alertMsg}></article>
 
             <article className="container-table">
-                <table className="table">
+                <table id="tabela-locacao" className="table">
                     <thead>
                         <tr>
                             <th>Info</th>

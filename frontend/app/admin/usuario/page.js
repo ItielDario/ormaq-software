@@ -1,6 +1,5 @@
 'use client';
 import { useState, useEffect, useRef } from "react";
-import MontarTabela from "../components/montarTabela.js";
 import CriarBotao from "../components/criarBotao.js";
 import httpClient from "../utils/httpClient.js";
 
@@ -23,7 +22,7 @@ export default function Usuario() {
         httpClient.get("/usuario")
         .then(r => r.json())
         .then((r) => {
-            console.log(r)
+            console.log(r);
             setListaUsuarios(r);
         });
     }
@@ -58,6 +57,77 @@ export default function Usuario() {
         }
     }
 
+    function imprimirRelatorioUsuarios() {
+        const tabela = document.getElementById("tabela-usuarios");
+        if (!tabela) {
+            alert("Nenhuma tabela disponível para impressão.");
+            return;
+        }
+
+        const tabelaClone = tabela.cloneNode(true);
+        tabelaClone.querySelectorAll("thead tr").forEach((tr) => {
+            tr.deleteCell(0); // Remove coluna "Info"
+            tr.deleteCell(4); // Remove coluna "Ações"
+        });
+        tabelaClone.querySelectorAll("tbody tr").forEach((tr) => {
+            tr.deleteCell(0); // Remove coluna "Info"
+            tr.deleteCell(4); // Remove coluna "Ações"
+        });
+
+        const htmlImpressao = `
+            <html>
+            <head>
+                <title>Relatório de Usuários</title>
+                <style>
+                    body {
+                        font-family: "Roboto", sans-serif;
+                        margin: 2vw;
+                    }
+                    h1 {
+                        text-align: center;
+                        font-size: 4vw;
+                    }
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        margin-top: 2vw;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 0.6vw;
+                        text-align: left;
+                        font-size: 2vw;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Relatório de Usuários</h1>
+                <table>
+                    ${tabelaClone.innerHTML}
+                </table>
+            </body>
+            </html>
+        `;
+
+        const iframe = document.createElement("iframe");
+        iframe.style.position = "absolute";
+        iframe.style.top = "-10000px";
+        document.body.appendChild(iframe);
+
+        const doc = iframe.contentWindow.document;
+        doc.open();
+        doc.write(htmlImpressao);
+        doc.close();
+
+        iframe.onload = () => {
+            iframe.contentWindow.print();
+            document.body.removeChild(iframe);
+        };
+    }
+
     return (
         <section className="content-main-children-listar">
             <article className="title">
@@ -65,28 +135,44 @@ export default function Usuario() {
             </article>
 
             <article className="container-btn-cadastrar">
+                <button className="btn-imprimir" onClick={imprimirRelatorioUsuarios}>Imprimir Relatório</button>
                 <CriarBotao value='Cadastrar' href='/admin/usuario/cadastrar' class='btn-cadastrar'></CriarBotao>
             </article>
 
             <article ref={alertMsg}></article>
 
             <article className="container-table">
-                <MontarTabela
-                    cabecalhos={['ID', 'Nome', 'Telefone', 'Email', 'Perfil', 'Ações']}
-                    listaDados={listaUsuarios.map(usuario => ({
-                        id: usuario.usuId,
-                        Nome: usuario.usuNome,
-                        Telefone: usuario.usuTelefone || 'Sem Telefone',
-                        Email: usuario.usuEmail || 'Sem Email',
-                        Perfil: usuario.usuPerDescricao
-                    }))}
-                    renderActions={(usuario) => (
-                        <div>
-                            <a href={`/admin/usuario/alterar/${usuario.id}`}><i className="nav-icon fas fa-pen"></i></a>
-                            <a onClick={() => excluirUsuario(usuario.id)}><i className="nav-icon fas fa-trash"></i></a>
-                        </div>
-                    )}
-                />
+                <table id="tabela-usuarios" className="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Email</th>
+                            <th>Perfil</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listaUsuarios.map(usuario => (
+                            <tr key={usuario.usuId}>
+                                <td>{usuario.usuId}</td>
+                                <td>{usuario.usuNome}</td>
+                                <td>{usuario.usuTelefone || 'Sem Telefone'}</td>
+                                <td>{usuario.usuEmail || 'Sem Email'}</td>
+                                <td>{usuario.usuPerDescricao}</td>
+                                <td>
+                                    <a href={`/admin/usuario/alterar/${usuario.usuId}`}>
+                                        <i className="nav-icon fas fa-pen"></i>
+                                    </a>
+                                    <a onClick={() => excluirUsuario(usuario.usuId)}>
+                                        <i className="nav-icon fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </article>
         </section>
     );

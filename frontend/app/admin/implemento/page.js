@@ -1,8 +1,7 @@
 'use client';
 import { useState, useEffect, useRef } from "react";
-import MontarTabela from "../components/montarTabela.js";
 import CriarBotao from "../components/criarBotao.js";
-import httpClient from "../utils/httpClient.js"
+import httpClient from "../utils/httpClient.js";
 
 export default function Implemento() {
     const [listaImplementos, setListaImplementos] = useState([]);
@@ -25,42 +24,117 @@ export default function Implemento() {
             .then(r => r.json())
             .then((r) => {
                 r.map(implemento => implemento.impDataAquisicao = new Date(implemento.impDataAquisicao).toLocaleDateString()) // Formatando a data
-                setListaImplementos(r)
-            })
+                setListaImplementos(r);
+            });
     }
 
     function excluirImplemento(idImplemento) {
-        if(confirm("Tem certeza que deseja excluir esse implemento?")) {
+        if (confirm("Tem certeza que deseja excluir esse implemento?")) {
             let status = 0;
 
             httpClient.delete(`/implemento/${idImplemento}`)
-            .then(r => {
-                status = r.status;
-                return r.json();
-            })
-            .then(r => {
-                if(status == 200) {
-                    carregarImplementos();
-                    alertMsg.current.className = 'alertSuccess';
-                }
-                else {
-                    alertMsg.current.className = 'alertError';
-                }
-
-                alertMsg.current.style.display = 'block';
-                alertMsg.current.textContent = r.msg;
-
-                // Inicia o setTimeout e armazena o ID
-                timeoutId = setTimeout(() => {
-                    if (alertMsg.current) { // Verifica se alertMsg ainda existe
-                        alertMsg.current.style.display = 'none';
+                .then(r => {
+                    status = r.status;
+                    return r.json();
+                })
+                .then(r => {
+                    if (status === 200) {
+                        carregarImplementos();
+                        alertMsg.current.className = 'alertSuccess';
+                    } else {
+                        alertMsg.current.className = 'alertError';
                     }
-                }, 6000);
-                document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
-            })
+
+                    alertMsg.current.style.display = 'block';
+                    alertMsg.current.textContent = r.msg;
+
+                    // Inicia o setTimeout e armazena o ID
+                    timeoutId = setTimeout(() => {
+                        if (alertMsg.current) {
+                            alertMsg.current.style.display = 'none';
+                        }
+                    }, 6000);
+                    document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+                });
         }
     }
 
+    function imprimirRelatorioImplementos() {
+        const tabela = document.getElementById("tabela-implementos");
+        if (!tabela) {
+            alert("Nenhuma tabela disponível para impressão.");
+            return;
+        }
+    
+        // Clona a tabela para impressão
+        const tabelaClone = tabela.cloneNode(true);
+    
+        // Remove a coluna de ações
+        tabelaClone.querySelectorAll("thead tr").forEach((tr) => {
+            tr.deleteCell(0); // Remove coluna "Info"
+            tr.deleteCell(5); // Remove coluna "Ações"
+        });
+        tabelaClone.querySelectorAll("tbody tr").forEach((tr) => {
+            tr.deleteCell(0); // Remove coluna "Info"
+            tr.deleteCell(5); // Remove coluna "Ações"
+        });
+    
+        // Criar o conteúdo HTML para impressão
+        const htmlImpressao = `
+            <html>
+            <head>
+                <title>Relatório de Implementos</title>
+                <style>
+                    body {
+                        font-family: "Roboto", sans-serif;
+                        margin: 2vw;
+                    }
+                    h1 {
+                        text-align: center;
+                        font-size: 4vw;
+                    }
+                    table {
+                        border-collapse: collapse;
+                        width: 100%;
+                        margin-top: 2vw;
+                    }
+                    th, td {
+                        border: 1px solid #ddd;
+                        padding: 0.6vw;
+                        text-align: left;
+                        font-size: 2vw;
+                    }
+                    th {
+                        background-color: #f2f2f2;
+                    }
+                </style>
+            </head>
+            <body>
+                <h1>Relatório de Implementos</h1>
+                <table>
+                    ${tabelaClone.innerHTML}
+                </table>
+            </body>
+            </html>
+        `;
+    
+       // Criar um iframe oculto para impressão
+       const iframe = document.createElement("iframe");
+       iframe.style.position = "absolute";
+       iframe.style.top = "-10000px";
+       document.body.appendChild(iframe);
+   
+       const doc = iframe.contentWindow.document;
+       doc.open();
+       doc.write(htmlImpressao);
+       doc.close();
+   
+       iframe.onload = () => {
+           iframe.contentWindow.print();
+           document.body.removeChild(iframe); // Remover o iframe após a impressão
+       };
+    }
+    
     return (
         <section className="content-main-children-listar">
             <article className="title">
@@ -68,29 +142,46 @@ export default function Implemento() {
             </article>
 
             <article className="container-btn-cadastrar">
+                <button className="btn-imprimir" onClick={imprimirRelatorioImplementos}>Imprimir Relatório</button>
                 <CriarBotao value='Cadastrar' href='/admin/implemento/cadastrar' class='btn-cadastrar'></CriarBotao>
             </article>
 
             <article ref={alertMsg}></article>
 
             <article className="container-table">
-                <MontarTabela
-                    cabecalhos={['ID', 'Nome', 'Data de Aquisição', 'Preço Venda', 'Preço / Hora', 'Status', 'Ações']}
-                    listaDados={listaImplementos.map(implemento => ({
-                        id: implemento.impId,
-                        Nome: implemento.impNome,
-                        'Data de Aquisição': implemento.impDataAquisicao,
-                        'Preço Venda': `R$ ${implemento.impPrecoVenda}`,
-                        'Preço / Hora': `R$ ${implemento.impPrecoHora}`,
-                        Status: implemento.equipamentoStatus.equipamentoStatusDescricao
-                    }))}
-                    renderActions={(implemento) => (
-                        <div>
-                            <a href={`/admin/implemento/alterar/${implemento.id}`}><i className="nav-icon fas fa-pen"></i></a>
-                            <a onClick={() => excluirImplemento(implemento.id)}><i className="nav-icon fas fa-trash"></i></a>
-                        </div>
-                    )}
-                />
+                <table id="tabela-implementos" className="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Data de Aquisição</th>
+                            <th>Preço Venda</th>
+                            <th>Preço / Hora</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {listaImplementos.map(implemento => (
+                            <tr key={implemento.impId}>
+                                <td>{implemento.impId}</td>
+                                <td>{implemento.impNome}</td>
+                                <td>{implemento.impDataAquisicao}</td>
+                                <td>R$ {implemento.impPrecoVenda}</td>
+                                <td>R$ {implemento.impPrecoHora}</td>
+                                <td>{implemento.equipamentoStatus.equipamentoStatusDescricao}</td>
+                                <td>
+                                    <a href={`/admin/implemento/alterar/${implemento.impId}`}>
+                                        <i className="nav-icon fas fa-pen"></i>
+                                    </a>
+                                    <a onClick={() => excluirImplemento(implemento.impId)}>
+                                        <i className="nav-icon fas fa-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
             </article>
         </section>
     );

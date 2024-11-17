@@ -15,7 +15,7 @@
 
 .content-main-children-listar .container-btn-cadastrar{
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
     margin: 2vw 0;
 }
 
@@ -229,7 +229,7 @@ tr:hover {
 
 /* Estilização do botão para impressão */
 .btn-imprimir,  .btn-limpar{
-    padding: 0.7vw 2vw;
+    padding: 0.7vw 1vw;
     cursor: pointer;
     font-size: 1vw;
     border-radius: 0.4vw;

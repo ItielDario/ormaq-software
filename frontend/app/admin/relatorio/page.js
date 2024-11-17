@@ -125,46 +125,62 @@ export default function Relatorios() {
     tabelaClone.querySelectorAll("thead tr").forEach((tr) => tr.deleteCell(0));
     tabelaClone.querySelectorAll("tbody tr").forEach((tr) => tr.deleteCell(0));
 
-    const titulo = isLocacoes ? "Relatório de Locações" : "Relatório de Manutenções"; // Titulo da tabela
+    const titulo = isLocacoes ? "Relatório de Locações" : "Relatório de Manutenções";
 
-    const janela = window.open("", "_target");
-    janela.document.write(`
-      <html>
+    // Criar o conteúdo HTML para impressão
+    const htmlImpressao = `
+        <html>
         <head>
-          <title>Relatório</title>
-          <style>
-            body {
-              font-family: "Roboto", sans-serif;
-              margin: 2vw;
-            }
-            h1 {
-              text-align: center;
-              font-size: 3vw;
-            }
-            table {
-              border-collapse: collapse;
-              width: 100%;
-              margin-top: 2vw;
-            }
-            th, td {
-              border: 0.1vw solid #ddd;
-              padding: 0.5vw;
-              text-align: left;
-              font-size: 1.7vw;
-            }
-            th {
-              background-color: #f2f2f2;
-            }
-          </style>
+            <title>${titulo}</title>
+            <style>
+                body {
+                    font-family: "Roboto", sans-serif;
+                    margin: 2vw;
+                }
+                h1 {
+                    text-align: center;
+                    font-size: 4vw;
+                }
+                table {
+                    border-collapse: collapse;
+                    width: 100%;
+                    margin-top: 2vw;
+                }
+                th, td {
+                    border: 1px solid #ddd;
+                    padding: 0.6vw;
+                    text-align: left;
+                    font-size: 2vw;
+                }
+                th {
+                    background-color: #f2f2f2;
+                }
+            </style>
         </head>
         <body>
-          <h1>${titulo}</h1>
-          ${tabelaClone.outerHTML}
+            <h1>${titulo}</h1>
+            <table>
+                ${tabelaClone.innerHTML}
+            </table>
         </body>
-      </html>
-    `);
-    janela.document.close();
-    janela.print();
+        </html>
+    `;
+
+    // Criar um iframe oculto para impressão
+    const iframe = document.createElement("iframe");
+    iframe.style.position = "absolute";
+    iframe.style.top = "-10000px";
+    document.body.appendChild(iframe);
+
+    const doc = iframe.contentWindow.document;
+    doc.open();
+    doc.write(htmlImpressao);
+    doc.close();
+
+    iframe.onload = () => {
+        iframe.contentWindow.print();
+        document.body.removeChild(iframe); // Remover o iframe após a impressão
+    };
   }
 
   return (

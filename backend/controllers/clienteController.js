@@ -56,7 +56,6 @@ export default class clienteController {
 
     async alterarCliente(req, res) {
         try {
-            console.log(req.body)
             let { cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail } = req.body;
             if (cliId && cliNome && cliCPF_CNPJ) {
 

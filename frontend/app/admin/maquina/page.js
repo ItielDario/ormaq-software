@@ -22,6 +22,7 @@ export default function Maquina() {
         httpClient.get("/maquina")
             .then(r => r.json())
             .then((r) => {
+                console.log(r)
                 r.map(maquina => maquina.maqDataAquisicao = new Date(maquina.maqDataAquisicao).toLocaleDateString());
                 setListaMaquinas(r);
             });
@@ -67,11 +68,11 @@ export default function Maquina() {
         const tabelaClone = tabela.cloneNode(true);
         tabelaClone.querySelectorAll("thead tr").forEach((tr) => {
             tr.deleteCell(0); // Remove coluna "Info"
-            tr.deleteCell(7); // Remove coluna "Ações"
+            tr.deleteCell(6); // Remove coluna "Ações"
         });
         tabelaClone.querySelectorAll("tbody tr").forEach((tr) => {
             tr.deleteCell(0); // Remove coluna "Info"
-            tr.deleteCell(7); // Remove coluna "Ações"
+            tr.deleteCell(6); // Remove coluna "Ações"
         });
 
         const htmlImpressao = `
@@ -147,11 +148,10 @@ export default function Maquina() {
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Data de Aquisição</th>
+                            <th>Modelo</th>
+                            <th>Série/Chassi</th>
                             <th>Tipo</th>
                             <th>Horas de Uso</th>
-                            <th>Preço Venda</th>
-                            <th>Preço / Hora</th>
                             <th>Status</th>
                             <th>Ações</th>
                         </tr>
@@ -161,11 +161,10 @@ export default function Maquina() {
                             <tr key={maquina.maqId}>
                                 <td>{maquina.maqId}</td>
                                 <td>{maquina.maqNome}</td>
-                                <td>{maquina.maqDataAquisicao}</td>
+                                <td>{maquina.maqModelo}</td>
+                                <td>{maquina.maqSerie}</td>
                                 <td>{maquina.maqTipo}</td>
                                 <td>{maquina.maqHorasUso}</td>
-                                <td>R$ {maquina.maqPrecoVenda}</td>
-                                <td>R$ {maquina.maqPrecoHora}</td>
                                 <td>{maquina.equipamentoStatus.equipamentoStatusDescricao}</td>
                                 <td>
                                     <a href={`/admin/maquina/alterar/${maquina.maqId}`}>

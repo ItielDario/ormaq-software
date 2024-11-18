@@ -34,8 +34,8 @@
         "summary": "Alterar uma maquina existente",
         "description": "Lista todas as máquinas.",
         "responses": {
-          "201": {
-            "description": "Created"
+          "200": {
+            "description": "OK"
           },
           "400": {
             "description": "Bad Request"
@@ -62,10 +62,13 @@
                   "maqTipo": {
                     "example": "any"
                   },
-                  "maqDescricao": {
+                  "maqModelo": {
                     "example": "any"
                   },
-                  "maqInativo": {
+                  "maqSerie": {
+                    "example": "any"
+                  },
+                  "maqAnoFabricacao": {
                     "example": "any"
                   },
                   "maqHorasUso": {
@@ -74,7 +77,22 @@
                   "maqPrecoVenda": {
                     "example": "any"
                   },
-                  "maqPrecoHora": {
+                  "maqPrecoAluguelDiario": {
+                    "example": "any"
+                  },
+                  "maqPrecoAluguelSemanal": {
+                    "example": "any"
+                  },
+                  "maqPrecoAluguelQuinzenal": {
+                    "example": "any"
+                  },
+                  "maqPrecoAluguelMensal": {
+                    "example": "any"
+                  },
+                  "maqExibirCatalogo": {
+                    "example": "any"
+                  },
+                  "maqDescricao": {
                     "example": "any"
                   }
                 }
@@ -172,19 +190,37 @@
                   "maqTipo": {
                     "example": "any"
                   },
+                  "maqModelo": {
+                    "example": "any"
+                  },
+                  "maqSerie": {
+                    "example": "any"
+                  },
+                  "maqAnoFabricacao": {
+                    "example": "any"
+                  },
                   "maqHorasUso": {
-                    "example": "any"
-                  },
-                  "maqInativo": {
-                    "example": "any"
-                  },
-                  "maqDescricao": {
                     "example": "any"
                   },
                   "maqPrecoVenda": {
                     "example": "any"
                   },
-                  "maqPrecoHora": {
+                  "maqPrecoAluguelDiario": {
+                    "example": "any"
+                  },
+                  "maqPrecoAluguelSemanal": {
+                    "example": "any"
+                  },
+                  "maqPrecoAluguelQuinzenal": {
+                    "example": "any"
+                  },
+                  "maqPrecoAluguelMensal": {
+                    "example": "any"
+                  },
+                  "maqExibirCatalogo": {
+                    "example": "any"
+                  },
+                  "maqDescricao": {
                     "example": "any"
                   }
                 }
@@ -1424,27 +1460,33 @@
             "type": "string",
             "example": "Nova"
           },
-          "maqDescricao": {
+          "maqModelo": {
             "type": "string",
             "example": "Trator de grande porte"
           },
-          "maqInativo": {
+          "maqSerie": {
             "type": "string",
             "example": "N"
           },
-          "maqHorasUso": {
+          "maqAnoFabricacao": {
             "type": "string",
             "example": "0"
+          },
+          "maqDescricao": {
+            "type": "string",
+            "example": "1"
+          },
+          "maqExibirCatalogo": {
+            "type": "undefined"
+          },
+          "maqHorasUso": {
+            "type": "undefined"
           },
           "maqPrecoVenda": {
             "type": "undefined"
           },
-          "maqPrecoHora": {
-            "type": "undefined"
-          },
           "equipamentoStatus": {
-            "type": "string",
-            "example": "1"
+            "type": "undefined"
           }
         }
       }

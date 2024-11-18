@@ -1,4 +1,5 @@
 'use client';
+import { ColorSelectorView } from "ckeditor5";
 import CriarBotao from "../../components/criarBotao.js";
 import CustomEditor from "../../components/custom-editor.js";
 import httpClient from "../../utils/httpClient.js";
@@ -8,10 +9,16 @@ export default function CadastrarMaquina() {
   const maqNomeRef = useRef(null);
   const maqDataAquisicaoRef = useRef(null);
   const maqTipoRef = useRef(null);
+  const maqModeloRef = useRef(null); 
+  const maqSerieRef = useRef(null); 
+  const maqAnoFabricacaoRef = useRef(null); 
   const maqHorasUsoRef = useRef(null);
   const maqPrecoVendaRef = useRef(null); 
-  const maqPrecoHoraRef = useRef(null); 
-  const maqInativoRef = useRef(null);
+  const maqPrecoAluguelDiarioRef = useRef(null); 
+  const maqPrecoAluguelSemanalRef = useRef(null); 
+  const maqPrecoAluguelQuinzenalRef = useRef(null); 
+  const maqPrecoAluguelMensalRef = useRef(null); 
+  const maqExibirCatalogoRef = useRef(null);
   const alertMsg = useRef(null);
   const [maquinaDescricao, setMaquinaDescricao] = useState('');
 
@@ -22,12 +29,20 @@ export default function CadastrarMaquina() {
       maqNome: maqNomeRef.current.value,
       maqDataAquisicao: maqDataAquisicaoRef.current.value,
       maqTipo: maqTipoRef.current.value,
+      maqModelo: maqModeloRef.current.value, 
+      maqSerie: maqSerieRef.current.value, 
+      maqAnoFabricacao: maqAnoFabricacaoRef.current.value, 
       maqHorasUso: maqHorasUsoRef.current.value,
       maqPrecoVenda: maqPrecoVendaRef.current.value, 
-      maqPrecoHora: maqPrecoHoraRef.current.value,
-      maqInativo: maqInativoRef.current.value,
+      maqPrecoAluguelDiario: maqPrecoAluguelDiarioRef.current.value, 
+      maqPrecoAluguelSemanal: maqPrecoAluguelSemanalRef.current.value, 
+      maqPrecoAluguelQuinzenal: maqPrecoAluguelQuinzenalRef.current.value, 
+      maqPrecoAluguelMensal: maqPrecoAluguelMensalRef.current.value, 
+      maqExibirCatalogo: maqExibirCatalogoRef.current.value,
       maqDescricao: maquinaDescricao
     };
+
+    console.log(dados)
 
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
@@ -46,6 +61,7 @@ export default function CadastrarMaquina() {
         })
         .then(r => {
           setTimeout(() => {
+            console.log(r)
             if(status == 201){
               alertMsg.current.className = 'alertSuccess';
 
@@ -53,11 +69,17 @@ export default function CadastrarMaquina() {
               maqNomeRef.current.value = '';
               maqDataAquisicaoRef.current.value = '';
               maqTipoRef.current.value = '';
+              maqModeloRef.current.value = ''; 
+              maqSerieRef.current.value = ''; 
+              maqAnoFabricacaoRef.current.value = ''; 
               maqHorasUsoRef.current.value = '';
               maqPrecoVendaRef.current.value = '';
-              maqPrecoHoraRef.current.value = '';
-              maqInativoRef.current.value = '0';
-              <CustomEditor initialValue={''}/>
+              maqPrecoAluguelDiarioRef.current.value = ''; 
+              maqPrecoAluguelSemanalRef.current.value = ''; 
+              maqPrecoAluguelQuinzenalRef.current.value = ''; 
+              maqPrecoAluguelMensalRef.current.value = ''; 
+              maqExibirCatalogoRef.current.value = '0';
+              <CustomEditor initialValue={''}/>;
             }
             else{
               alertMsg.current.className = 'alertError';
@@ -88,15 +110,27 @@ export default function CadastrarMaquina() {
       <article ref={alertMsg}></article>
 
       <form>
-        <section>
-          <label htmlFor="maqNomeRef">Nome da Máquina</label>
-          <input type="text" id="maqNomeRef" ref={maqNomeRef} />
+        <section className="input-group">
+          <section>
+            <label htmlFor="maqNomeRef">Nome da Máquina</label>
+            <input type="text" id="maqNomeRef" ref={maqNomeRef} />
+          </section>
+
+          <section>
+            <label htmlFor="maqModelo">Modelo da Máquina</label>
+            <input type="text" id="maqModelo" ref={maqModeloRef} />
+          </section>
+
+          <section>
+            <label htmlFor="maqSerie">Série/Chassi da Máquina</label>
+            <input type="text" id="maqSerie" ref={maqSerieRef} />
+          </section>
         </section>
 
         <section className="input-group">
           <section>
-            <label htmlFor="maqDataAquisicao">Data de Aquisição</label>
-            <input type="date" id="maqDataAquisicao" ref={maqDataAquisicaoRef} />
+            <label htmlFor="maqAnoFabricacao">Ano de Fabricação</label>
+            <input type="number" id="maqAnoFabricacao" ref={maqAnoFabricacaoRef} />
           </section>
 
           <section>
@@ -109,28 +143,51 @@ export default function CadastrarMaquina() {
           </section>
 
           <section>
-            <label htmlFor="maqHorasUso">Horas de Uso</label>
-            <input type="number" id="maqHorasUso" ref={maqHorasUsoRef} />
+            <label htmlFor="maqDataAquisicao">Data de Aquisição</label>
+            <input type="date" id="maqDataAquisicao" ref={maqDataAquisicaoRef} />
           </section>
         </section>
 
         <section className="input-group">
           <section>
-            <label htmlFor="maqPrecoVenda">Preço de Venda</label>
-            <input type="number" id="maqPrecoVenda" ref={maqPrecoVendaRef} step="0.01" />
+            <label htmlFor="maqPrecoAluguelQuinzenal">Preço de Venda</label>
+            <input type="number" id="maqPrecoVendaRef" ref={maqPrecoVendaRef} step="0.01" />
           </section>
 
           <section>
-            <label htmlFor="maqPrecoHora">Preço por Hora</label>
-            <input type="number" id="maqPrecoHora" ref={maqPrecoHoraRef} step="0.01" />
+            <label htmlFor="maqHorasUso">Horas de Uso</label>
+            <input type="number" id="maqHorasUso" ref={maqHorasUsoRef} />
           </section>
 
           <section>
-            <label htmlFor="maqInativo">Exibir nos classificados</label>
-            <select id="maqInativo" ref={maqInativoRef}>
-              <option value="0">Sim</option>
-              <option value="1">Não</option>
+            <label htmlFor="maqExibirCatalogo">Exibir nos classificados</label>
+            <select id="maqExibirCatalogo" ref={maqExibirCatalogoRef}>
+              <option value="1">Sim</option>
+              <option value="0">Não</option>
             </select>
+          </section>
+        </section>
+
+
+        <section className="input-group">
+          <section>
+            <label htmlFor="maqPrecoAluguelDiario">Preço do Aluguel Diário</label>
+            <input type="number" id="maqPrecoAluguelDiario" ref={maqPrecoAluguelDiarioRef} step="0.01" />
+          </section>
+
+          <section>
+            <label htmlFor="maqPrecoAluguelSemanal">Preço do Aluguel Semanal</label>
+            <input type="number" id="maqPrecoAluguelSemanal" ref={maqPrecoAluguelSemanalRef} step="0.01" />
+          </section>
+
+          <section>
+            <label htmlFor="maqPrecoAluguelQuinzenal">Preço do Aluguel Quinzenal</label>
+            <input type="number" id="maqPrecoAluguelQuinzenal" ref={maqPrecoAluguelQuinzenalRef} step="0.01" />
+          </section>
+
+          <section>
+            <label htmlFor="maqPrecoAluguelMensal">Preço do Aluguel Mensal</label>
+            <input type="number" id="maqPrecoAluguelMensal" ref={maqPrecoAluguelMensalRef} step="0.01" />
           </section>
         </section>
 

@@ -9,7 +9,7 @@ export default function CadastrarPeca() {
   const pecDataAquisicaoRef = useRef(null);
   const pecPrecoVendaRef = useRef(null); 
   const pecPrecoHoraRef = useRef(null); 
-  const pecInativoRef = useRef(null);
+  const pecaExibirCatalogoRef = useRef(null);
   const alertMsg = useRef(null);
   const [pecDescricao, setPecDescricao] = useState('');
 
@@ -21,7 +21,7 @@ export default function CadastrarPeca() {
       pecaDataAquisicao: pecDataAquisicaoRef.current.value,
       pecaPrecoVenda: pecPrecoVendaRef.current.value, 
       pecaPrecoHora: pecPrecoHoraRef.current.value,
-      pecaInativo: pecInativoRef.current.value,
+      pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
       pecaDescricao: pecDescricao
     };
     
@@ -50,7 +50,7 @@ export default function CadastrarPeca() {
               pecDataAquisicaoRef.current.value = '';
               pecPrecoVendaRef.current.value = '';
               pecPrecoHoraRef.current.value = '';
-              pecInativoRef.current.value = '0';
+              pecaExibirCatalogoRef.current.value = '0';
               setPecDescricao('');
             }
             else{
@@ -107,7 +107,7 @@ export default function CadastrarPeca() {
 
           <section>
             <label htmlFor="pecInativo">Exibir nos classificados</label>
-            <select id="pecInativo" ref={pecInativoRef}>
+            <select id="pecInativo" ref={pecaExibirCatalogoRef}>
               <option value="0">Sim</option>
               <option value="1">Não</option>
             </select>

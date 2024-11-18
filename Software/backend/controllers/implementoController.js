@@ -30,10 +30,10 @@ export default class ImplementoController {
 
     async cadastrarImplemento(req, res) {
         try {
-            let { impNome, impDataAquisicao, impDescricao, impInativo, impPrecoHora, impPrecoVenda} = req.body;
+            let { impNome, impDataAquisicao, impDescricao, impExibirCatalogo, impPrecoHora, impPrecoVenda} = req.body;
 
-            if (impNome && impDataAquisicao && impDescricao && impInativo != null && impPrecoHora && impPrecoVenda) {
-                let implemento = new ImplementoModel(0, impNome, impDescricao, impDataAquisicao, 1, impInativo, impPrecoVenda, impPrecoHora);
+            if (impNome && impDataAquisicao && impDescricao && impExibirCatalogo != null && impPrecoHora && impPrecoVenda) {
+                let implemento = new ImplementoModel(0, impNome, impDescricao, impDataAquisicao, 1, impExibirCatalogo, impPrecoVenda, impPrecoHora);
 
                 let result = await implemento.gravar();
 
@@ -53,10 +53,10 @@ export default class ImplementoController {
 
     async alterarImplemento(req, res) {
         try {
-            let { impId, impNome, impDataAquisicao, impDescricao, impInativo, impPrecoHora, impPrecoVenda} = req.body;
+            let { impId, impNome, impDataAquisicao, impDescricao, impExibirCatalogo, impPrecoHora, impPrecoVenda} = req.body;
 
-            if (impId && impNome && impDataAquisicao && impDescricao && impInativo != null && impPrecoHora && impPrecoVenda) {
-                let implemento = new ImplementoModel(impId, impNome, impDescricao, impDataAquisicao, 1, impInativo, impPrecoVenda, impPrecoHora);
+            if (impId && impNome && impDataAquisicao && impDescricao && impExibirCatalogo != null && impPrecoHora && impPrecoVenda) {
+                let implemento = new ImplementoModel(impId, impNome, impDescricao, impDataAquisicao, 1, impExibirCatalogo, impPrecoVenda, impPrecoHora);
 
                 let result = await implemento.gravar();
 

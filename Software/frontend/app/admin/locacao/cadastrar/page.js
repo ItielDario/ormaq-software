@@ -11,11 +11,11 @@ export default function CadastrarLocacao() {
   const dataFinalPrevistaRef = useRef(null);
   const valorFinalRef = useRef(null);
   const descontoRef = useRef(null);
-  const modeloRef = useRef(null);
 
   // Itens de locação
   const equipamentoIdRef = useRef(null);
   const valorTotalRef = useRef(null);
+  const [maquinaSelecionada, setMaquinaSelecionada] = useState([]);
 
   //Variaveis Auxiliares
   const [clientes, setClientes] = useState([]);
@@ -25,6 +25,7 @@ export default function CadastrarLocacao() {
   const containerValorTotalRef = useRef(null);
   const formRef = useRef(null);
   const alertMsg = useRef(null);
+  const containerInfoRef = useRef(null);
 
   useEffect(() => {
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
@@ -52,30 +53,88 @@ export default function CadastrarLocacao() {
     return clienteIdRef.current.dataset.clienteId || null;
   };
 
+  function calcularDiferencaDias(dataInicio, dataFinalPrevista) {
+    // Converter as datas para o formato UTC para evitar problemas de fuso horário
+    const inicioUTC = Date.UTC(dataInicio.getFullYear(), dataInicio.getMonth(), dataInicio.getDate());
+    const finalUTC = Date.UTC(dataFinalPrevista.getFullYear(), dataFinalPrevista.getMonth(), dataFinalPrevista.getDate());
+
+    // Calcular a diferença em milissegundos e converter para dias
+    const diferencaMilissegundos = finalUTC - inicioUTC;
+    const diferencaDias = diferencaMilissegundos / (1000 * 60 * 60 * 24);
+
+    return diferencaDias;
+}
+
   const adicionarItemLocacao = () => {
     alertMsg.current.style.display = 'none';
     let result = false;
-  
+    
+    // Validação da data de inicio e término
+    const dataInicio = new Date(dataInicioRef.current.value);
+    const dataFinalPrevista = new Date(dataFinalPrevistaRef.current.value);
+
+    if (dataInicio == "Invalid Date" && dataFinalPrevista == "Invalid Date") {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Primeiro preencha data de inicio e de término da locação';
+        document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      }, 100);
+      return;
+    }
+
+    if (dataInicio > dataFinalPrevista) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'A data de início da locação deve ser anterior à data de término!';
+        document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      }, 100);
+      return;
+    }
+
+    // Verifica se a máquina exite
     if (equipamentoIdRef.current.value.length > 0) {
-      let equipamentoNome = [];
       let equipamentoDados = '';
-  
-      equipamentoDados = maquina.filter(value => value.maqNome === equipamentoIdRef.current.value);
+      const dias = calcularDiferencaDias(dataInicio, dataFinalPrevista);
+      let valorMaquina = null;
+      let planoAluguel = null;
+
+      equipamentoDados = maquina.filter(value => value.maqSerie === equipamentoIdRef.current.value);
+
       if (equipamentoDados.length > 0) {
+
+        if(dias < 7){
+          valorMaquina = equipamentoDados[0].maqAluPrecoDiario * dias;
+          planoAluguel = "Diária"
+        }
+        else if(dias < 15){
+
+        }
+        else if(dias < 30){
+          
+        }
+        else{
+
+        }
+
         result = true;
         equipamentoDados = {
-          id: equipamentoDados[0].maqId,
-          tipo: 'Máquina',
-          nome: equipamentoDados[0].maqNome,
-          preco: equipamentoDados[0].maqPrecoHora,
+          maqId: equipamentoDados[0].maqId,
+          maqNome: equipamentoDados[0].maqNome,
+          maqModelo: equipamentoDados[0].maqModelo,
+          maqSerie: equipamentoDados[0].maqSerie,
+          iteLocValorUnitario: valorMaquina,
+          iteLocPlanoAluguel: planoAluguel,
         };
       }
-
   
       if (result) {
+        
+        console.log(dias)
         const listaItensAuxiliar = [...itensLocacao, equipamentoDados];
         setItensLocacao(listaItensAuxiliar);
-  
+
         let valorTotal = listaItensAuxiliar.reduce((total, equip) => total + equip.preco * equip.quantidade, 0);
         valorTotalRef.current.innerHTML = `R$ ${valorTotal.toFixed(2)}`;       
         setvalorTotal(valorTotal);
@@ -84,24 +143,25 @@ export default function CadastrarLocacao() {
         calcularValorFinal(descontoRef.current.value, valorTotal);
   
         equipamentoIdRef.current.value = '';
+        containerInfoRef.current.style.display = 'none';
   
         setTimeout(() => {
           alertMsg.current.className = 'alertSuccess';
           alertMsg.current.style.display = 'block';
-          alertMsg.current.textContent = `Máquina inserido na lista com sucesso!`;
+          alertMsg.current.textContent = `Máquina inserida na lista com sucesso!`;
         }, 100);
       } else {
         setTimeout(() => {
           alertMsg.current.className = 'alertError';
           alertMsg.current.style.display = 'block';
-          alertMsg.current.textContent = `Máquina não cadastrado!`;
+          alertMsg.current.textContent = `Máquina não cadastrada!`;
         }, 100);
       }
     } else {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = `Por favor, digite um equipamento e sua quantidade!`;
+        alertMsg.current.textContent = `Por favor, escolha uma máquina!`;
       }, 100);
     }
 
@@ -211,31 +271,35 @@ export default function CadastrarLocacao() {
   };   
 
   // Função para buscar o modelo com base no nome da máquina
-const buscarModeloPorNome = () => {
-  const nomeDigitado = equipamentoIdRef.current.value;
-  
-  if (nomeDigitado.length > 0) {
-    // Filtra a máquina com o nome correspondente
-    const maquinaEncontrada = maquina.find((m) => m.maqNome === nomeDigitado);
+  const buscarMaquinaPorSerie = () => {
+    const serieDigitado = equipamentoIdRef.current.value;
+    alertMsg.current.style.display = 'none';
     
-    if (maquinaEncontrada) {
-      modeloRef.current.value = maquinaEncontrada.maqModelo; // Preenche o modelo
-      alertMsg.current.style.display = 'none';
-    } else {
-      setTimeout(() => {
-        alertMsg.current.className = 'alertError';
-        alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = 'Máquina não encontrada!';
-        document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
-      }, 100);
+    if (serieDigitado.length > 0) {
+      // Filtra a máquina com o nome correspondente
+      const maquinaEncontrada = maquina.find((m) => m.maqSerie === serieDigitado);
+      
+      if (maquinaEncontrada) {
+        maquinaEncontrada.maqDataAquisicao = new Date(maquinaEncontrada.maqDataAquisicao).toLocaleDateString();
+        setMaquinaSelecionada(maquinaEncontrada)
+        alertMsg.current.style.display = 'none';
+        containerInfoRef.current.style.display = 'block';
+      } 
+      else {
+        setTimeout(() => {
+          alertMsg.current.className = 'alertError';
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = 'Máquina não encontrada!';
 
-      modeloRef.current.value = ''
+          document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+          containerInfoRef.current.style.display = 'none';
+        }, 100);
+      }
     }
-  }
-  else{
-    modeloRef.current.value = ''
-  }
-};
+    else{
+      containerInfoRef.current.style.display = 'none';
+    }
+  };
 
   return (
     <section className="content-main-children-cadastrar">
@@ -284,72 +348,61 @@ const buscarModeloPorNome = () => {
 
           <section className="input-group-equipamento">
             <section className="input-equipamento">
-              <label>Nome do Máquina</label>
+              <label>Série / Chassi da Máquina</label>
               <input
                 list="equipamentos"
                 name="equipamentoId"
                 className="datalist"
                 ref={equipamentoIdRef}
-                onBlur={buscarModeloPorNome}
+                onBlur={buscarMaquinaPorSerie}
               />
               <datalist id="equipamentos">
                 {maquina.map((maquina) => (
-                  <option key={maquina.maqId} value={maquina.maqNome} />
+                  <option key={maquina.maqId} value={maquina.maqSerie}>
+                    {maquina.maqNome + " - " + maquina.maqModelo}
+                  </option>
                 ))}
               </datalist>
               <p style={{ display: equipamentoIdRef.current && equipamentoIdRef.current.value === '' ? 'block' : 'none',}} className="msg-obs">
-                * Primeiro digite o nome da máquina
+                * Primeiro digite a série / chassi da máquina
               </p>
             </section>
-
-
-            <section className="input-equipamento">
-              <label>Modelo do Máquina</label>
-              <input
-                type="text"
-                name="modelo"
-                className="datalist"
-                ref={modeloRef}
-                readOnly // Torna o campo somente leitura
-                style={{ cursor: 'not-allowed'}}
-              />
-            </section>
-
-
-            {/* <section className="input-equipamento">
-              <label>Modelo da máquina</label>
-              <input 
-                list="equipamentos" 
-                name="equipamentoId" 
-                className="datalist" 
-                ref={equipamentoIdRef} 
-                disabled={!tipoEquipamento} 
-                style={{ cursor: !tipoEquipamento ? 'not-allowed' : 'text' }}
-              />
-              {verificaTipoEquipamento()}
-              <p style={{ display: !tipoEquipamento ? 'block' : 'none' }} className="msg-obs">* Primeiro selecione o tipo do equipamento</p>
-            </section> */}
           </section>
+
+          <article ref={containerInfoRef} className="container-info container-info-locacao">
+              <h2 className="title-info">Dados da Máquina</h2>
+              <p className="data-info"><strong>Nome da Máquina:</strong> {maquinaSelecionada.maqNome}</p>
+              <p className="data-info"><strong>Modelo:</strong> {maquinaSelecionada.maqModelo}</p>
+              <p className="data-info"><strong>Série:</strong> {maquinaSelecionada.maqSerie}</p>
+              <p className="data-info"><strong>Tipo:</strong> {maquinaSelecionada.maqTipo}</p>
+              <p className="data-info"><strong>Ano de Fabricação:</strong> {maquinaSelecionada.maqAnoFabricacao}</p>
+              <p className="data-info"><strong>Data de Aquisição:</strong> {maquinaSelecionada.maqDataAquisicao}</p>
+              <p className="data-info"><strong>Horas de Uso:</strong> {maquinaSelecionada.maqHorasUso}</p>
+              <p className="data-info"><strong>Preço do Aluguel Diária:</strong> R$ {maquinaSelecionada.maqAluPrecoDiario}</p>
+              <p className="data-info"><strong>Preço do Aluguel Semanal:</strong> R$ {maquinaSelecionada.maqAluPrecoSemanal}</p>
+              <p className="data-info"><strong>Preço do Aluguel Quinzenal:</strong> R$ {maquinaSelecionada.maqAluPrecoQuinzenal}</p>
+              <p className="data-info data-info-ultimo"><strong>Preço do Aluguel Mensal:</strong> R$ {maquinaSelecionada.maqAluPrecoMensal}</p>
+          </article>
 
           <table id="table-itens-locacao">
             <thead>
               <tr className="thead-itens-locacao">
                 <th>ID</th>
                 <th>Nome</th>
-                <th>Tipo Equipamento</th>
-                <th>Preço / Hora</th>
-                <th>Quantidade</th>
+                <th>Modelo</th>
+                <th>Serie/Chassi </th>
+                <th>Valor da Máquina</th>
                 <th>Ações</th>
               </tr>
             </thead>
             <tbody className="tbody-itens-locacao">
               {itensLocacao.map((item, index) => (
                 <tr key={index}>
-                  <td>{item.id}</td>
-                  <td>{item.nome}</td>
-                  <td>{item.tipo}</td>
-                  <td>{item.preco}</td>
-                  <td>{item.quantidade}</td>
+                  <td>{item.maqId}</td>
+                  <td>{item.maqNome}</td>
+                  <td>{item.maqModelo}</td>
+                  <td>{item.maqSerie}</td>
+                  <td>{item.iteLocValorUnitario}</td>
                   <td><a onClick={() => excluirItem(index)}><i className="nav-icon fas fa-trash"></i></a></td>
                 </tr>
               ))}

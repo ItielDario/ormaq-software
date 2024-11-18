@@ -110,15 +110,11 @@ input::placeholder{
 }
 
 .input-equipamento{
-    width: 80% !important;
+    width: 100% !important;
 }
 
 .input-equipamento-width-100{
     width: 100% !important;
-}
-
-.input-quantidade{
-    width: 20% !important;
 }
 
 .input-cliente{
@@ -236,6 +232,10 @@ input::placeholder{
 
 .content-main-children-cadastrar .fa-plus-circle:hover{
     color: rgb(55, 142, 255);
+}
+
+.container-info-locacao{
+    display: none;
 }
 
 @media (max-width: 60vw) {

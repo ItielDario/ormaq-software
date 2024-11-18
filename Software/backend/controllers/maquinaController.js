@@ -5,7 +5,7 @@ export default class maquinaController {
     async listarMaquinas(req, res){ 
         try{
             let maquinas = new MaquinaModel()
-            maquinas = await maquinas.listarMaquinas()
+            maquinas = await maquinas.listarMaquinas();
             res.status(200).json(maquinas);
         }
         catch(error){

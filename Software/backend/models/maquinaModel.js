@@ -246,9 +246,15 @@ export default class MaquinaModel {
                 Maquina.maqDescricao, 
                 Maquina.maqExibirCatalogo,  
                 Maquina.maqHorasUso, 
-                Maquina.maqPrecoVenda 
+                Maquina.maqPrecoVenda,
+                Maquina_Aluguel.maqAluPrecoDiario,
+                Maquina_Aluguel.maqAluPrecoSemanal,
+                Maquina_Aluguel.maqAluPrecoQuinzenal,
+                Maquina_Aluguel.maqAluPrecoMensal
             FROM Maquina
-            WHERE Maquina.maqStatus = 1`;
+            LEFT JOIN Maquina_Aluguel 
+            ON Maquina.maqId = Maquina_Aluguel.maqId
+            WHERE Maquina.maqStatus = 1;`;
     
         let valores = [idMaquina];
         let rows = await db.ExecutaComando(sql, valores);

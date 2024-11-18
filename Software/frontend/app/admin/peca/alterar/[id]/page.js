@@ -11,7 +11,7 @@ export default function AlterarPeca({ params: { id } }) {
   const pecaDataAquisicaoRef = useRef(null);
   const pecaPrecoVendaRef = useRef(null);
   const pecaPrecoHoraRef = useRef(null);
-  const pecaInativoRef = useRef(null);
+  const pecaExibirCatalogoRef = useRef(null);
 
   const [pecaDescricao, setPecaDescricao] = useState('');
   const [pecaSelecionada, setPecaSelecionada] = useState(null);
@@ -38,7 +38,7 @@ export default function AlterarPeca({ params: { id } }) {
       pecaDescricao: pecaDescricao,
       pecaPrecoVenda: pecaPrecoVendaRef.current.value,
       pecaPrecoHora: pecaPrecoHoraRef.current.value,
-      pecaInativo: pecaInativoRef.current.value,
+      pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
     };
 
     if (verificaCampoVazio(dados)) {
@@ -147,12 +147,12 @@ export default function AlterarPeca({ params: { id } }) {
                 </section>
 
                 <section>
-                  <label htmlFor="pecaInativo">Exibir nos classificados</label>
+                  <label htmlFor="pecaExibirCatalogo">Exibir nos classificados</label>
                   <select 
-                    id="pecaInativo" 
-                    name="pecaInativo" 
-                    defaultValue={pecaSelecionada.pecInativo} 
-                    ref={pecaInativoRef} 
+                    id="pecaExibirCatalogo" 
+                    name="pecaExibirCatalogo" 
+                    defaultValue={pecaSelecionada.pecExibirCatalogo} 
+                    ref={pecaExibirCatalogoRef} 
                     required
                   >
                     <option value="0">Sim</option>

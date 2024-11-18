@@ -298,7 +298,7 @@
                   "pecaDescricao": {
                     "example": "any"
                   },
-                  "pecaInativo": {
+                  "pecaExibirCatalogo": {
                     "example": "any"
                   },
                   "pecaPrecoHora": {
@@ -402,7 +402,7 @@
                   "pecaDescricao": {
                     "example": "any"
                   },
-                  "pecaInativo": {
+                  "pecaExibirCatalogo": {
                     "example": "any"
                   },
                   "pecaPrecoHora": {
@@ -486,7 +486,7 @@
                   "impDescricao": {
                     "example": "any"
                   },
-                  "impInativo": {
+                  "impExibirCatalogo": {
                     "example": "any"
                   },
                   "impPrecoHora": {
@@ -593,7 +593,7 @@
                   "impDescricao": {
                     "example": "any"
                   },
-                  "impInativo": {
+                  "impExibirCatalogo": {
                     "example": "any"
                   },
                   "impPrecoHora": {

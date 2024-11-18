@@ -9,7 +9,7 @@ export default function CadastrarImplemento() {
   const impDataAquisicaoRef = useRef(null);
   const impPrecoVendaRef = useRef(null); 
   const impPrecoHoraRef = useRef(null); 
-  const impInativoRef = useRef(null);
+  const impExibirCatalogoRef = useRef(null);
   const alertMsg = useRef(null);
   const [impDescricao, setImpDescricao] = useState('');
 
@@ -21,7 +21,7 @@ export default function CadastrarImplemento() {
       impDataAquisicao: impDataAquisicaoRef.current.value,
       impPrecoVenda: impPrecoVendaRef.current.value, 
       impPrecoHora: impPrecoHoraRef.current.value,
-      impInativo: impInativoRef.current.value,
+      impExibirCatalogo: impExibirCatalogoRef.current.value,
       impDescricao: impDescricao,
     };
 
@@ -50,7 +50,7 @@ export default function CadastrarImplemento() {
               impDataAquisicaoRef.current.value = '';
               impPrecoVendaRef.current.value = '';
               impPrecoHoraRef.current.value = '';
-              impInativoRef.current.value = '0';
+              impExibirCatalogoRef.current.value = '0';
               setImpDescricao('');
             } else {
               alertMsg.current.className = 'alertError';
@@ -105,8 +105,8 @@ export default function CadastrarImplemento() {
           </section>
 
           <section>
-            <label htmlFor="impInativo">Exibir nos classificados</label>
-            <select id="impInativo" ref={impInativoRef}>
+            <label htmlFor="impExibirCatalogo">Exibir nos classificados</label>
+            <select id="impExibirCatalogo" ref={impExibirCatalogoRef}>
               <option value="0">Sim</option>
               <option value="1">Não</option>
             </select>

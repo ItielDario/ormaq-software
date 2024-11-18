@@ -32,7 +32,7 @@ export default function AlterarMaquina({ params: { id } }) {
     httpClient.get(`/maquina/${id}`)
       .then(r => r.json())
       .then(r => {
-        r.maquina.maqDataAquisicao = new Date(r.maquina.maqDataAquisicao).toISOString().split('T')[0];
+        r.maquina.maqDataAquisicao = new Date(r.maquina.maqDataAquisicao)
         console.log(r)
         setMaquinaSelecionada(r.maquina);
         setMaquinaAluguelSelecionada(r.maquinaAluguel);

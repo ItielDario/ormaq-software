@@ -11,7 +11,7 @@ export default function AlterarImplemento({ params: { id } }) {
   const impDataAquisicaoRef = useRef(null);
   const impPrecoVendaRef = useRef(null);
   const impPrecoHoraRef = useRef(null);
-  const impInativoRef = useRef(null);
+  const impExibirCatalogoRef = useRef(null);
 
   const [impDescricao, setImpDescricao] = useState('');
   const [implementoSelecionado, setImplementoSelecionado] = useState(null);
@@ -38,7 +38,7 @@ export default function AlterarImplemento({ params: { id } }) {
       impDescricao: impDescricao,
       impPrecoVenda: impPrecoVendaRef.current.value,
       impPrecoHora: impPrecoHoraRef.current.value,
-      impInativo: impInativoRef.current.value,
+      impExibirCatalogo: impExibirCatalogoRef.current.value,
     };
 
     if (verificaCampoVazio(dados)) {
@@ -146,12 +146,12 @@ export default function AlterarImplemento({ params: { id } }) {
                 </section>
 
                 <section>
-                  <label htmlFor="impInativo">Exibir nos classificados</label>
+                  <label htmlFor="impExibirCatalogo">Exibir nos classificados</label>
                   <select 
-                    id="impInativo" 
-                    name="impInativo" 
-                    defaultValue={implementoSelecionado.impInativo} 
-                    ref={impInativoRef} 
+                    id="impExibirCatalogo" 
+                    name="impExibirCatalogo" 
+                    defaultValue={implementoSelecionado.impExibirCatalogo} 
+                    ref={impExibirCatalogoRef} 
                     required
                   >
                     <option value="0">Sim</option>

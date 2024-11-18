@@ -8,7 +8,7 @@ export default class ImplementoModel {
     #impNome;
     #impDataAquisicao;
     #impDescricao;
-    #impInativo;
+    #impExibirCatalogo;
     #equipamentoStatus;
     #impPrecoVenda;
     #impPrecoHora;
@@ -25,8 +25,8 @@ export default class ImplementoModel {
     get impDescricao() { return this.#impDescricao; }
     set impDescricao(impDescricao) { this.#impDescricao = impDescricao; }
 
-    get impInativo() { return this.#impInativo; }
-    set impInativo(impInativo) { this.#impInativo = impInativo; }
+    get impExibirCatalogo() { return this.#impExibirCatalogo; }
+    set impExibirCatalogo(impExibirCatalogo) { this.#impExibirCatalogo = impExibirCatalogo; }
 
     get equipamentoStatus() { return this.#equipamentoStatus; }
     set equipamentoStatus(equipamentoStatus) { this.#equipamentoStatus = equipamentoStatus; }
@@ -37,13 +37,13 @@ export default class ImplementoModel {
     get impPrecoHora() { return this.#impPrecoHora; }
     set impPrecoHora(impPrecoHora) { this.#impPrecoHora = impPrecoHora; }
 
-    constructor(impId, impNome, impDescricao, impDataAquisicao, equipamentoStatus, impInativo, impPrecoVenda, impPrecoHora) {
+    constructor(impId, impNome, impDescricao, impDataAquisicao, equipamentoStatus, impExibirCatalogo, impPrecoVenda, impPrecoHora) {
         this.#impId = impId;
         this.#impNome = impNome;
         this.#impDataAquisicao = impDataAquisicao;
         this.#impDescricao = impDescricao;
         this.#equipamentoStatus = equipamentoStatus;
-        this.#impInativo = impInativo;
+        this.#impExibirCatalogo = impExibirCatalogo;
         this.#impPrecoVenda = impPrecoVenda;
         this.#impPrecoHora = impPrecoHora;
     }
@@ -54,7 +54,7 @@ export default class ImplementoModel {
             "impNome": this.#impNome,
             "impDataAquisicao": this.#impDataAquisicao,
             "impDescricao": this.#impDescricao,
-            "impInativo": this.#impInativo,
+            "impExibirCatalogo": this.#impExibirCatalogo,
             "equipamentoStatus": this.#equipamentoStatus,
             "impPrecoVenda": this.#impPrecoVenda,
             "impPrecoHora": this.#impPrecoHora
@@ -76,7 +76,7 @@ export default class ImplementoModel {
                 implemento["impDescricao"],
                 implemento["impDataAquisicao"],
                 equipamentoStatus,
-                implemento["impInativo"],
+                implemento["impExibirCatalogo"],
                 implemento["impPrecoVenda"],
                 implemento["impPrecoHora"]
             ));
@@ -86,7 +86,7 @@ export default class ImplementoModel {
 
     async listarImplementos() {
         const sql = `
-            SELECT i.impId, i.impNome, i.impDataAquisicao, i.impDescricao, i.impInativo, 
+            SELECT i.impId, i.impNome, i.impDataAquisicao, i.impDescricao, i.impExibirCatalogo, 
                    i.impPrecoVenda, i.impPrecoHora,
                    es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Implemento i
@@ -104,14 +104,14 @@ export default class ImplementoModel {
 
         if (this.#impId == 0 || this.#impId == null) {
             // Inserção
-            sql = `INSERT INTO Implemento (impNome, impDescricao, impDataAquisicao, impInativo, impPrecoVenda, impPrecoHora, impStatus) 
+            sql = `INSERT INTO Implemento (impNome, impDescricao, impDataAquisicao, impExibirCatalogo, impPrecoVenda, impPrecoHora, impStatus) 
                    VALUES (?, ?, ?, ?, ?, ?, ?)`;
-            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#impInativo, this.#impPrecoVenda, this.#impPrecoHora, this.equipamentoStatus];
+            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#impExibirCatalogo, this.#impPrecoVenda, this.#impPrecoHora, this.equipamentoStatus];
         } else {
             // Alteração
-            sql = `UPDATE Implemento SET impNome = ?, impDescricao = ?, impDataAquisicao = ?, impStatus = ?, impInativo = ?, 
+            sql = `UPDATE Implemento SET impNome = ?, impDescricao = ?, impDataAquisicao = ?, impStatus = ?, impExibirCatalogo = ?, 
                    impPrecoVenda = ?, impPrecoHora = ? WHERE impId = ?`;
-            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.equipamentoStatus, this.#impInativo, this.#impPrecoVenda, this.#impPrecoHora, this.#impId];
+            valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.equipamentoStatus, this.#impExibirCatalogo, this.#impPrecoVenda, this.#impPrecoHora, this.#impId];
         }
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
@@ -119,7 +119,7 @@ export default class ImplementoModel {
     }
 
     async obter(id) {
-        let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impDataAquisicao, Implemento.impDescricao, Implemento.impInativo, 
+        let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impDataAquisicao, Implemento.impDescricao, Implemento.impExibirCatalogo, 
                           Implemento.impPrecoVenda, Implemento.impPrecoHora, Implemento.impStatus,
                           Equipamento_Status.eqpStaDescricao
                     FROM Implemento 

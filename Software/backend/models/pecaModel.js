@@ -8,7 +8,7 @@ export default class PecaModel {
     #pecaNome;
     #pecaDataAquisicao;
     #pecaDescricao;
-    #pecaInativo;
+    #pecaExibirCatalogo;
     #equipamentoStatus;
     #pecaPrecoVenda;
     #pecaPrecoHora;
@@ -25,8 +25,8 @@ export default class PecaModel {
     get pecaDescricao() { return this.#pecaDescricao; }
     set pecaDescricao(pecaDescricao) { this.#pecaDescricao = pecaDescricao; }
 
-    get pecaInativo() { return this.#pecaInativo; }
-    set pecaInativo(pecaInativo) { this.#pecaInativo = pecaInativo; }
+    get pecaExibirCatalogo() { return this.#pecaExibirCatalogo; }
+    set pecaExibirCatalogo(pecaExibirCatalogo) { this.#pecaExibirCatalogo = pecaExibirCatalogo; }
 
     get equipamentoStatus() { return this.#equipamentoStatus; }
     set equipamentoStatus(equipamentoStatus) { this.#equipamentoStatus = equipamentoStatus; }
@@ -37,13 +37,13 @@ export default class PecaModel {
     get pecaPrecoHora() { return this.#pecaPrecoHora; }
     set pecaPrecoHora(pecaPrecoHora) { this.#pecaPrecoHora = pecaPrecoHora; }
 
-    constructor(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, equipamentoStatus, pecaInativo, pecaPrecoVenda, pecaPrecoHora) {
+    constructor(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, equipamentoStatus, pecaExibirCatalogo, pecaPrecoVenda, pecaPrecoHora) {
         this.#pecaId = pecaId;
         this.#pecaNome = pecaNome;
         this.#pecaDataAquisicao = pecaDataAquisicao;
         this.#pecaDescricao = pecaDescricao;
         this.#equipamentoStatus = equipamentoStatus;
-        this.#pecaInativo = pecaInativo;
+        this.#pecaExibirCatalogo = pecaExibirCatalogo;
         this.#pecaPrecoVenda = pecaPrecoVenda;
         this.#pecaPrecoHora = pecaPrecoHora;
     }
@@ -54,7 +54,7 @@ export default class PecaModel {
             "pecaNome": this.#pecaNome,
             "pecaDataAquisicao": this.#pecaDataAquisicao,
             "pecaDescricao": this.#pecaDescricao,
-            "pecaInativo": this.#pecaInativo,
+            "pecaExibirCatalogo": this.#pecaExibirCatalogo,
             "equipamentoStatus": this.#equipamentoStatus,
             "pecaPrecoVenda": this.#pecaPrecoVenda,
             "pecaPrecoHora": this.#pecaPrecoHora
@@ -76,7 +76,7 @@ export default class PecaModel {
                 peca["pecDescricao"],
                 peca["pecDataAquisicao"],
                 equipamentoStatus,
-                peca["pecInativo"],
+                peca["pecExibirCatalogo"],
                 peca["pecPrecoVenda"],
                 peca["pecPrecoHora"]
             ));
@@ -86,7 +86,7 @@ export default class PecaModel {
 
     async listarPecas() {
         const sql = `
-            SELECT p.pecId, p.pecNome, p.pecDataAquisicao, p.pecDescricao, p.pecInativo, 
+            SELECT p.pecId, p.pecNome, p.pecDataAquisicao, p.pecDescricao, p.pecExibirCatalogo, 
                    p.pecPrecoVenda, p.pecPrecoHora,
                    es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Peca p
@@ -104,14 +104,14 @@ export default class PecaModel {
 
         if (this.#pecaId == 0 || this.#pecaId == null) {
             // Inserção
-            sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecInativo, pecPrecoVenda, pecPrecoHora, pecStatus) 
+            sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecExibirCatalogo, pecPrecoVenda, pecPrecoHora, pecStatus) 
                    VALUES (?, ?, ?, ?, ?, ?, ?)`;
-            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaInativo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.equipamentoStatus];
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaExibirCatalogo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.equipamentoStatus];
         } else {
             // Alteração
-            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecInativo = ?, 
+            sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecExibirCatalogo = ?, 
                    pecPrecoVenda = ?, pecPrecoHora = ? WHERE pecId = ?`;
-            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.equipamentoStatus, this.#pecaInativo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.#pecaId];
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.equipamentoStatus, this.#pecaExibirCatalogo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.#pecaId];
         }
 
         let result = await db.ExecutaComandoNonQuery(sql, valores);
@@ -119,7 +119,7 @@ export default class PecaModel {
     }
 
     async obter(id) {
-        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecInativo, 
+        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecExibirCatalogo, 
                           Peca.pecPrecoVenda, Peca.pecPrecoHora, Peca.pecStatus,
                           Equipamento_Status.eqpStaDescricao
                     FROM Peca 

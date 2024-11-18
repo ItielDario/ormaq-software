@@ -246,7 +246,7 @@ export default class MaquinaModel {
                 Maquina.maqDescricao, 
                 Maquina.maqExibirCatalogo,  
                 Maquina.maqHorasUso, 
-                Maquina.maqPrecoVenda, 
+                Maquina.maqPrecoVenda 
             FROM Maquina
             WHERE Maquina.maqStatus = 1`;
     

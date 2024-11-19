@@ -132,7 +132,7 @@ export default function CadastrarLocacao() {
           planoAluguel = "Mensal";
         }
 
-        console.log(valorMaquina)
+        valorMaquina = Number(valorMaquina.toFixed(0)); // Garantir que seja um número arredondado
 
         result = true;
         equipamentoDados = {
@@ -155,7 +155,7 @@ export default function CadastrarLocacao() {
           (total, equip) => total + equip.iteLocValorUnitario,
           0
         );
-        valorTotalRef.current.innerHTML = `R$ ${valorTotal.toFixed(0)},00`;
+        valorTotalRef.current.innerHTML = `R$ ${valorTotal},00`;
         setvalorTotal(valorTotal);
 
         // Executa a função calcularValorFinal sempre que um item é adicionado
@@ -214,8 +214,6 @@ export default function CadastrarLocacao() {
       locCliId: obterClienteIdSelecionado(), // Usa o ID do cliente
       itens: itensLocacao, // Array de itens da locação
     };
-
-    console.log(dados)
   
     // Validação de campos vazios
     if (verificaCampoVazio(dados) || itensLocacao.length === 0) {
@@ -417,7 +415,7 @@ export default function CadastrarLocacao() {
                 <th>Dias locado</th>
                 <th>Ações</th>
               </tr>
-            </thead>
+            </thead> 
             <tbody className="tbody-itens-locacao">
               {itensLocacao.map((item, index) => (
                 <tr key={index}>
@@ -425,7 +423,7 @@ export default function CadastrarLocacao() {
                   <td>{item.maqNome}</td>
                   <td>{item.maqModelo}</td>
                   <td>{item.maqSerie}</td>
-                  <td>R$ {item.iteLocValorUnitario.toFixed(0)},00</td>
+                  <td>R$ {Number(item.iteLocValorUnitario).toFixed(0)},00</td>
                   <td>{item.iteLocPlanoAluguel}</td>
                   <td>{item.iteLocQuantDias}</td>
                   <td><a onClick={() => excluirItem(index)}><i className="nav-icon fas fa-trash"></i></a></td>

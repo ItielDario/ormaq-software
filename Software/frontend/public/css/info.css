@@ -24,3 +24,10 @@
     color: black;
 }
 
+.container-btn-info{
+    justify-content: end !important;
+}
+
+.btn-imprimir{
+    height: 3vw;
+}

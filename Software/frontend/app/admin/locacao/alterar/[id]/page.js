@@ -23,17 +23,45 @@ export default function AlterarLocacao({ params: { id } }) {
   const [itensLocacao, setItensLocacao] = useState([]);
   const [valorTotal, setvalorTotal] = useState('');
   const [locacaoBuscada, setLocacaoBuscada] = useState([]);
-  const [itensLocacaoBuscada, setItensLocacaoBuscada] = useState([]);
   const containerValorTotalRef = useRef(null);
   const formRef = useRef(null);
   const alertMsg = useRef(null);
   const containerInfoRef = useRef(null);
 
   useEffect(() => {
+    // OBTEM O CLIENTE DESTA LOCAÇÃO
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
-    httpClient.get("/maquina/obter/disponivel").then(r => r.json()).then(r => {setMaquina(r)});
-    httpClient.get(`/locacao/${id}`).then(r => r.json()).then(r => {setLocacaoBuscada(r.locacao); setItensLocacaoBuscada(r.itensLocacao);});
 
+    // OBTEM AS MÁQUINAS COM STATUS DISPONÍVEL E AS MÁQUINAS QUE ESTÃO ALUGADAS NESSA LOCAÇÃO
+    Promise.all([ 
+      httpClient.get("/maquina/obter/disponivel").then(r => r.json()),
+      httpClient.get(`/maquina/obter/locacao/${id}`).then(r => r.json())
+    ])
+    .then(([disponiveis, locacao]) => {
+        const maquinasCombinadas = [...disponiveis, ...locacao.maquina];
+        setMaquina(maquinasCombinadas);
+    })
+    .catch(error => {
+        console.error("Erro ao buscar máquinas:", error);
+    });
+
+    // OBTEM OS DADOS DESTA LOCAÇÃO
+    httpClient.get(`/locacao/${id}`)
+    .then(r => r.json())
+    .then(r => {
+      r.locacao.locDataFinalPrevista = new Date(r.locacao.locDataFinalPrevista).toISOString().split('T')[0];
+      r.locacao.locDataInicio = new Date(r.locacao.locDataInicio).toISOString().split('T')[0];
+
+      let valorTotalAux = r.itensLocacao.reduce((total, equip) => total + Number(equip.iteLocValorUnitario), 0);
+      valorTotalRef.current.innerHTML = `R$ ${valorTotalAux}`;
+      clienteIdRef.current.dataset.clienteId = r.locacao.cliId
+
+      setLocacaoBuscada(r.locacao); 
+      setItensLocacao(r.itensLocacao); 
+      setvalorTotal(valorTotalAux);
+      
+      calcularValorFinal(r.locacao.locDesconto, valorTotalAux);
+    });
   }, []);
   
   const verificaClienteExiste = () => {
@@ -136,7 +164,7 @@ export default function AlterarLocacao({ params: { id } }) {
           planoAluguel = "Mensal";
         }
 
-        console.log(valorMaquina)
+        valorMaquina = Number(valorMaquina.toFixed(0)); // Garantir que seja um número arredondado
 
         result = true;
         equipamentoDados = {
@@ -155,10 +183,7 @@ export default function AlterarLocacao({ params: { id } }) {
 
         setItensLocacao(listaItensAuxiliar);
 
-        let valorTotal = listaItensAuxiliar.reduce(
-          (total, equip) => total + equip.iteLocValorUnitario,
-          0
-        );
+        let valorTotal = listaItensAuxiliar.reduce((total, equip) => total + Number(equip.iteLocValorUnitario), 0);
         valorTotalRef.current.innerHTML = `R$ ${valorTotal.toFixed(0)},00`;
         setvalorTotal(valorTotal);
 
@@ -193,11 +218,11 @@ export default function AlterarLocacao({ params: { id } }) {
 
   const excluirItem = (index) => {
     // Remove o item da lista de itens de locação
-    const novaLista = itensLocacao.filter((item, i) => i !== index);
+    const novaLista = itensLocacao.filter((item, i) => item.maqId !== index);
     setItensLocacao(novaLista);
   
     // Recalcula o valor total com base na nova lista
-    let novoValorTotal = novaLista.reduce((total, item) => total + item.iteLocValorUnitario, 0);
+    let novoValorTotal = novaLista.reduce((total, item) => total + Number(item.iteLocValorUnitario), 0);
     setvalorTotal(novoValorTotal);
     valorTotalRef.current.innerHTML = `R$ ${novoValorTotal.toFixed(0)},00`;
   
@@ -210,6 +235,7 @@ export default function AlterarLocacao({ params: { id } }) {
     let status = 0;
 
     const dados = {
+      locId: id,
       locDataInicio: dataInicioRef.current.value,
       locDataFinalPrevista: dataFinalPrevistaRef.current.value,
       locValorTotal: valorTotal,
@@ -218,8 +244,6 @@ export default function AlterarLocacao({ params: { id } }) {
       locCliId: obterClienteIdSelecionado(), // Usa o ID do cliente
       itens: itensLocacao, // Array de itens da locação
     };
-
-    console.log(dados)
   
     // Validação de campos vazios
     if (verificaCampoVazio(dados) || itensLocacao.length === 0) {
@@ -257,7 +281,7 @@ export default function AlterarLocacao({ params: { id } }) {
       return;
     }
   
-    httpClient.post("/locacao", dados) 
+    httpClient.put("/locacao", dados) 
       .then((r) => {
         status = r.status;
         return r.json();
@@ -267,16 +291,6 @@ export default function AlterarLocacao({ params: { id } }) {
           alertMsg.current.className = status === 201 ? 'alertSuccess' : 'alertError';
           alertMsg.current.style.display = 'block';
           alertMsg.current.textContent = r.msg;
-  
-          if (status === 201) {
-            formRef.current.reset();
-            setItensLocacao([]);
-            setvalorTotal(0);
-            valorTotalRef.current.innerHTML = 'R$ 00,00';
-            valorFinalRef.current.innerHTML = '0';
-            containerValorTotalRef.current.style.display = 'none'
-            descontoRef.current.style.width = '100%'
-          }
         }, 100);
       });
       
@@ -338,7 +352,7 @@ export default function AlterarLocacao({ params: { id } }) {
         <section className="input-group">
           <section className="input-cliente">
             <label>Cliente (Nome / CPF / CNPJ)</label>
-            <input list="clientes" name="locCliId" onBlur={verificaClienteExiste} className="datalist" ref={clienteIdRef} required />
+            <input list="clientes" name="locCliId" defaultValue={locacaoBuscada.cliNome} onBlur={verificaClienteExiste} className="datalist" ref={clienteIdRef} required />
             <datalist id="clientes">
               {clientes.map(cliente => (
                 <option key={cliente.cliId} value={cliente.cliNome}>
@@ -356,12 +370,12 @@ export default function AlterarLocacao({ params: { id } }) {
         <section className="input-group">
           <section>
             <label>Data de início da locação</label>
-            <input type="date" name="locDataInicio" ref={dataInicioRef} required readonly onKeyDown={(e) => e.preventDefault()}/>
+            <input type="date" name="locDataInicio" ref={dataInicioRef} defaultValue={locacaoBuscada.locDataInicio}  required readonly onKeyDown={(e) => e.preventDefault()}/>
           </section>
 
           <section>
             <label>Data de término da locação</label>
-            <input type="date" name="locDataFinalPrevista" ref={dataFinalPrevistaRef} required readonly onKeyDown={(e) => e.preventDefault()}/>
+            <input type="date" name="locDataFinalPrevista" ref={dataFinalPrevistaRef} defaultValue={locacaoBuscada.locDataFinalPrevista} required readonly onKeyDown={(e) => e.preventDefault()}/>
           </section>
         </section>
 
@@ -423,16 +437,16 @@ export default function AlterarLocacao({ params: { id } }) {
               </tr>
             </thead>
             <tbody className="tbody-itens-locacao">
-              {itensLocacao.map((item, index) => (
-                <tr key={index}>
+              {itensLocacao.map((item) => (
+                <tr key={item.maqId}>
                   <td>{item.maqId}</td>
                   <td>{item.maqNome}</td>
                   <td>{item.maqModelo}</td>
                   <td>{item.maqSerie}</td>
-                  <td>R$ {item.iteLocValorUnitario.toFixed(0)},00</td>
+                  <td>R$ {Number(item.iteLocValorUnitario).toFixed(0)},00</td>
                   <td>{item.iteLocPlanoAluguel}</td>
                   <td>{item.iteLocQuantDias}</td>
-                  <td><a onClick={() => excluirItem(index)}><i className="nav-icon fas fa-trash"></i></a></td>
+                  <td><a onClick={() => excluirItem(item.maqId)}><i className="nav-icon fas fa-trash"></i></a></td>
                 </tr>
               ))}
             </tbody>
@@ -447,7 +461,7 @@ export default function AlterarLocacao({ params: { id } }) {
         <section className="container-valor-final">
           <article className="box-desconto">
             <label>Desconto</label>
-            <input type="number" onChange={(e) => calcularValorFinal(e.target.value, valorTotal)}  name="locDesconto" ref={descontoRef} defaultValue={0}/>
+            <input type="number" defaultValue={locacaoBuscada.locDesconto} onChange={(e) => calcularValorFinal(e.target.value, valorTotal)}  name="locDesconto" ref={descontoRef}/>
           </article>
 
           <article ref={containerValorTotalRef} className="box-valor-final">

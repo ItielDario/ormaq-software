@@ -7,6 +7,7 @@ export default function FinalizarLocacao({ params: { id } }) {
 
     // Campos do formulário
     const dataTermino = useRef(null);
+    const horaExtra = useRef(null);
     const [horasUso, setHorasUso] = useState([]);
 
     // Variáveis Auxiliares
@@ -37,7 +38,6 @@ export default function FinalizarLocacao({ params: { id } }) {
         const partes = data.split('/');
         return `${partes[2]}-${partes[1]}-${partes[0]}`;  // Converte 'dd/mm/yyyy' para 'yyyy-mm-dd'
     }
-
 
     const handleHorasUsoChange = (itemId, value) => {
         setHorasUso(prev => ({
@@ -79,22 +79,29 @@ export default function FinalizarLocacao({ params: { id } }) {
         }
 
         // Verifica se as horas de uso estão preenchidas para todos os itens do tipo 'Máquina'
+
         for (const item of itensLocacao) {
-            if (item.iteLocTipo === "Máquina" && !horasUso[item.iteLocId]) {
+            if (!horasUso[item.iteLocId]) {
                 setTimeout(() => {
                     alertMsg.current.className = 'alertError';
                     alertMsg.current.style.display = 'block';
-                    alertMsg.current.textContent = `As horas de uso para a máquina ${item.iteLocNome} não foram preenchidas!`;
+                    alertMsg.current.textContent = `As horas de uso para a máquina ${item.maqNome} não foram preenchidas!`;
                     document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
                     }, 100);
                 return;
             }
         }
 
+        if(horaExtra.current.value == null || horaExtra.current.value == null){
+            horaExtra.current.value = 0;
+        }
+
         const dados = {
             locId: parseInt(id),
             locDataFinalEntrega: dataTermino.current.value,
             maqHorasUso: horasUso,
+            locPrecoHoraExtra: horaExtra.current.value,
+            locValorFinal: locacao.locValorFinal,
             itensLocacao: itensLocacao
         };
 
@@ -143,28 +150,36 @@ export default function FinalizarLocacao({ params: { id } }) {
             <article ref={alertMsg}></article>
 
             <article ref={containerFormRef} className="container-form">
-                <section>
-                    <label className="form-label">Data de Término: </label>
-                    <input type="date" ref={dataTermino} required/>
+                
+
+                <section className="input-group">
+                    <section>
+                        <label className="form-label">Data de Término: </label>
+                        <input type="date" ref={dataTermino} required readonly onKeyDown={(e) => e.preventDefault()}/>
+                    </section>
+
+                    <section>
+                        <label>Valor de Hora Extra: </label>
+                        <input type="number" name="locHoraExtra" ref={horaExtra} required defaultValue={0}/>
+                    </section>
                 </section>
 
                 <section>
-                    {itensLocacao.filter(item => item.iteLocTipo === "Máquina").length > 0 && (
-                        <article className="container-horas-usadas">
-                            <h3>Atualização de Horas de Uso das Máquinas</h3>
-                            {itensLocacao.filter(item => item.iteLocTipo === "Máquina").map(item => (
-                                <label key={item.iteLocId} className="from-label input-horas-usadas">
-                                    Nova hora de operação - {item.iteLocNome}:
-                                    <input
-                                        type="number"
-                                        value={horasUso[item.iteLocId] || ""}
-                                        onChange={(e) => handleHorasUsoChange(item.iteLocId, e.target.value)}
-                                        required
-                                    />
-                                </label>
-                            ))}
-                        </article>
-                    )}
+                    <article className="container-horas-usadas">
+                        <h3>Atualização de Horas de Uso das Máquinas</h3>
+                        {itensLocacao.map(item => (
+                            <label key={item.iteLocId} className="from-label input-horas-usadas">
+                                    {item.maqNome} - {item.maqModelo} ({item.maqSerie}):
+                                <input
+                                    type="number"
+                                    value={horasUso[item.iteLocId] || ""}
+                                    onChange={(e) => handleHorasUsoChange(item.iteLocId, e.target.value)}
+                                    required
+                                    placeholder={`Hora de uso atual: ${item.maqHorasUso}`}
+                                />
+                            </label>
+                        ))}
+                    </article>
                 </section>
             </article>
 

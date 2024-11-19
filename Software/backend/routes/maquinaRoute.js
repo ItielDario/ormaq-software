@@ -36,4 +36,9 @@ router.get('/obter/disponivel', (req, res) => {
     ctrl.listarMaquinasDisponiveis(req, res)
 })
 
+router.get('/obter/locacao/:id', (req, res) => {
+    // #swagger.summary = 'Listar todas as máquinas que estão alugadas em uma determinada locação'
+    ctrl.listarMaquinasDaLocacao(req, res)
+})
+
 export default router;

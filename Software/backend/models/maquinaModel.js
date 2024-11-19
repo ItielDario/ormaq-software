@@ -261,5 +261,36 @@ export default class MaquinaModel {
     
         return rows;
     }
+
+    async listarMaquinasDaLocacao(idLocacao) {
+        let sql = `
+            SELECT 
+                L.locId,
+                IL.iteLocId,
+                M.maqId, 
+                M.maqNome, 
+                M.maqDataAquisicao, 
+                M.maqTipo, 
+                M.maqModelo,         
+                M.maqSerie,           
+                M.maqAnoFabricacao,   
+                M.maqDescricao, 
+                M.maqExibirCatalogo,  
+                M.maqHorasUso, 
+                M.maqPrecoVenda,
+                MA.maqAluPrecoDiario,
+                MA.maqAluPrecoSemanal,
+                MA.maqAluPrecoQuinzenal,
+                MA.maqAluPrecoMensal
+            FROM Locacao L
+            JOIN Itens_Locacao IL ON IL.IteLocLocacaoId = L.locId
+            JOIN Maquina M ON M.maqId = IL.iteLocMaqId
+            JOIN Maquina_Aluguel MA ON MA.maqId = M.maqId
+            WHERE L.locId = ?`;
     
+        let valores = [idLocacao];
+        let rows = await db.ExecutaComando(sql, valores);
+    
+        return rows;
+    }   
 }

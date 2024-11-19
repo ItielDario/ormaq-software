@@ -130,7 +130,6 @@ export default class LocacaoModel {
                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
             valores = [this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#locPrecoHoraExtra, this.#cliente, this.#locacaoStatus];
 
-            console.log(this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#locPrecoHoraExtra, this.#cliente, this.#locacaoStatus)
             // Executa o comando e recupera o ID da última inserção
             result = await db.ExecutaComandoNonQuery(sql, valores);
             if (result) {
@@ -174,8 +173,8 @@ export default class LocacaoModel {
     }
 
     async finalizar() {
-        const sql = `UPDATE Locacao SET locDataFinalEntrega = ?, locStatus = ? WHERE locId = ?`;
-        const valores = [this.#locDataFinalEntrega , this.locacaoStatus, this.#locId];
+        const sql = `UPDATE Locacao SET locDataFinalEntrega = ?, locPrecoHoraExtra = ?, locStatus = ? WHERE locId = ?`;
+        const valores = [this.#locDataFinalEntrega, this.locPrecoHoraExtra, this.locacaoStatus, this.#locId];
         
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;

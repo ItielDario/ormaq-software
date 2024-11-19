@@ -247,6 +247,33 @@
         }
       }
     },
+    "/maquina/obter/locacao/{id}": {
+      "get": {
+        "tags": [
+          "Maquina"
+        ],
+        "summary": "Listar todas as máquinas que estão alugadas em uma determinada locação",
+        "description": "Lista todas as máquinas.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/peca/": {
       "get": {
         "tags": [
@@ -834,6 +861,12 @@
                     "example": "any"
                   },
                   "maqHorasUso": {
+                    "example": "any"
+                  },
+                  "locPrecoHoraExtra": {
+                    "example": "any"
+                  },
+                  "locValorFinal": {
                     "example": "any"
                   },
                   "itensLocacao": {

@@ -173,4 +173,23 @@ export default class maquinaController {
             res.status(500).json(error)
         }
     }
+
+    async listarMaquinasDaLocacao(req, res) {
+        try{
+            let { id } = req.params;
+
+            let maquina = new MaquinaModel();
+            maquina = await maquina.listarMaquinasDaLocacao(id);
+            if(maquina == null && maquinaAluguel == null) {
+                res.staus(404).json({msg: `Maquina com o id ${id} não encontrada!`})
+            }
+            else{
+                res.status(200).json({maquina});
+            }
+        }
+        catch(ex) {
+            console.log(ex)
+            res.status(500).json({msg: "Erro interno de servidor!"});
+        }
+    }
 }

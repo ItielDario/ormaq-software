@@ -72,12 +72,6 @@ export default class ItensLocacaoModel {
             this.#iteLocLocacaoId
         ];
 
-        console.log(this.#iteLocValorUnitario,
-            this.#iteLocPlanoAluguel,
-            this.#iteLocQuantDias,
-            this.#iteLocMaqId,
-            this.#iteLocLocacaoId)
-
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
@@ -94,7 +88,30 @@ export default class ItensLocacaoModel {
         const sql = `
             SELECT iteLocId, iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias, iteLocMaqId, IteLocLocacaoId
             FROM Itens_Locacao
-            WHERE IteLocLocacaoId = ?;
+            WHERE IteLocLocacaoId = ?
+            
+            SELECT 
+                IL.iteLocId, 
+                IL.iteLocValorUnitario, 
+                IL.iteLocPlanoAluguel, 
+                IL.iteLocQuantDias, 
+                IL.iteLocMaqId, 
+                IL.IteLocLocacaoId,
+                M.maqId, 
+                M.maqNome, 
+                M.maqTipo, 
+                M.maqModelo, 
+                M.maqSerie, 
+                M.maqAnoFabricacao, 
+                M.maqDescricao, 
+                M.maqPrecoVenda,
+                L.locId
+            FROM Itens_Locacao IL
+            JOIN Maquina M 
+            ON IL.iteLocMaqId = M.maqId
+            JOIN Locacao L
+            ON IL.IteLocLocacaoId = L.locId
+            WHERE L.IteLocLocacaoId = ?;
         `;
         const rows = await db.ExecutaComando(sql, [locacaoId]);
         return this.toMAP(rows);
@@ -103,18 +120,31 @@ export default class ItensLocacaoModel {
     async obter(id) {
         const sql = `
             SELECT 
-                li.iteLocId, 
-                li.iteLocValorUnitario, 
-                li.iteLocPlanoAluguel, 
-                li.iteLocQuantDias,
-                m.maqId AS iteLocMaqId, 
-                m.maqNome AS iteLocMaqNome
-            FROM Itens_Locacao li
-            LEFT JOIN Maquina m ON li.iteLocMaqId = m.maqId
-            WHERE li.iteLocId = ?;
+                IL.iteLocId, 
+                IL.iteLocValorUnitario, 
+                IL.iteLocPlanoAluguel, 
+                IL.iteLocQuantDias, 
+                IL.iteLocMaqId, 
+                IL.IteLocLocacaoId,
+                M.maqId, 
+                M.maqNome, 
+                M.maqTipo, 
+                M.maqModelo, 
+                M.maqSerie, 
+                M.maqAnoFabricacao, 
+                M.maqDescricao,
+                M.maqHorasUso, 
+                M.maqPrecoVenda,
+                L.locId
+            FROM Itens_Locacao IL
+            JOIN Maquina M 
+            ON IL.iteLocMaqId = M.maqId
+            JOIN Locacao L
+            ON IL.IteLocLocacaoId = L.locId
+            WHERE L.locId = ?;
         `;
         const valores = [id];
         const rows = await db.ExecutaComando(sql, valores);
-        return this.toMAP(rows);
+        return rows;
     }
 }

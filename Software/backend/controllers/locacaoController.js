@@ -38,110 +38,87 @@ export default class locacaoController {
 
     async cadastrarLocacao(req, res) {
         try {
-            let { locDataInicio, locDataFinalPrevista, locValorTotal, locDesconto, locValorFinal, locCliId, itens } = req.body;
+            const { locDataInicio, locDataFinalPrevista, locValorTotal, locDesconto, locValorFinal, locCliId, itens } = req.body;
     
-            if (locDataInicio && locDataFinalPrevista && locValorTotal && locDesconto && locValorFinal && locCliId && itens && itens.length > 0) {
-                let locacao = new LocacaoModel(0, locDataInicio, locDataFinalPrevista, null, locValorTotal, locDesconto, locValorFinal, locCliId, 1, 1);
-                let locacaoId = await locacao.gravar();
-    
-                if (locacaoId) {
-                    let maquina = new MaquinaModel();
-                    let peca = new PecaModel();
-                    let implemento= new ImplementoModel();
-
-                    // Cadastra cada item individualmente
-                    for (const item of itens) {
-                        const { quantidade, preco, tipo, id } = item;
-    
-                        // Define os IDs específicos com base no tipo do item
-                        let iteLocPecId = tipo === "Peça" ? id : null;
-                        let iteLocImpId = tipo === "Implemento" ? id : null;
-                        let iteLocMaqId = tipo === "Máquina" ? id : null;
-    
-                        let itemLocacao = new ItensLocacaoModel(0, quantidade, preco, iteLocPecId, iteLocImpId, iteLocMaqId, locacaoId);
-    
-                        const itemResult = await itemLocacao.gravar();
-                        if (!itemResult) {
-                            throw new Error(`Erro ao cadastrar item de locação: ${item.nome}`);
-                        }
-
-                        if (tipo === "Máquina") { await maquina.atualizarStatus(id, 2) } 
-                        else if (tipo === "Peça") { await peca.atualizarStatus(id, 2) } 
-                        else if (tipo === "Implemento") { await implemento.atualizarStatus(id, 2) }
-                    }
-    
-                    res.status(201).json({ msg: "Locação cadastrada com sucesso!" });
-                } else {
-                    res.status(500).json({ msg: "Erro durante o cadastro da locação." });
-                }
-            } else {
-                res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!" });
+            if (!locDataInicio || !locDataFinalPrevista || !locValorTotal || !locValorFinal || !locCliId || !itens || itens.length === 0) {
+                return res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios e adicione pelo menos uma máquina para locação!" });
             }
-        } catch (ex) {
-            console.log(ex);
+    
+            const locacao = new LocacaoModel(0, locDataInicio, locDataFinalPrevista, null, locValorTotal, locDesconto, locValorFinal, null, locCliId, 1);
+            const locacaoId = await locacao.gravar();
+
+            if (!locacaoId) {
+                return res.status(500).json({ msg: "Erro durante o cadastro da locação!" });
+            }
+            
+            const maquina = new MaquinaModel();
+    
+            // Cadastra cada máquina da locação
+            for (const item of itens) {
+                const { maqId, iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias } = item;
+    
+                const itemLocacao = new ItensLocacaoModel(0, iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias, maqId, locacaoId);
+                const itemResult = await itemLocacao.gravar();
+
+                if (!itemResult) {
+                    throw new Error(`Erro ao cadastrar máquina: ID ${maqId}`);
+                }
+    
+                // Atualizar status da máquina para "Locado"
+                await maquina.atualizarStatus(maqId, 2);
+            }
+    
+            // Responder com sucesso
+            res.status(201).json({ msg: "Locação cadastrada com sucesso!" });
+        } 
+        catch (error) {
+            console.error(error);
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
-    }
+    }    
 
     async alterarLocacao(req, res) {
         try {
-            let { locId, locDataInicio, locDataFinalPrevista, locValorTotal, locDesconto, locValorFinal, locCliId, itens } = req.body;
+            const { locId, locDataInicio, locDataFinalPrevista, locValorTotal, locDesconto, locValorFinal, locCliId, itens } = req.body;
     
-            if (locId && locDataInicio && locDataFinalPrevista && locValorTotal && locDesconto && locValorFinal && locCliId && itens && itens.length > 0) {
-                let locacao = new LocacaoModel(locId, locDataInicio, locDataFinalPrevista, null, locValorTotal, locDesconto, locValorFinal, locCliId, 1, 1);
-                let locacaoId = await locacao.gravar();
-    
-                if (locacaoId) {
-                    let maquina = new MaquinaModel();
-                    let peca = new PecaModel();
-                    let implemento= new ImplementoModel();
-
-                    let itemLocacao = new ItensLocacaoModel();
-                    let itemLocacaoLista = await itemLocacao.obter(locId);
-                    const exclusaoResult = await itemLocacao.excluir(locId); // Exclui todos os itens dessa locação
-
-                    // Muda o status de todos os itens que estavam locados para 'Disponível'
-                    for (const item of itemLocacaoLista) {
-                        const { iteLocTipo, iteLocId } = item;
-        
-                        if (iteLocTipo === "Máquina") { await maquina.atualizarStatus(iteLocId, 1) } 
-                        else if (iteLocTipo === "Peça") { await peca.atualizarStatus(iteLocId, 1) } 
-                        else if (iteLocTipo === "Implemento") { await implemento.atualizarStatus(iteLocId, 1) }
-                    }
-
-                    // Cadastra novamente cada item individualmente
-                    for (const item of itens) {
-                        const { iteLocQuantidade, iteLocValorUnitario, iteLocTipo, iteLocId } = item;
-
-                        // Define os IDs específicos com base no tipo do item
-                        let iteLocPecId = iteLocTipo === "Peça" ? iteLocId : null;
-                        let iteLocImpId = iteLocTipo === "Implemento" ? iteLocId : null;
-                        let iteLocMaqId = iteLocTipo === "Máquina" ? iteLocId : null;
-
-                        let itemLocacao = new ItensLocacaoModel(0, iteLocQuantidade, iteLocValorUnitario, iteLocPecId, iteLocImpId, iteLocMaqId, locId);
-
-                        const itemResult = await itemLocacao.gravar();
-                        if (!itemResult) {
-                            throw new Error(`Erro ao alterar item de locação: ${item.nome}`);
-                        }
-
-                        if (iteLocTipo === "Máquina") { await maquina.atualizarStatus(iteLocId, 2) } 
-                        else if (iteLocTipo === "Peça") { await peca.atualizarStatus(iteLocId, 2) } 
-                        else if (iteLocTipo === "Implemento") { await implemento.atualizarStatus(iteLocId, 2) }
-                    }
-
-                    res.status(201).json({ msg: "Locação alterada com sucesso!" });
-                } else {
-                    res.status(500).json({ msg: "Erro durante a alteração da locação!" });
-                }
-            } else {
-                res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!" });
+            if (!locId || !locDataInicio || !locDataFinalPrevista || !locValorTotal || !locValorFinal || !locCliId || !itens || itens.length === 0) {
+                return res.status(400).json({ msg: "Por favor, preencha todos os campos obrigatórios e adicione pelo menos uma máquina para locação!" });
             }
-        } catch (ex) {
-            console.log(ex);
+    
+            const locacao = new LocacaoModel(locId, locDataInicio, locDataFinalPrevista, null, locValorTotal, locDesconto, locValorFinal, null, locCliId, 1);
+            const locacaoId = await locacao.gravar();
+
+            if (!locacaoId) {
+                return res.status(500).json({ msg: "Erro durante a alteração da locação!" });
+            }
+            
+            const maquina = new MaquinaModel();
+            const itemLocacaoExcluir = new ItensLocacaoModel();
+            await itemLocacaoExcluir.excluir(locId);
+    
+            // Cadastra cada máquina da locação
+            for (const item of itens) {
+                const { maqId, iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias } = item;
+    
+                const itemLocacao = new ItensLocacaoModel(0, iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias, maqId, locId);
+                const itemResult = await itemLocacao.gravar();
+
+                if (!itemResult) {
+                    throw new Error(`Erro ao alterar máquina: ID ${maqId}`);
+                }
+    
+                // Atualizar status da máquina para "Locado"
+                await maquina.atualizarStatus(maqId, 2);
+            }
+    
+            // Responder com sucesso
+            res.status(201).json({ msg: "Locação alterada com sucesso!" });
+        } 
+        catch (error) {
+            console.error(error);
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
-    }
+    } 
 
     async excluirLocacao(req, res) {
         try {

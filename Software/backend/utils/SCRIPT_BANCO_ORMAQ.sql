@@ -139,6 +139,7 @@
     iteLocId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     iteLocValorUnitario DECIMAL(10, 2) NOT NULL,
     iteLocPlanoAluguel VARCHAR(15) NOT NULL,
+    iteLocQuantDias INT NOT NULL,
     iteLocMaqId INT NULL,
     IteLocLocacaoId INT NOT NULL,
     CONSTRAINT iteLocMaqId
@@ -238,10 +239,10 @@
     ('2024-05-01', '2024-05-10', '2024-05-09', 10000.00, 500.00, 9500.00, 0, 1, 2),  
     ('2024-06-01', '2024-06-15', '2024-06-14', 15000.00, 750.00, 14250.00, 100.00, 2, 2); 
 
-  INSERT INTO Itens_Locacao ( iteLocValorUnitario, iteLocPlanoAluguel, iteLocMaqId, IteLocLocacaoId ) 
+  INSERT INTO Itens_Locacao ( iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias, iteLocMaqId, IteLocLocacaoId ) 
   VALUES 
-    (1000.00, 'Diária', 1, 1),  
-    (1500.00, 'Mensal', 2, 2);  
+    (1000.00, 'Diária', 3, 1, 1),  
+    (1500.00, 'Mensal', 35, 2, 2);  
 
   SELECT * FROM Equipamento_Status;
   SELECT * FROM Locacao_Status;

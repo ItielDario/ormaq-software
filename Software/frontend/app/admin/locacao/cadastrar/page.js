@@ -29,7 +29,7 @@ export default function CadastrarLocacao() {
 
   useEffect(() => {
     httpClient.get("/cliente").then(r => r.json()).then(r => setClientes(r));
-    httpClient.get("/maquina/obter/disponivel").then(r => r.json()).then(r => {setMaquina(r); console.log(r)});
+    httpClient.get("/maquina/obter/disponivel").then(r => r.json()).then(r => {setMaquina(r)});
   }, []);
   
   const verificaClienteExiste = () => {
@@ -62,14 +62,14 @@ export default function CadastrarLocacao() {
     const diferencaMilissegundos = finalUTC - inicioUTC;
     const diferencaDias = diferencaMilissegundos / (1000 * 60 * 60 * 24);
 
-    return diferencaDias;
-}
+    return diferencaDias + 1;
+  };
 
   const adicionarItemLocacao = () => {
     alertMsg.current.style.display = 'none';
     let result = false;
-    
-    // Validação da data de inicio e término
+
+    // Validação da data de início e término
     const dataInicio = new Date(dataInicioRef.current.value);
     const dataFinalPrevista = new Date(dataFinalPrevistaRef.current.value);
 
@@ -77,7 +77,7 @@ export default function CadastrarLocacao() {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = 'Primeiro preencha data de inicio e de término da locação';
+        alertMsg.current.textContent = 'Primeiro preencha data de início e de término da locação';
         document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
       }, 100);
       return;
@@ -93,7 +93,7 @@ export default function CadastrarLocacao() {
       return;
     }
 
-    // Verifica se a máquina exite
+    // Verifica se a máquina existe
     if (equipamentoIdRef.current.value.length > 0) {
       let equipamentoDados = '';
       const dias = calcularDiferencaDias(dataInicio, dataFinalPrevista);
@@ -103,20 +103,36 @@ export default function CadastrarLocacao() {
       equipamentoDados = maquina.filter(value => value.maqSerie === equipamentoIdRef.current.value);
 
       if (equipamentoDados.length > 0) {
+        // Verifica se a máquina já está na lista de locações
+        const jaAdicionada = itensLocacao.some(
+          item => item.maqId === equipamentoDados[0].maqId
+        );
 
-        if(dias < 7){
+        if (jaAdicionada) {
+          setTimeout(() => {
+            alertMsg.current.className = 'alertError';
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = `A máquina já foi adicionada à lista de locações!`;
+          }, 100);
+          return;
+        }
+
+        // Cálculo do valor baseado no período
+        if (dias < 7) {
           valorMaquina = equipamentoDados[0].maqAluPrecoDiario * dias;
-          planoAluguel = "Diária"
+          planoAluguel = "Diária";
+        } else if (dias < 15) {
+          valorMaquina = (equipamentoDados[0].maqAluPrecoSemanal / 7) * dias;
+          planoAluguel = "Semanal";
+        } else if (dias < 30) {
+          valorMaquina = (equipamentoDados[0].maqAluPrecoQuinzenal / 15) * dias;
+          planoAluguel = "Quinzenal";
+        } else {
+          valorMaquina = (equipamentoDados[0].maqAluPrecoMensal / 30) * dias;
+          planoAluguel = "Mensal";
         }
-        else if(dias < 15){
 
-        }
-        else if(dias < 30){
-          
-        }
-        else{
-
-        }
+        console.log(valorMaquina)
 
         result = true;
         equipamentoDados = {
@@ -126,25 +142,28 @@ export default function CadastrarLocacao() {
           maqSerie: equipamentoDados[0].maqSerie,
           iteLocValorUnitario: valorMaquina,
           iteLocPlanoAluguel: planoAluguel,
+          iteLocQuantDias: dias,
         };
       }
-  
+
       if (result) {
-        
-        console.log(dias)
         const listaItensAuxiliar = [...itensLocacao, equipamentoDados];
+
         setItensLocacao(listaItensAuxiliar);
 
-        let valorTotal = listaItensAuxiliar.reduce((total, equip) => total + equip.preco * equip.quantidade, 0);
-        valorTotalRef.current.innerHTML = `R$ ${valorTotal.toFixed(2)}`;       
+        let valorTotal = listaItensAuxiliar.reduce(
+          (total, equip) => total + equip.iteLocValorUnitario,
+          0
+        );
+        valorTotalRef.current.innerHTML = `R$ ${valorTotal.toFixed(0)},00`;
         setvalorTotal(valorTotal);
-  
+
         // Executa a função calcularValorFinal sempre que um item é adicionado
         calcularValorFinal(descontoRef.current.value, valorTotal);
-  
+
         equipamentoIdRef.current.value = '';
         containerInfoRef.current.style.display = 'none';
-  
+
         setTimeout(() => {
           alertMsg.current.className = 'alertSuccess';
           alertMsg.current.style.display = 'block';
@@ -166,7 +185,7 @@ export default function CadastrarLocacao() {
     }
 
     document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
-  };  
+  };
 
   const excluirItem = (index) => {
     // Remove o item da lista de itens de locação
@@ -174,9 +193,9 @@ export default function CadastrarLocacao() {
     setItensLocacao(novaLista);
   
     // Recalcula o valor total com base na nova lista
-    let novoValorTotal = novaLista.reduce((total, item) => total + item.preco * item.quantidade, 0);
+    let novoValorTotal = novaLista.reduce((total, item) => total + item.iteLocValorUnitario, 0);
     setvalorTotal(novoValorTotal);
-    valorTotalRef.current.innerHTML = `R$ ${novoValorTotal.toFixed(2)}`;
+    valorTotalRef.current.innerHTML = `R$ ${novoValorTotal.toFixed(0)},00`;
   
     // Recalcula o valor final com o desconto
     calcularValorFinal(descontoRef.current.value, novoValorTotal);
@@ -195,6 +214,8 @@ export default function CadastrarLocacao() {
       locCliId: obterClienteIdSelecionado(), // Usa o ID do cliente
       itens: itensLocacao, // Array de itens da locação
     };
+
+    console.log(dados)
   
     // Validação de campos vazios
     if (verificaCampoVazio(dados) || itensLocacao.length === 0) {
@@ -264,13 +285,13 @@ export default function CadastrarLocacao() {
 
   const calcularValorFinal = (valorDesconto, valorTotal) => {
     if(valorDesconto >= 0){
-      valorFinalRef.current.innerHTML = `R$ ${(valorTotal - descontoRef.current.value).toFixed(2)}`
+      valorFinalRef.current.innerHTML = `R$ ${(valorTotal - descontoRef.current.value).toFixed(0)},00`
       containerValorTotalRef.current.style.display = 'flex'
       descontoRef.current.style.width = '95%'
     }
   };   
 
-  // Função para buscar o modelo com base no nome da máquina
+  // Função para buscar os dados da máquina com base no chassi
   const buscarMaquinaPorSerie = () => {
     const serieDigitado = equipamentoIdRef.current.value;
     alertMsg.current.style.display = 'none';
@@ -331,12 +352,12 @@ export default function CadastrarLocacao() {
         <section className="input-group">
           <section>
             <label>Data de início da locação</label>
-            <input type="date" name="locDataInicio" ref={dataInicioRef} required />
+            <input type="date" name="locDataInicio" ref={dataInicioRef} required readonly onKeyDown={(e) => e.preventDefault()}/>
           </section>
 
           <section>
             <label>Data de término da locação</label>
-            <input type="date" name="locDataFinalPrevista" ref={dataFinalPrevistaRef} required />
+            <input type="date" name="locDataFinalPrevista" ref={dataFinalPrevistaRef} required readonly onKeyDown={(e) => e.preventDefault()}/>
           </section>
         </section>
 
@@ -391,7 +412,9 @@ export default function CadastrarLocacao() {
                 <th>Nome</th>
                 <th>Modelo</th>
                 <th>Serie/Chassi </th>
-                <th>Valor da Máquina</th>
+                <th>Subtotal</th>
+                <th>Plano</th>
+                <th>Dias locado</th>
                 <th>Ações</th>
               </tr>
             </thead>
@@ -402,7 +425,9 @@ export default function CadastrarLocacao() {
                   <td>{item.maqNome}</td>
                   <td>{item.maqModelo}</td>
                   <td>{item.maqSerie}</td>
-                  <td>{item.iteLocValorUnitario}</td>
+                  <td>R$ {item.iteLocValorUnitario.toFixed(0)},00</td>
+                  <td>{item.iteLocPlanoAluguel}</td>
+                  <td>{item.iteLocQuantDias}</td>
                   <td><a onClick={() => excluirItem(index)}><i className="nav-icon fas fa-trash"></i></a></td>
                 </tr>
               ))}

@@ -4,81 +4,79 @@ const db = new Database();
 
 export default class ItensLocacaoModel {
     #iteLocId;
-    #iteLocQuantidade;
     #iteLocValorUnitario;
-    #iteLocPecId;
-    #iteLocImpId;
+    #iteLocPlanoAluguel;
+    #iteLocQuantDias;
     #iteLocMaqId;
-    #IteLocLocacaoId;
+    #iteLocLocacaoId;
 
     get iteLocId() { return this.#iteLocId; }
     set iteLocId(iteLocId) { this.#iteLocId = iteLocId; }
 
-    get iteLocQuantidade() { return this.#iteLocQuantidade; }
-    set iteLocQuantidade(iteLocQuantidade) { this.#iteLocQuantidade = iteLocQuantidade; }
-
     get iteLocValorUnitario() { return this.#iteLocValorUnitario; }
     set iteLocValorUnitario(iteLocValorUnitario) { this.#iteLocValorUnitario = iteLocValorUnitario; }
 
-    get iteLocPecId() { return this.#iteLocPecId; }
-    set iteLocPecId(iteLocPecId) { this.#iteLocPecId = iteLocPecId; }
+    get iteLocPlanoAluguel() { return this.#iteLocPlanoAluguel; }
+    set iteLocPlanoAluguel(iteLocPlanoAluguel) { this.#iteLocPlanoAluguel = iteLocPlanoAluguel; }
 
-    get iteLocImpId() { return this.#iteLocImpId; }
-    set iteLocImpId(iteLocImpId) { this.#iteLocImpId = iteLocImpId; }
+    get iteLocQuantDias() { return this.#iteLocQuantDias; }
+    set iteLocQuantDias(iteLocQuantDias) { this.#iteLocQuantDias = iteLocQuantDias; }
 
     get iteLocMaqId() { return this.#iteLocMaqId; }
     set iteLocMaqId(iteLocMaqId) { this.#iteLocMaqId = iteLocMaqId; }
 
-    get IteLocLocacaoId() { return this.#IteLocLocacaoId; }
-    set IteLocLocacaoId(IteLocLocacaoId) { this.#IteLocLocacaoId = IteLocLocacaoId; }
+    get iteLocLocacaoId() { return this.#iteLocLocacaoId; }
+    set iteLocLocacaoId(iteLocLocacaoId) { this.#iteLocLocacaoId = iteLocLocacaoId; }
 
-    constructor(iteLocId, iteLocQuantidade, iteLocValorUnitario, iteLocPecId, iteLocImpId, iteLocMaqId, IteLocLocacaoId) {
+    constructor(iteLocId, iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias, iteLocMaqId, iteLocLocacaoId) {
         this.#iteLocId = iteLocId;
-        this.#iteLocQuantidade = iteLocQuantidade;
         this.#iteLocValorUnitario = iteLocValorUnitario;
-        this.#iteLocPecId = iteLocPecId;
-        this.#iteLocImpId = iteLocImpId;
+        this.#iteLocPlanoAluguel = iteLocPlanoAluguel;
+        this.#iteLocQuantDias = iteLocQuantDias;
         this.#iteLocMaqId = iteLocMaqId;
-        this.#IteLocLocacaoId = IteLocLocacaoId;
+        this.#iteLocLocacaoId = iteLocLocacaoId;
     }
 
     toJSON() {
         return {
-            "iteLocId": this.#iteLocId,
-            "iteLocQuantidade": this.#iteLocQuantidade,
-            "iteLocValorUnitario": this.#iteLocValorUnitario,
-            "iteLocPecId": this.#iteLocPecId,
-            "iteLocImpId": this.#iteLocImpId,
-            "iteLocMaqId": this.#iteLocMaqId,
-            "IteLocLocacaoId": this.#IteLocLocacaoId
+            iteLocId: this.#iteLocId,
+            iteLocValorUnitario: this.#iteLocValorUnitario,
+            iteLocPlanoAluguel: this.#iteLocPlanoAluguel,
+            iteLocQuantDias: this.#iteLocQuantDias,
+            iteLocMaqId: this.#iteLocMaqId,
+            iteLocLocacaoId: this.#iteLocLocacaoId
         };
     }
 
     toMAP(rows) {
         return rows.map(item => new ItensLocacaoModel(
             item["iteLocId"],
-            item["iteLocQuantidade"],
             item["iteLocValorUnitario"],
-            item["iteLocPecId"],
-            item["iteLocImpId"],
+            item["iteLocPlanoAluguel"],
+            item["iteLocQuantDias"],
             item["iteLocMaqId"],
-            item["IteLocLocacaoId"]
+            item["iteLocLocacaoId"]
         ));
     }
 
     async gravar() {
         const sql = `
-            INSERT INTO Itens_Locacao (iteLocQuantidade, iteLocValorUnitario, iteLocPecId, iteLocImpId, iteLocMaqId, IteLocLocacaoId)
-            VALUES (?, ?, ?, ?, ?, ?)
+            INSERT INTO Itens_Locacao (iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias, iteLocMaqId, IteLocLocacaoId)
+            VALUES (?, ?, ?, ?, ?)
         `;
         const valores = [
-            this.#iteLocQuantidade,
             this.#iteLocValorUnitario,
-            this.#iteLocPecId,
-            this.#iteLocImpId,
+            this.#iteLocPlanoAluguel,
+            this.#iteLocQuantDias,
             this.#iteLocMaqId,
-            this.#IteLocLocacaoId
+            this.#iteLocLocacaoId
         ];
+
+        console.log(this.#iteLocValorUnitario,
+            this.#iteLocPlanoAluguel,
+            this.#iteLocQuantDias,
+            this.#iteLocMaqId,
+            this.#iteLocLocacaoId)
 
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
@@ -94,7 +92,7 @@ export default class ItensLocacaoModel {
 
     async listarItensPorLocacao(locacaoId) {
         const sql = `
-            SELECT iteLocId, iteLocQuantidade, iteLocValorUnitario, iteLocPecId, iteLocImpId, iteLocMaqId, IteLocLocacaoId
+            SELECT iteLocId, iteLocValorUnitario, iteLocPlanoAluguel, iteLocQuantDias, iteLocMaqId, IteLocLocacaoId
             FROM Itens_Locacao
             WHERE IteLocLocacaoId = ?;
         `;
@@ -103,24 +101,20 @@ export default class ItensLocacaoModel {
     }
 
     async obter(id) {
-        let sql = `
-            SELECT li.iteLocQuantidade, li.iteLocValorUnitario,
-                COALESCE(m.maqId, p.pecId, i.impId) AS iteLocId,
-                COALESCE(m.maqNome, p.pecNome, i.impNome) AS iteLocNome,
-            CASE 
-                WHEN m.maqId IS NOT NULL THEN 'Máquina'
-                WHEN p.pecId IS NOT NULL THEN 'Peça'
-                WHEN i.impId IS NOT NULL THEN 'Implemento'
-            END AS iteLocTipo
+        const sql = `
+            SELECT 
+                li.iteLocId, 
+                li.iteLocValorUnitario, 
+                li.iteLocPlanoAluguel, 
+                li.iteLocQuantDias,
+                m.maqId AS iteLocMaqId, 
+                m.maqNome AS iteLocMaqNome
             FROM Itens_Locacao li
             LEFT JOIN Maquina m ON li.iteLocMaqId = m.maqId
-            LEFT JOIN Peca p ON li.iteLocPecId = p.pecId
-            LEFT JOIN Implemento i ON li.iteLocImpId = i.impId
-            WHERE li.IteLocLocacaoId = ?;
+            WHERE li.iteLocId = ?;
         `;
-        let valores = [id];
-
-        let rows = await db.ExecutaComando(sql, valores);
-        return rows;
+        const valores = [id];
+        const rows = await db.ExecutaComando(sql, valores);
+        return this.toMAP(rows);
     }
 }

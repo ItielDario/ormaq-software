@@ -1,5 +1,5 @@
 import Database from "../utils/database.js";
-// import ClienteModel from "./clienteModel.js";
+import ClienteModel from "./clienteModel.js";
 // import UsuarioModel from "./usuarioModel.js";
 // import LocacaoStatusModel from "./locacaoStatusModel.js";
 
@@ -127,9 +127,10 @@ export default class LocacaoModel {
         if (this.#locId == 0 || this.#locId == null) {
             // Inserção
             sql = `INSERT INTO Locacao (locDataInicio, locDataFinalPrevista, locDataFinalEntrega, locValorTotal, locDesconto, locValorFinal, locPrecoHoraExtra, locCliId, locStatus) 
-                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+                   VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`;
             valores = [this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#locPrecoHoraExtra, this.#cliente, this.#locacaoStatus];
 
+            console.log(this.#locDataInicio, this.#locDataFinalPrevista, this.#locDataFinalEntrega, this.#locValorTotal, this.#locDesconto, this.#locValorFinal, this.#locPrecoHoraExtra, this.#cliente, this.#locacaoStatus)
             // Executa o comando e recupera o ID da última inserção
             result = await db.ExecutaComandoNonQuery(sql, valores);
             if (result) {
@@ -160,25 +161,8 @@ export default class LocacaoModel {
 
         const rows = await db.ExecutaComando(sql, [id]);
 
-        if (rows.length > 0) {
-            const locacao = rows[0];
-            const cliente = new ClienteModel(locacao["cliId"], locacao["cliNome"], locacao["cliCPF_CNPJ"], locacao["cliTelefone"], locacao["cliEmail"]);
-            const locacaoStatus = new LocacaoStatusModel(locacao["locStatusId"], locacao["locStaDescricao"]);
-
-            return new LocacaoModel(
-                locacao["locId"],
-                locacao["locDataInicio"],
-                locacao["locDataFinalPrevista"],
-                locacao["locDataFinalEntrega"],
-                locacao["locValorTotal"],
-                locacao["locDesconto"],
-                locacao["locValorFinal"],
-                locacao["locPrecoHoraExtra"],
-                cliente,
-                locacaoStatus
-            );
-        }
-        return null;
+        
+        return rows;
     }
 
     async excluir(idLocacao) {

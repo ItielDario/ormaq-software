@@ -173,8 +173,8 @@ export default class LocacaoModel {
     }
 
     async finalizar() {
-        const sql = `UPDATE Locacao SET locDataFinalEntrega = ?, locPrecoHoraExtra = ?, locStatus = ? WHERE locId = ?`;
-        const valores = [this.#locDataFinalEntrega, this.locPrecoHoraExtra, this.locacaoStatus, this.#locId];
+        const sql = `UPDATE Locacao SET locDataFinalEntrega = ?, locPrecoHoraExtra = ?, locValorFinal = ?, locStatus = ? WHERE locId = ?`;
+        const valores = [this.#locDataFinalEntrega, this.locPrecoHoraExtra, this.#locValorFinal, this.locacaoStatus, this.#locId];
         
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;

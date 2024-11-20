@@ -81,18 +81,20 @@ export default function FinalizarLocacao({ params: { id } }) {
         // Verifica se as horas de uso estão preenchidas para todos os itens do tipo 'Máquina'
 
         for (const item of itensLocacao) {
-            if (!horasUso[item.iteLocId]) {
+            if (!horasUso[item.iteLocId] || horasUso[item.iteLocId] < 0) {
                 setTimeout(() => {
                     alertMsg.current.className = 'alertError';
                     alertMsg.current.style.display = 'block';
-                    alertMsg.current.textContent = `As horas de uso para a máquina ${item.maqNome} não foram preenchidas!`;
+                    alertMsg.current.textContent = `As horas de uso para a máquina ${item.maqNome} não foram preenchidas corretamente!`;
                     document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
                     }, 100);
                 return;
             }
         }
 
-        if(horaExtra.current.value == null || horaExtra.current.value == null){
+        console.log(horaExtra.current.value)
+
+        if(horaExtra.current.value == null || horaExtra.current.value == undefined || horaExtra.current.value == ''){
             horaExtra.current.value = 0;
         }
 

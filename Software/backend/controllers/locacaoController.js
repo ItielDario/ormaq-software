@@ -166,11 +166,10 @@ export default class locacaoController {
             
             if (locId && locDataFinalEntrega && maqHorasUso && locPrecoHoraExtra && locValorFinal && itensLocacao) {
 
-                console.log(locValorFinal)
-                console.log(locPrecoHoraExtra)
+                // Soma o valor final + a hora extra
+                locValorFinal = parseFloat(locValorFinal.replace(/[^0-9.-]+/g, "")) || 0;
+                locPrecoHoraExtra = parseFloat(locPrecoHoraExtra.replace(/[^0-9.-]+/g, "")) || 0;
                 locValorFinal = locValorFinal + locPrecoHoraExtra;
-                console.log('-=-----------------------')
-                console.log(locValorFinal)
     
                 let locacao = new LocacaoModel(locId, null, null, locDataFinalEntrega, null, null, locValorFinal, locPrecoHoraExtra, null, 2);
                 let result = await locacao.finalizar();

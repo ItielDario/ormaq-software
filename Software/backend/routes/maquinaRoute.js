@@ -1,6 +1,8 @@
 import express from 'express';
 import MaquinaController from '../controllers/maquinaController.js';
 import Autenticar from '../middlewares/autenticar.js';
+import upload from '../middlewares/multer.js';
+
 
 const router = express.Router();
 const ctrl = new MaquinaController();
@@ -16,12 +18,12 @@ router.get('/:id', (req, res) => {
     ctrl.obterMaquina(req, res)
 })
 
-router.post('/cadastrar', (req, res) => {
-    // #swagger.summary = 'Cadsatrar máquinas'
-    ctrl.cadastrarMaquina(req, res)
-})
+router.post('/cadastrar', upload, (req, res) => {
+    //#swagger.summary = 'Cadastrar uma maquina'
+    ctrl.cadastrarMaquina(req, res);
+  });
 
-router.put("/", (req, res) => {
+router.put("/", upload, (req, res) => {
     //#swagger.summary = 'Alterar uma maquina existente'
     ctrl.alterarMaquina(req, res);
 })

@@ -1,7 +1,10 @@
 import MaquinaModel from "../models/maquinaModel.js"
 import MaquinaAluguelModel from "../models/maquinaAluguelModel.js"
+import ImagensEquipamentoModel from "../models/imagensEquipamentoModel.js"
+import enviarObjeto from '../utils/oracleBucket.js'; 
 
 export default class maquinaController {
+    
     async listarMaquinas(req, res){ 
         try{
             let maquinas = new MaquinaModel()
@@ -22,11 +25,14 @@ export default class maquinaController {
             let maquinaAluguel = new MaquinaAluguelModel();
             maquinaAluguel = await maquinaAluguel.obter(id);
 
+            let imagensMaquina = new ImagensEquipamentoModel();
+            imagensMaquina = await imagensMaquina.obterImgMaquina(id);
+
             if(maquina == null && maquinaAluguel == null) {
                 res.staus(404).json({msg: `Maquina com o id ${id} não encontrada!`})
             }
             else{
-                res.status(200).json({maquina, maquinaAluguel});
+                res.status(200).json({maquina, maquinaAluguel, imagensMaquina});
             }
         }
         catch(ex) {
@@ -40,9 +46,9 @@ export default class maquinaController {
             let { 
                 maqNome, maqDataAquisicao, maqTipo, maqModelo, maqSerie, maqAnoFabricacao, 
                 maqHorasUso, maqPrecoVenda, maqPrecoAluguelDiario, maqPrecoAluguelSemanal, 
-                maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal, maqExibirCatalogo, maqDescricao 
+                maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal, maqExibirCatalogo, maqDescricao, nomeImagemPrincipal
             } = req.body;
-    
+
             if (
                 maqNome && maqDataAquisicao && maqTipo && maqModelo && maqSerie && 
                 maqAnoFabricacao && maqHorasUso !== undefined && maqPrecoVenda && 
@@ -68,17 +74,44 @@ export default class maquinaController {
                     let maquinaAluguelResult = await maquinaAluguel.gravar();
 
                     if(maquinaAluguelResult){
+                        const imagens = req.files;  
+                        let achouImagemPrincipal = true
+    
+                        if (imagens) {
+                            for (let i = 0; i < imagens.length; i++) { // Loop para enviar todas as imagens para o Oracle Cloud Storage
+                                const imagem = imagens[i];
+                                let imagensEquipamento = null
+    
+                                const nomeImagem = new Date().getTime() + '-' + imagem.originalname;  // Gerar um nome único
+                                await enviarObjeto(nomeImagem, imagem.buffer); // Envia a imagem para o Oracle Cloud Storage
+                                const urlImagem = `https://objectstorage.us-phoenix-1.oraclecloud.com/n/axfyzw7gyrvi/b/bucket-ormaq/o/${nomeImagem}`; // Cria a URL pública da imagem
+
+                                if(nomeImagemPrincipal == imagem.originalname && achouImagemPrincipal){
+                                    imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 1,  null, maquinaId, null);
+                                    achouImagemPrincipal = false;
+                                }
+                                else{
+                                    imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 0,  null, maquinaId, null);
+                                }
+    
+                                await imagensEquipamento.gravar();
+                            }
+                        }
+                    
                         return res.status(201).json({ msg: "Máquina cadastrada com sucesso!" });
                     }
-    
+
                     return res.status(500).json({ msg: "Erro durante o cadastro dos valores da máquina!" });
-                } else {
+                } 
+                else {
                     return res.status(500).json({ msg: "Erro durante o cadastro da Máquina!" });
                 }
-            } else {
+            } 
+            else {
                 return res.status(400).json({ msg: "Por favor, preencha os campos abaixo corretamente!" });
             }
-        } catch (ex) {
+        } 
+        catch (ex) {
             console.log(ex);
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
@@ -89,7 +122,8 @@ export default class maquinaController {
             let { 
                 maqId, maqNome, maqDataAquisicao, maqTipo, maqModelo, maqSerie, maqAnoFabricacao, 
                 maqHorasUso, maqPrecoVenda, maqPrecoAluguelDiario, maqPrecoAluguelSemanal, 
-                maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal, maqExibirCatalogo, maqDescricao 
+                maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal, maqExibirCatalogo, maqDescricao, nomeImagemPrincipal, 
+                imagensBancoExcluir, imagensBanco 
             } = req.body;
     
             if (
@@ -121,19 +155,70 @@ export default class maquinaController {
 
                     // Cadastra novamente os alugueis da máquina
                     let maquinaAluguelResult = await maquinaAluguel.gravar(); 
+
+                    if(maquinaAluguelResult){
+                        const imagens = req.files;  
+                        let achouImagemPrincipal = true;
+
+                        let imagensEquipamento = new ImagensEquipamentoModel();
+
+                        if (typeof imagensBanco === 'string') {imagensBanco = JSON.parse(imagensBanco)}
+                        imagensBanco.forEach(imagem => { console.log(imagem) });
+
+                        if (typeof imagensBancoExcluir === 'string') {imagensBancoExcluir = JSON.parse(imagensBancoExcluir)}
+                        imagensBancoExcluir.forEach(imagem => { console.log(imagem) });
+
+
+                        for (let i = 0; i < imagensBancoExcluir.length; i++){
+                            await imagensEquipamento.excluir(imagensBancoExcluir[i].id);
+                        }
+
+                        // Verifica se a imagem principal é alguma imagem que ja estava cadastada antes da alteração
+                        for (let i = 0; i < imagensBanco.length; i++){
+                            if(nomeImagemPrincipal == imagensBanco[i].file.name && achouImagemPrincipal){
+                                await imagensEquipamento.atualizarImgPrincipal(1, imagensBanco[i].id);
+                                achouImagemPrincipal = false;
+                            }
+                            else{
+                                await imagensEquipamento.atualizarImgPrincipal(0, imagensBanco[i].id);
+                            }  
+                        }
+
+                        // Envia todas as imagens novas para o Oracle Cloud Storage e salva no banco
+                        if (imagens) {
+                            for (let i = 0; i < imagens.length; i++) { 
+                                const imagem = imagens[i];
+                                
+                                const nomeImagem = new Date().getTime() + '-' + imagem.originalname;  // Gerar um nome único
+                                await enviarObjeto(nomeImagem, imagem.buffer); // Envia a imagem para o Oracle Cloud Storage
+                                const urlImagem = `https://objectstorage.us-phoenix-1.oraclecloud.com/n/axfyzw7gyrvi/b/bucket-ormaq/o/${nomeImagem}`; // Cria a URL pública da imagem
+
+                                if(nomeImagemPrincipal == imagem.originalname && achouImagemPrincipal){
+                                    imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 1,  null, maqId, null);
+                                    achouImagemPrincipal = false;
+                                }
+                                else{
+                                    imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 0,  null, maqId, null);
+                                }
     
-                    if (maquinaAluguelResult) {
-                        return res.status(200).json({ msg: "Máquina alterada com sucesso!" });
+                                await imagensEquipamento.gravar();
+                            }
+                        }
+                    
+                        return res.status(201).json({ msg: "Máquina cadastrada com sucesso!" });
                     }
     
                     return res.status(500).json({ msg: "Erro durante a alteração dos valores de aluguel da máquina!" });
-                } else {
+                } 
+                else {
                     return res.status(500).json({ msg: "Erro durante a alteração da máquina!" });
                 }
-            } else {
+            } 
+            else {
                 return res.status(400).json({ msg: "Por favor, preencha os campos abaixo corretamente!" });
             }
-        } catch (ex) {
+        } 
+        catch (ex) {
             console.log(ex);
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
@@ -143,9 +228,14 @@ export default class maquinaController {
         try{
             let {id} = req.params;
             let maquina = new MaquinaModel();
+
             if(await maquina.isLocado(id) == false){
 
+                const imagensEquipamento = new ImagensEquipamentoModel();
+                await imagensEquipamento.excluirImgMaquina(id);
+
                 let result = await maquina.excluir(id);
+
                 if(result) {
                     res.status(200).json({msg: `Máquina excluída com sucesso!`});
                 }

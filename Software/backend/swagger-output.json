@@ -34,8 +34,8 @@
         "summary": "Alterar uma maquina existente",
         "description": "Lista todas as máquinas.",
         "responses": {
-          "200": {
-            "description": "OK"
+          "201": {
+            "description": "Created"
           },
           "400": {
             "description": "Bad Request"
@@ -93,6 +93,15 @@
                     "example": "any"
                   },
                   "maqDescricao": {
+                    "example": "any"
+                  },
+                  "nomeImagemPrincipal": {
+                    "example": "any"
+                  },
+                  "imagensBancoExcluir": {
+                    "example": "any"
+                  },
+                  "imagensBanco": {
                     "example": "any"
                   }
                 }
@@ -162,7 +171,7 @@
         "tags": [
           "Maquina"
         ],
-        "summary": "Cadsatrar máquinas",
+        "summary": "Cadastrar uma maquina",
         "description": "Lista todas as máquinas.",
         "responses": {
           "201": {
@@ -221,6 +230,9 @@
                     "example": "any"
                   },
                   "maqDescricao": {
+                    "example": "any"
+                  },
+                  "nomeImagemPrincipal": {
                     "example": "any"
                   }
                 }

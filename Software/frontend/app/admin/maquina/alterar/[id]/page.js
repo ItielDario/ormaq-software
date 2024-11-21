@@ -1,6 +1,6 @@
 'use client';
 import CriarBotao from "../../../components/criarBotao.js";
-import CustomEditor from "../../../components/custom-editor.js";
+import CustomEditor from "../../../components/custom-editor.js"; 
 import httpClient from "../../../utils/httpClient.js";
 import { useRef, useState, useEffect } from "react";
 
@@ -23,6 +23,10 @@ export default function AlterarMaquina({ params: { id } }) {
   const [maqDescricao, setMaqDescricao] = useState('');
   const [maquinaSelecionada, setMaquinaSelecionada] = useState(null);
   const [maquinaAluguelSelecionada, setMaquinaAluguelSelecionada] = useState(null);
+  const [imagens, setImagens] = useState([]); 
+  const [imagensBanco, setImagensBanco] = useState([]); 
+  const [imagemPrincipal, setImagemPrincipal] = useState(null);
+  const [nomeImagemPrincipal, setNomeImagemPrincipal] = useState(null);
 
   useEffect(() => {
     carregarMaquina();
@@ -32,12 +36,30 @@ export default function AlterarMaquina({ params: { id } }) {
     httpClient.get(`/maquina/${id}`)
       .then(r => r.json())
       .then(r => {
-        r.maquina.maqDataAquisicao = new Date(r.maquina.maqDataAquisicao)
-        console.log(r)
+        r.maquina.maqDataAquisicao = new Date(r.maquina.maqDataAquisicao).toISOString().split('T')[0];
+
         setMaquinaSelecionada(r.maquina);
         setMaquinaAluguelSelecionada(r.maquinaAluguel);
         setMaqDescricao(r.maquina.maqDescricao);
-      });
+
+        // Atualiza imagens no estado
+        const imagensBanco = r.imagensMaquina.map(imagem => ({
+          id: imagem.imgId,
+          file: { name: imagem.imgNome }, // Criando um objeto `file` para acessar o `name`
+          url: imagem.imgUrl,
+          principal: imagem.imgPrincipal === 1
+        }));
+        setImagens(imagensBanco);
+        setImagensBanco(imagensBanco)
+
+        // Define imagem principal
+        const principal = imagensBanco.find(img => img.principal);
+        if (principal) {
+          setImagemPrincipal(principal.id);
+          setNomeImagemPrincipal(principal.file.name);
+        }
+      })
+      .catch(error => console.error("Erro ao carregar os dados da máquina:", error));
   };
 
   const alterarMaquina = () => {
@@ -58,10 +80,20 @@ export default function AlterarMaquina({ params: { id } }) {
       maqPrecoAluguelQuinzenal: maqPrecoAluguelQuinzenalRef.current.value,
       maqPrecoAluguelMensal: maqPrecoAluguelMensalRef.current.value,
       maqExibirCatalogo: maqExibirCatalogoRef.current.value,
-      maqDescricao: maqDescricao
+      maqDescricao: maqDescricao,
+      imagens: imagens,
+      nomeImagemPrincipal: nomeImagemPrincipal
     };
 
-    console.log(dados)
+    if (imagens.length > 0 && imagemPrincipal == null) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, escolha uma imagem para utilizada de capa!';
+      }, 100);
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    } 
 
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
@@ -69,24 +101,62 @@ export default function AlterarMaquina({ params: { id } }) {
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha os campos abaixo corretamente!';
       }, 100);
-    } else {
+    } 
+    else {
       var status = null;
-      httpClient.put("/maquina", dados)
-        .then((r) => {
+      const formData = new FormData();
+
+      const imagensExcluidas = imagensBanco.filter(imagemBanco => 
+        !imagens.some(imagem => imagem.id === imagemBanco.id)
+      );
+    
+      const imagensBancoString = JSON.stringify(imagensBanco);
+      const imagensExcluidasString = JSON.stringify(imagensExcluidas);
+
+      // Adicione os campos do formulário
+      formData.append("maqId", id);
+      formData.append("maqNome", maqNomeRef.current.value);
+      formData.append("maqDataAquisicao", maqDataAquisicaoRef.current.value);
+      formData.append("maqTipo", maqTipoRef.current.value);
+      formData.append("maqModelo", maqModeloRef.current.value);
+      formData.append("maqSerie", maqSerieRef.current.value);
+      formData.append("maqAnoFabricacao", maqAnoFabricacaoRef.current.value);
+      formData.append("maqHorasUso", maqHorasUsoRef.current.value);
+      formData.append("maqPrecoVenda", maqPrecoVendaRef.current.value);
+      formData.append("maqPrecoAluguelDiario", maqPrecoAluguelDiarioRef.current.value);
+      formData.append("maqPrecoAluguelSemanal", maqPrecoAluguelSemanalRef.current.value);
+      formData.append("maqPrecoAluguelQuinzenal", maqPrecoAluguelQuinzenalRef.current.value);
+      formData.append("maqPrecoAluguelMensal", maqPrecoAluguelMensalRef.current.value);
+      formData.append("maqExibirCatalogo", maqExibirCatalogoRef.current.value);
+      formData.append("maqDescricao", maqDescricao);
+      formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
+      formData.append("imagensBancoExcluir", imagensExcluidasString);
+      formData.append("imagensBanco", imagensBancoString);
+
+      // Adicione as imagens
+      imagens.forEach((imagem) => {
+        formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
+      });
+
+      fetch(`http://localhost:5000/maquina`, {
+        method: "PUT",
+        body: formData
+      })
+      .then(r => {
           status = r.status;
           return r.json();
-        })
-        .then(r => {
-          setTimeout(() => {
-            if (status == 200) {
-              alertMsg.current.className = 'alertSuccess';
-            } else {
-              alertMsg.current.className = 'alertError';
-            }
-            alertMsg.current.style.display = 'block';
-            alertMsg.current.textContent = r.msg;
-          }, 100);
-        });
+      })
+      .then(r => {
+        setTimeout(() => {
+          if (status == 201) {
+            alertMsg.current.className = 'alertSuccess';
+          } else {
+            alertMsg.current.className = 'alertError';
+          }
+          alertMsg.current.style.display = 'block';
+          alertMsg.current.textContent = r.msg;
+        }, 100);
+      });
     }
 
     document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
@@ -98,6 +168,32 @@ export default function AlterarMaquina({ params: { id } }) {
 
   const handleCustomEditorChange = (data) => {
     setMaqDescricao(data);
+  };
+
+  const exibirImagem = (e) => {
+    const arquivos = Array.from(e.target.files); // Obtém os arquivos selecionados
+  
+    const novasImagens = arquivos.map((file, index) => ({
+      id: index + Date.now(), // ID único
+      file, // Arquivo da imagem
+      url: URL.createObjectURL(file), // URL temporária para exibição
+    }));
+  
+    setImagens((prev) => [...prev, ...novasImagens]); // Adiciona as novas imagens ao estado
+  };
+
+  const selecionarImagemPrincipal = (image) => {
+    setImagemPrincipal(image.id); // Define a imagem selecionada como principal
+    setNomeImagemPrincipal(image.file.name);
+  };
+
+  const excluirImagem = (id) => {
+    setImagens(imagens.filter((imagem) => imagem.id !== id));
+
+    if (imagemPrincipal === id) {
+      setImagemPrincipal(null);
+      setNomeImagemPrincipal(null);
+    }
   };
 
   return (
@@ -267,6 +363,59 @@ export default function AlterarMaquina({ params: { id } }) {
             </section>
           </>
         )}
+
+        <section className="image-upload">
+          <label htmlFor="inputImagem">Imagens da Máquina</label>
+          <input
+            className="input-img"
+            type="file"
+            id="inputImagem"
+            multiple
+            accept=".jpg,.png"
+            onChange={exibirImagem}
+          />
+
+          {imagens.length > 0 && (
+            <section className="image-table">
+              <h2>Imagens Selecionadas</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Imagem</th>
+                    <th>Definir imagem principal</th>
+                    <th>Excluir</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {imagens.map((imagem) => (
+                    <tr key={imagem.id}>
+                      <td>
+                        <img
+                          src={imagem.url}
+                          alt={imagem.nome}
+                          className={imagemPrincipal === imagem.id ? "selected" : ""}
+                          style={{ width: "100px", height: "auto" }}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="button"
+                          onClick={() => selecionarImagemPrincipal(imagem)}
+                          className={imagemPrincipal === imagem.id ? "btn-selected" : "btn-default"}
+                        >
+                          {imagemPrincipal === imagem.id ? "Selecionada como Capa" : "Selecionar como Capa"}
+                        </button>
+                      </td>
+                      <td>
+                        <a onClick={() => excluirImagem(imagem.id)}><i className="nav-icon fas fa-trash"></i></a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
+        </section>
       </form>
 
       <article className="container-btn">

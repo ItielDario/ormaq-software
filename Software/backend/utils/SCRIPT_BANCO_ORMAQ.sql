@@ -153,6 +153,7 @@
   CREATE TABLE Imagens_Equipamento (
     imgId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     imgUrl VARCHAR(255) NOT NULL,
+    imgNome VARCHAR(255) NOT NULL,
     imgPrincipal BOOLEAN NOT NULL,
     imgPecId INT NULL,
     imgMaqId INT NULL,
@@ -201,16 +202,6 @@
   VALUES
     (1, 'Ferro de Reposição', '2023-01-05', 'Ferro para substituição', 1, 1, 200.00, 10.00),
     (2, 'Correia', '2023-02-10', 'Correia de transmissão', 0, 1, 150.00, 8.00);
-
-  INSERT INTO Imagens_Equipamento (imgUrl, imgPrincipal, imgPecId, imgMaqId, imgImpId)
-  VALUES
-    ('https://example.com/escavadeira_principal.jpg', TRUE, NULL, 1, NULL),
-    ('https://example.com/escavadeira_adicional.jpg', FALSE, NULL, 1, NULL),
-    ('https://example.com/retroescavadeira_principal.jpg', TRUE, NULL, 2, NULL), 
-    ('https://example.com/retroescavadeira_adicional.jpg', FALSE, NULL, 2, NULL),
-    ('https://example.com/bulldozer_principal.jpg', TRUE, NULL, 3, NULL), 
-    ('https://example.com/pulverizador_principal.jpg', TRUE, NULL, NULL, 1),
-    ('https://example.com/arado_principal.jpg', TRUE, NULL, NULL, 2);
 
   INSERT INTO Cliente (cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail)
   VALUES

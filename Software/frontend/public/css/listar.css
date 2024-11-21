@@ -115,6 +115,19 @@ tr:hover {
     font-size: 1.35vw;
 }
 
+.fa-eye{
+    color: rgb(60, 174, 34);
+    padding: 0.1vw;
+    font-size: 1.5vw;
+    cursor: pointer;
+}
+
+.fa-eye-slash{
+    color: rgb(116, 116, 116);
+    padding: 0.1vw;
+    font-size: 1.5vw;
+    cursor: pointer;
+}
 .coluna-acoes{
     text-align: center;
     font-size: 1.5vw;

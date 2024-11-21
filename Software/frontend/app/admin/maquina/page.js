@@ -129,6 +129,10 @@ export default function Maquina() {
         };
     }
 
+    function exirbirClassificados() {
+
+    }
+
     return (
         <section className="content-main-children-listar">
             <article className="title">
@@ -146,7 +150,7 @@ export default function Maquina() {
                 <table id="tabela-maquinas" className="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Exibir</th>
                             <th>Nome</th>
                             <th>Modelo</th>
                             <th>Série/Chassi</th>
@@ -159,7 +163,7 @@ export default function Maquina() {
                     <tbody>
                         {listaMaquinas.map(maquina => (
                             <tr key={maquina.maqId}>
-                                <td>{maquina.maqId}</td>
+                                <td><a onClick={() => exirbirClassificados(maquina.maqId)}><i className="nav-icon fas fa-eye"></i></a></td>
                                 <td>{maquina.maqNome}</td>
                                 <td>{maquina.maqModelo}</td>
                                 <td>{maquina.maqSerie}</td>
@@ -167,12 +171,9 @@ export default function Maquina() {
                                 <td>{maquina.maqHorasUso}</td>
                                 <td>{maquina.equipamentoStatus.equipamentoStatusDescricao}</td>
                                 <td>
-                                    <a href={`/admin/maquina/alterar/${maquina.maqId}`}>
-                                        <i className="nav-icon fas fa-pen"></i>
-                                    </a>
-                                    <a onClick={() => excluirMaquina(maquina.maqId)}>
-                                        <i className="nav-icon fas fa-trash"></i>
-                                    </a>
+                                    <a href={`/admin/maquina/informacao/${maquina.maqId}`}><i className="nav-icon fas fa-info-circle"></i></a>
+                                    <a href={`/admin/maquina/alterar/${maquina.maqId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                    <a onClick={() => excluirMaquina(maquina.maqId)}><i className="nav-icon fas fa-trash"></i></a>
                                 </td>
                             </tr>
                         ))}

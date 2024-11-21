@@ -36,6 +36,7 @@ input[type="number"],
 input[type="email"],
 input[type="password"],
 input[type="tel"],
+input[type="file"],
 select,
 textarea,
 .ck-editor__editable,
@@ -47,6 +48,10 @@ textarea,
     border-radius: 0.4vw;
     font-size: 1.1vw;
     background-color: white;
+    color: #1d1d1d;
+}
+
+input[type="file"]{
     color: #1d1d1d;
 }
 
@@ -236,6 +241,80 @@ input::placeholder{
 
 .container-info-locacao{
     display: none;
+}
+
+.image-upload {
+    display: flex;
+    flex-direction: column;
+    gap: 0vw;
+}
+  
+.image-upload label {
+    font-size: 1.3vw;
+    font-weight: bold;
+}
+  
+.image-upload .input-img {
+    padding: 1vw;
+    border: 0.1vw solid #ccc;
+    border-radius: 0.4vw;
+    width: 100%;
+}
+
+.image-table{
+    margin-top: 2vw;
+}
+  
+.image-table h2 {
+    font-size: 1.3vw;
+    margin-bottom: 1vw;
+}
+  
+.image-table table {
+    width: 100%;
+    border-collapse: collapse;
+}
+  
+.image-table th, 
+.image-table td {
+    padding: 1vw;
+    text-align: center;
+    border: 0.1vw solid #ddd;
+    font-size: 1.5vw;
+}
+  
+.image-table img {
+    width: 10vw;
+    border-radius: 0.4vw;
+    transition: transform 0.3s ease;
+}
+  
+.image-table img.selected {
+    border: 0.2vw solid #28a745;
+    transform: scale(1.1);
+}
+  
+.image-table .btn-default {
+    background-color: #007bff;
+    color: white;
+    padding: 0.8vw 1.2vw;
+    border: none;
+    border-radius: 0.4vw;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+  
+.image-table .btn-default:hover {
+    background-color: #0056b3;
+}
+  
+.image-table .btn-selected {
+    background-color: #28a745;
+    color: white;
+    padding: 0.8vw 1.2vw;
+    border: none;
+    border-radius: 0.4vw;
+    cursor: pointer;
 }
 
 @media (max-width: 60vw) {

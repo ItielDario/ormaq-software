@@ -1,0 +1,6 @@
+[DEFAULT]
+user=ocid1.user.oc1..aaaaaaaao2h6x74x5z7jt72x2m5cka6zvjfirrij5w5q2su5o2ofrbyb6wqq
+fingerprint=b2:2e:31:ac:4f:9a:2c:6b:1b:61:4e:9f:71:9e:6d:e0
+tenancy=ocid1.tenancy.oc1..aaaaaaaatraytawlncqrybigpjwqpwypovcubsao52iz46frnsqiutyfo6ka
+region=us-phoenix-1
+key_file=.oci/10442221998@unoeste.edu.br_2024-11-20T19_42_58.955Z.pem

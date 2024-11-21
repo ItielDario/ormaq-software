@@ -31,3 +31,60 @@
 .btn-imprimir{
     height: 3vw;
 }
+
+.container-imagens {
+    margin-top: 2vw;
+}
+
+.grid-imagens {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1vw;
+    margin-top: 1vw;
+}
+
+.grid-item {
+    position: relative;
+    border: 0.1vw solid #ddd;
+    border-radius: 0.4vw;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.grid-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.badge {
+    position: absolute;
+    top: 0.5vw;
+    left: 0.5vw;
+    background-color: #4caf50;
+    color: white;
+    padding: 0.2vw 1vw;
+    border-radius: 0.4vw;
+    font-size: 0.8vw;
+    font-weight: bold;
+}
+
+@media print {
+    .container-table {
+        page-break-after: avoid; /* Evita quebra de página */
+    }
+    .container-imagens {
+        display: block;
+        margin-top: 2vw;
+    }
+    .grid-imagens {
+        grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+        gap: 1vw;
+    }
+    .grid-item img {
+        max-width: 100%;
+        max-height: auto;
+    }
+}

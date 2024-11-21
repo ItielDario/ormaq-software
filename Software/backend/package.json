@@ -15,7 +15,10 @@
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.5",
     "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.3",
+    "oci-common": "^2.99.0",
+    "oci-objectstorage": "^2.99.0",
     "swagger-autogen": "^2.23.7",
     "swagger-ui-express": "^5.0.1"
   }

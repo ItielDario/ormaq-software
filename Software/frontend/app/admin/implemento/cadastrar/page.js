@@ -12,6 +12,9 @@ export default function CadastrarImplemento() {
   const impExibirCatalogoRef = useRef(null);
   const alertMsg = useRef(null);
   const [impDescricao, setImpDescricao] = useState('');
+  const [imagens, setImagens] = useState([]); 
+  const [imagemPrincipal, setImagemPrincipal] = useState(null);
+  const [nomeImagemPrincipal, setNomeImagemPrincipal] = useState(null);
 
   const cadastrarImplemento = () => {
     alertMsg.current.style.display = 'none';
@@ -25,6 +28,16 @@ export default function CadastrarImplemento() {
       impDescricao: impDescricao,
     };
 
+    if (imagens.length > 0 && imagemPrincipal == null) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, escolha uma imagem para ser utilizada de capa!'; 
+      }, 100);
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    } 
+
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
@@ -34,12 +47,31 @@ export default function CadastrarImplemento() {
     } 
     else {
       var status = null;
+      const formData = new FormData();
+
+      formData.append("impNome", impNomeRef.current.value); 
+      formData.append("impDataAquisicao", impDataAquisicaoRef.current.value); 
+      formData.append("impDescricao", impDescricao || ""); 
+      formData.append("impExibirCatalogo", impExibirCatalogoRef.current.value); 
+      formData.append("impPrecoVenda", impPrecoVendaRef.current.value); 
+      formData.append("impPrecoHora", impPrecoHoraRef.current.value);
+      formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
+
+      // Adicione as imagens
+      imagens.forEach((imagem) => {
+        formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
+      });
+
+      console.log(nomeImagemPrincipal)
       
-      httpClient.post("/implemento/cadastrar", dados)
-        .then((r) => {
+      fetch("http://localhost:5000/implemento/cadastrar", {
+        method: "POST",
+        body: formData
+      })
+      .then(r => {
           status = r.status;
           return r.json();
-        })
+      })
         .then(r => {
           setTimeout(() => {
             if(status === 201) {
@@ -52,9 +84,13 @@ export default function CadastrarImplemento() {
               impPrecoHoraRef.current.value = '';
               impExibirCatalogoRef.current.value = '0';
               setImpDescricao('');
-            } else {
+              <CustomEditor initialValue={''}/>;
+              setImagens([]);
+            } 
+            else {
               alertMsg.current.className = 'alertError';
             }
+            
             alertMsg.current.style.display = 'block';
             alertMsg.current.textContent = r.msg;
           }, 100);
@@ -70,6 +106,32 @@ export default function CadastrarImplemento() {
 
   const handleCustomEditorChange = (data) => {
     setImpDescricao(data);
+  };
+
+  const exibirImagem = (e) => {
+    const arquivos = Array.from(e.target.files); // Obtém os arquivos selecionados
+  
+    const novasImagens = arquivos.map((file, index) => ({
+      id: index + Date.now(), // ID único
+      file, // Arquivo da imagem
+      url: URL.createObjectURL(file), // URL temporária para exibição
+    }));
+  
+    setImagens((prev) => [...prev, ...novasImagens]); // Adiciona as novas imagens ao estado
+  };
+
+  const selecionarImagemPrincipal = (image) => {
+    setImagemPrincipal(image.id); // Define a imagem selecionada como principal
+    setNomeImagemPrincipal(image.file.name);
+  };
+
+  const excluirImagem = (id) => {
+    setImagens(imagens.filter((imagem) => imagem.id !== id));
+    
+    if (imagemPrincipal === id) {
+      setImagemPrincipal(null);
+      setNomeImagemPrincipal(null);
+    }
   };
 
   return (
@@ -119,6 +181,58 @@ export default function CadastrarImplemento() {
             onChange={handleCustomEditorChange}
             initialValue={impDescricao}
           />
+        </section>
+
+        <section className="image-upload">
+          <label htmlFor="inputImagem">Imagens do Implemento</label>
+          <input
+            className="input-img"
+            onChange={exibirImagem}
+            type="file"
+            id="inputImagem"
+            multiple
+            accept=".jpg,.png"
+          />
+
+          {imagens.length > 0 && (
+            <section className="image-table">
+              <h2>Imagens Selecionadas</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Imagem</th>
+                    <th>Definir imagem principal</th>
+                    <th>Excluir</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {imagens.map((imagem) => (
+                    <tr key={imagem.id}>
+                      <td>
+                        <img
+                          src={imagem.url}
+                          alt="Imagem do produto"
+                          className={imagemPrincipal === imagem.id ? "selected" : ""}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="button" // Evita o comportamento padrão de enviar formulário
+                          onClick={() => selecionarImagemPrincipal(imagem)}
+                          className={imagemPrincipal === imagem.id ? "btn-selected" : "btn-default"}
+                        >
+                          {imagemPrincipal === imagem.id ? "Selecionada como Capa" : "Selecionar como Capa"}
+                        </button>
+                      </td>
+                      <td>
+                        <a onClick={() => excluirImagem(imagem.id)}><i className="nav-icon fas fa-trash"></i></a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
         </section>
       </form>
 

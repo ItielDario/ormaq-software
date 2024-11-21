@@ -81,8 +81,6 @@ export default function AlterarMaquina({ params: { id } }) {
       maqPrecoAluguelMensal: maqPrecoAluguelMensalRef.current.value,
       maqExibirCatalogo: maqExibirCatalogoRef.current.value,
       maqDescricao: maqDescricao,
-      imagens: imagens,
-      nomeImagemPrincipal: nomeImagemPrincipal
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {
@@ -150,6 +148,7 @@ export default function AlterarMaquina({ params: { id } }) {
         setTimeout(() => {
           if (status == 201) {
             alertMsg.current.className = 'alertSuccess';
+            carregarMaquina();
           } else {
             alertMsg.current.className = 'alertError';
           }

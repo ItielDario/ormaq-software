@@ -28,8 +28,6 @@ export default function AlterarPeca({ params: { id } }) {
     httpClient.get(`/peca/${id}`)
       .then(r => r.json())
       .then(r => {
-        console.log(r)
-        console.log(r.imagensPeca)
         r.peca.pecDataAquisicao = new Date(r.peca.pecDataAquisicao).toISOString().split('T')[0];
         setPecaSelecionada(r.peca);
         setPecaDescricao(r.peca.pecDescricao);
@@ -56,14 +54,13 @@ export default function AlterarPeca({ params: { id } }) {
 
   const alterarPeca = () => {
     const dados = {
+      pecaId: id,
       pecaNome: pecaNomeRef.current.value,
       pecaDataAquisicao: pecaDataAquisicaoRef.current.value,
       pecaPrecoVenda: pecaPrecoVendaRef.current.value, 
       pecaPrecoHora: pecaPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
       pecaDescricao: pecaDescricao,
-      imagens: imagens,
-      nomeImagemPrincipal: nomeImagemPrincipal
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {
@@ -94,6 +91,7 @@ export default function AlterarPeca({ params: { id } }) {
       const imagensBancoString = JSON.stringify(imagensBanco);
       const imagensExcluidasString = JSON.stringify(imagensExcluidas);
 
+      formData.append("pecaId", id); 
       formData.append("pecaNome", pecaNomeRef.current.value); 
       formData.append("pecaDataAquisicao", pecaDataAquisicaoRef.current.value); 
       formData.append("pecaDescricao", pecaDescricao || ""); 
@@ -108,8 +106,6 @@ export default function AlterarPeca({ params: { id } }) {
       imagens.forEach((imagem) => {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
-
-      console.log(nomeImagemPrincipal)
       
       fetch("http://localhost:5000/peca", {
         method: "PUT",
@@ -123,6 +119,7 @@ export default function AlterarPeca({ params: { id } }) {
           setTimeout(() => {
             if(status == 201){
               alertMsg.current.className = 'alertSuccess';
+              carregarPeca()
             }
             else{
               alertMsg.current.className = 'alertError';

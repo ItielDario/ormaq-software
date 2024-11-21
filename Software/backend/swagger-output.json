@@ -545,6 +545,15 @@
                   },
                   "impPrecoVenda": {
                     "example": "any"
+                  },
+                  "nomeImagemPrincipal": {
+                    "example": "any"
+                  },
+                  "imagensBancoExcluir": {
+                    "example": "any"
+                  },
+                  "imagensBanco": {
+                    "example": "any"
                   }
                 }
               }
@@ -651,6 +660,9 @@
                     "example": "any"
                   },
                   "impPrecoVenda": {
+                    "example": "any"
+                  },
+                  "nomeImagemPrincipal": {
                     "example": "any"
                   }
                 }

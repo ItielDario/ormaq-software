@@ -1,6 +1,7 @@
 import express from 'express';
 import ImplementoController from '../controllers/implementoController.js'
 import Autenticar from '../middlewares/autenticar.js';
+import upload from '../middlewares/multer.js';
 
 const router = express.Router();
 const ctrl = new ImplementoController();
@@ -16,12 +17,12 @@ router.get('/:id', (req, res) => {
     ctrl.obterImplemento(req, res)
 })
 
-router.post('/cadastrar', (req, res) => {
+router.post('/cadastrar', upload, (req, res) => {
     // #swagger.summary = 'Cadsatrar Implementos'
     ctrl.cadastrarImplemento(req, res)
 })
 
-router.put("/", (req, res) => {
+router.put("/", upload, (req, res) => {
     // #swagger.summary = 'Alterar um implemento'
     ctrl.alterarImplemento(req, res);
 })

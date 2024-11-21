@@ -101,21 +101,28 @@ export default class ImplementoModel {
     async gravar() {
         let sql = "";
         let valores = [];
+        let result;
 
         if (this.#impId == 0 || this.#impId == null) {
             // Inserção
             sql = `INSERT INTO Implemento (impNome, impDescricao, impDataAquisicao, impExibirCatalogo, impPrecoVenda, impPrecoHora, impStatus) 
                    VALUES (?, ?, ?, ?, ?, ?, ?)`;
             valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.#impExibirCatalogo, this.#impPrecoVenda, this.#impPrecoHora, this.equipamentoStatus];
+       
+            result = await db.ExecutaComandoNonQuery(sql, valores);
+    
+            // Recupera o último ID inserido
+            const lastInsertIdResult = await db.ExecutaComando(`SELECT LAST_INSERT_ID() AS lastId`);
+            return lastInsertIdResult[0].lastId;
         } else {
             // Alteração
             sql = `UPDATE Implemento SET impNome = ?, impDescricao = ?, impDataAquisicao = ?, impStatus = ?, impExibirCatalogo = ?, 
                    impPrecoVenda = ?, impPrecoHora = ? WHERE impId = ?`;
             valores = [this.#impNome, this.#impDescricao, this.#impDataAquisicao, this.equipamentoStatus, this.#impExibirCatalogo, this.#impPrecoVenda, this.#impPrecoHora, this.#impId];
+        
+            result = await db.ExecutaComandoNonQuery(sql, valores);
+            return result;
         }
-
-        let result = await db.ExecutaComandoNonQuery(sql, valores);
-        return result;
     }
 
     async obter(id) {

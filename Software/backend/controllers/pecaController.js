@@ -41,7 +41,6 @@ export default class pecaController {
         try {
             let { pecaNome, pecaDataAquisicao, pecaDescricao, pecaExibirCatalogo, pecaPrecoHora, pecaPrecoVenda, nomeImagemPrincipal} = req.body;
 
-            console.log(pecaNome, pecaDataAquisicao, pecaDescricao, pecaExibirCatalogo, pecaPrecoHora, pecaPrecoVenda, nomeImagemPrincipal)
             if(pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaExibirCatalogo != "" && pecaPrecoHora != "" && pecaPrecoVenda != "") {
 
                 let peca = new PecaModel(0, pecaNome, pecaDescricao, pecaDataAquisicao, 1, pecaExibirCatalogo, pecaPrecoVenda, pecaPrecoHora);
@@ -163,6 +162,10 @@ export default class pecaController {
             let peca = new PecaModel();
 
             if(await peca.isLocado(id) == false){
+                
+                const imagensEquipamento = new ImagensEquipamentoModel();
+                await imagensEquipamento.excluirImgPeca(id);
+
                 let result = await peca.excluir(id);
 
                 if(result) {

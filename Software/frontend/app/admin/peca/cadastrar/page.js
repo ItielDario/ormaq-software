@@ -26,8 +26,6 @@ export default function CadastrarPeca() {
       pecaPrecoHora: pecPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
       pecaDescricao: pecDescricao,
-      imagens: imagens,
-      nomeImagemPrincipal: nomeImagemPrincipal
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {
@@ -91,6 +89,7 @@ export default function CadastrarPeca() {
             else{
               alertMsg.current.className = 'alertError';
             }
+            
             alertMsg.current.style.display = 'block';
             alertMsg.current.textContent = r.msg;
           }, 100);

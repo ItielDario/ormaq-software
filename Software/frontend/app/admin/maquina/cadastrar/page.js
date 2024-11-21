@@ -43,8 +43,6 @@ export default function CadastrarMaquina() {
       maqPrecoAluguelMensal: maqPrecoAluguelMensalRef.current.value, 
       maqExibirCatalogo: maqExibirCatalogoRef.current.value,
       maqDescricao: maquinaDescricao,
-      imagens: imagens,
-      nomeImagemPrincipal: nomeImagemPrincipal
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {

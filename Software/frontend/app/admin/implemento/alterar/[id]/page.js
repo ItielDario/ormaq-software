@@ -15,6 +15,11 @@ export default function AlterarImplemento({ params: { id } }) {
 
   const [impDescricao, setImpDescricao] = useState('');
   const [implementoSelecionado, setImplementoSelecionado] = useState(null);
+  const [imagens, setImagens] = useState([]); 
+  const [imagensBanco, setImagensBanco] = useState([]); 
+  const [imagemPrincipal, setImagemPrincipal] = useState(null);
+  const [nomeImagemPrincipal, setNomeImagemPrincipal] = useState(null);
+
 
   useEffect(() => {
     carregarImplemento();
@@ -24,10 +29,29 @@ export default function AlterarImplemento({ params: { id } }) {
     httpClient.get(`/implemento/${id}`)
       .then(r => r.json())
       .then(r => {
-        r.impDataAquisicao = new Date(r.impDataAquisicao).toISOString().split('T')[0];
-        setImplementoSelecionado(r);
-        setImpDescricao(r.impDescricao);
-      });
+        console.log(r)
+        r.implemento.impDataAquisicao = new Date(r.implemento.impDataAquisicao).toISOString().split('T')[0];
+        setImplementoSelecionado(r.implemento);
+        setImpDescricao(r.implemento.impDescricao);
+
+        // Atualiza imagens no estado
+        const imagensBanco = r.imagensImplemento.map(imagem => ({
+          id: imagem.imgId,
+          file: { name: imagem.imgNome }, // Criando um objeto `file` para acessar o `name`
+          url: imagem.imgUrl,
+          principal: imagem.imgPrincipal === 1
+        }));
+        setImagens(imagensBanco);
+        setImagensBanco(imagensBanco)
+
+        // Define imagem principal
+        const principal = imagensBanco.find(img => img.principal);
+        if (principal) {
+          setImagemPrincipal(principal.id);
+          setNomeImagemPrincipal(principal.file.name);
+        }
+      })
+      .catch(error => console.error("Erro ao carregar os dados da peça:", error));
   }
 
   const alterarImplemento = () => {
@@ -41,6 +65,16 @@ export default function AlterarImplemento({ params: { id } }) {
       impExibirCatalogo: impExibirCatalogoRef.current.value,
     };
 
+    if (imagens.length > 0 && imagemPrincipal == null) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, escolha uma imagem para ser utilizada de capa!'; 
+      }, 100);
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    } 
+
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
@@ -50,19 +84,49 @@ export default function AlterarImplemento({ params: { id } }) {
     } 
     else {
       var status = null;
+      const formData = new FormData();
+
+      const imagensExcluidas = imagensBanco.filter(imagemBanco => 
+        !imagens.some(imagem => imagem.id === imagemBanco.id)
+      );
+    
+      const imagensBancoString = JSON.stringify(imagensBanco);
+      const imagensExcluidasString = JSON.stringify(imagensExcluidas);
+
+      formData.append("impId", id); 
+      formData.append("impNome", impNomeRef.current.value); 
+      formData.append("impDataAquisicao", impDataAquisicaoRef.current.value); 
+      formData.append("impDescricao", impDescricao || ""); 
+      formData.append("impExibirCatalogo", impExibirCatalogoRef.current.value); 
+      formData.append("impPrecoVenda", impPrecoVendaRef.current.value); 
+      formData.append("impPrecoHora", impPrecoHoraRef.current.value);
+      formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
+      formData.append("imagensBancoExcluir", imagensExcluidasString);
+      formData.append("imagensBanco", imagensBancoString);
+
+      // Adicione as imagens
+      imagens.forEach((imagem) => {
+        formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
+      });
       
-      httpClient.put(`/implemento`, dados)
-        .then((r) => {
+      fetch("http://localhost:5000/implemento", {
+        method: "PUT",
+        body: formData
+      })
+      .then(r => {
           status = r.status;
           return r.json();
-        })
+      })
         .then(r => {
           setTimeout(() => {
             if (status === 200) {
               alertMsg.current.className = 'alertSuccess';
-            } else {
+              carregarImplemento();
+            } 
+            else {
               alertMsg.current.className = 'alertError';
             }
+
             alertMsg.current.style.display = 'block';
             alertMsg.current.textContent = r.msg;
           }, 100);
@@ -78,6 +142,32 @@ export default function AlterarImplemento({ params: { id } }) {
 
   const handleCustomEditorChange = (data) => {
     setImpDescricao(data);
+  };
+
+  const exibirImagem = (e) => {
+    const arquivos = Array.from(e.target.files); // Obtém os arquivos selecionados
+  
+    const novasImagens = arquivos.map((file, index) => ({
+      id: index + Date.now(), // ID único
+      file, // Arquivo da imagem
+      url: URL.createObjectURL(file), // URL temporária para exibição
+    }));
+  
+    setImagens((prev) => [...prev, ...novasImagens]); // Adiciona as novas imagens ao estado
+  };
+
+  const selecionarImagemPrincipal = (image) => {
+    setImagemPrincipal(image.id); // Define a imagem selecionada como principal
+    setNomeImagemPrincipal(image.file.name);
+  };
+
+  const excluirImagem = (id) => {
+    setImagens(imagens.filter((imagem) => imagem.id !== id));
+
+    if (imagemPrincipal === id) {
+      setImagemPrincipal(null);
+      setNomeImagemPrincipal(null);
+    }
   };
 
   return (
@@ -166,6 +256,59 @@ export default function AlterarImplemento({ params: { id } }) {
                   onChange={handleCustomEditorChange} 
                   initialValue={impDescricao} 
                 />
+              </section>
+
+              <section className="image-upload">
+                <label htmlFor="inputImagem">Imagens do Implemento</label>
+                <input
+                  className="input-img"
+                  type="file"
+                  id="inputImagem"
+                  multiple
+                  accept=".jpg,.png"
+                  onChange={exibirImagem}
+                />
+
+                {imagens.length > 0 && (
+                  <section className="image-table">
+                    <h2>Imagens Selecionadas</h2>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Imagem</th>
+                          <th>Definir imagem principal</th>
+                          <th>Excluir</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {imagens.map((imagem) => (
+                          <tr key={imagem.id}>
+                            <td>
+                              <img
+                                src={imagem.url}
+                                alt={imagem.nome}
+                                className={imagemPrincipal === imagem.id ? "selected" : ""}
+                                style={{ width: "100px", height: "auto" }}
+                              />
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                onClick={() => selecionarImagemPrincipal(imagem)}
+                                className={imagemPrincipal === imagem.id ? "btn-selected" : "btn-default"}
+                              >
+                                {imagemPrincipal === imagem.id ? "Selecionada como Capa" : "Selecionar como Capa"}
+                              </button>
+                            </td>
+                            <td>
+                              <a onClick={() => excluirImagem(imagem.id)}><i className="nav-icon fas fa-trash"></i></a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </section>
+                )}
               </section>
             </form>
           </article>

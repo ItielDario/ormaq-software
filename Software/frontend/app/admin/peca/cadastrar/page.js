@@ -12,6 +12,9 @@ export default function CadastrarPeca() {
   const pecaExibirCatalogoRef = useRef(null);
   const alertMsg = useRef(null);
   const [pecDescricao, setPecDescricao] = useState('');
+  const [imagens, setImagens] = useState([]); 
+  const [imagemPrincipal, setImagemPrincipal] = useState(null);
+  const [nomeImagemPrincipal, setNomeImagemPrincipal] = useState(null);
 
   const cadastrarPeca = () => {
     alertMsg.current.style.display = 'none';
@@ -22,8 +25,20 @@ export default function CadastrarPeca() {
       pecaPrecoVenda: pecPrecoVendaRef.current.value, 
       pecaPrecoHora: pecPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
-      pecaDescricao: pecDescricao
+      pecaDescricao: pecDescricao,
+      imagens: imagens,
+      nomeImagemPrincipal: nomeImagemPrincipal
     };
+
+    if (imagens.length > 0 && imagemPrincipal == null) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, escolha uma imagem para ser utilizada de capa!'; 
+      }, 100);
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    } 
     
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
@@ -34,12 +49,31 @@ export default function CadastrarPeca() {
     } 
     else {
       var status = null;
+      const formData = new FormData();
+
+      formData.append("pecaNome", pecNomeRef.current.value); 
+      formData.append("pecaDataAquisicao", pecDataAquisicaoRef.current.value); 
+      formData.append("pecaDescricao", pecDescricao || ""); 
+      formData.append("pecaExibirCatalogo", pecaExibirCatalogoRef.current.value); 
+      formData.append("pecaPrecoVenda", pecPrecoVendaRef.current.value); 
+      formData.append("pecaPrecoHora", pecPrecoHoraRef.current.value);
+      formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
+
+      // Adicione as imagens
+      imagens.forEach((imagem) => {
+        formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
+      });
+
+      console.log(nomeImagemPrincipal)
       
-      httpClient.post("/peca/cadastrar", dados)
-        .then((r) => {
+      fetch("http://localhost:5000/peca/cadastrar", {
+        method: "POST",
+        body: formData
+      })
+      .then(r => {
           status = r.status;
           return r.json();
-        })
+      })
         .then(r => {
           setTimeout(() => {
             if(status == 201){
@@ -51,7 +85,8 @@ export default function CadastrarPeca() {
               pecPrecoVendaRef.current.value = '';
               pecPrecoHoraRef.current.value = '';
               pecaExibirCatalogoRef.current.value = '0';
-              setPecDescricao('');
+              <CustomEditor initialValue={''}/>;
+              setImagens([]);
             }
             else{
               alertMsg.current.className = 'alertError';
@@ -71,6 +106,32 @@ export default function CadastrarPeca() {
 
   const handleCustomEditorChange = (data) => {
     setPecDescricao(data);
+  };
+
+  const exibirImagem = (e) => {
+    const arquivos = Array.from(e.target.files); // Obtém os arquivos selecionados
+  
+    const novasImagens = arquivos.map((file, index) => ({
+      id: index + Date.now(), // ID único
+      file, // Arquivo da imagem
+      url: URL.createObjectURL(file), // URL temporária para exibição
+    }));
+  
+    setImagens((prev) => [...prev, ...novasImagens]); // Adiciona as novas imagens ao estado
+  };
+
+  const selecionarImagemPrincipal = (image) => {
+    setImagemPrincipal(image.id); // Define a imagem selecionada como principal
+    setNomeImagemPrincipal(image.file.name);
+  };
+
+  const excluirImagem = (id) => {
+    setImagens(imagens.filter((imagem) => imagem.id !== id));
+    
+    if (imagemPrincipal === id) {
+      setImagemPrincipal(null);
+      setNomeImagemPrincipal(null);
+    }
   };
 
   return (
@@ -120,6 +181,58 @@ export default function CadastrarPeca() {
             onChange={handleCustomEditorChange}
             initialValue={pecDescricao}
           />
+        </section>
+
+        <section className="image-upload">
+          <label htmlFor="inputImagem">Imagens da Peça</label>
+          <input
+            className="input-img"
+            onChange={exibirImagem}
+            type="file"
+            id="inputImagem"
+            multiple
+            accept=".jpg,.png"
+          />
+
+          {imagens.length > 0 && (
+            <section className="image-table">
+              <h2>Imagens Selecionadas</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Imagem</th>
+                    <th>Definir imagem principal</th>
+                    <th>Excluir</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {imagens.map((imagem) => (
+                    <tr key={imagem.id}>
+                      <td>
+                        <img
+                          src={imagem.url}
+                          alt="Imagem do produto"
+                          className={imagemPrincipal === imagem.id ? "selected" : ""}
+                        />
+                      </td>
+                      <td>
+                        <button
+                          type="button" // Evita o comportamento padrão de enviar formulário
+                          onClick={() => selecionarImagemPrincipal(imagem)}
+                          className={imagemPrincipal === imagem.id ? "btn-selected" : "btn-default"}
+                        >
+                          {imagemPrincipal === imagem.id ? "Selecionada como Capa" : "Selecionar como Capa"}
+                        </button>
+                      </td>
+                      <td>
+                        <a onClick={() => excluirImagem(imagem.id)}><i className="nav-icon fas fa-trash"></i></a>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </section>
+          )}
         </section>
       </form>
 

@@ -101,22 +101,33 @@ export default class PecaModel {
     async gravar() {
         let sql = "";
         let valores = [];
-
+        let result;
+    
         if (this.#pecaId == 0 || this.#pecaId == null) {
             // Inserção
-            sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecExibirCatalogo, pecPrecoVenda, pecPrecoHora, pecStatus) 
+            sql = `INSERT INTO Peca (pecNome, pecDescricao, pecDataAquisicao, pecExibirCatalogo, 
+                        pecPrecoVenda, pecPrecoHora, pecStatus) 
                    VALUES (?, ?, ?, ?, ?, ?, ?)`;
-            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaExibirCatalogo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.equipamentoStatus];
-        } else {
+            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.#pecaExibirCatalogo, 
+                this.#pecaPrecoVenda, this.#pecaPrecoHora, this.equipamentoStatus];
+    
+            result = await db.ExecutaComandoNonQuery(sql, valores);
+    
+            // Recupera o último ID inserido
+            const lastInsertIdResult = await db.ExecutaComando(`SELECT LAST_INSERT_ID() AS lastId`);
+            return lastInsertIdResult[0].lastId;
+        } 
+        else {
             // Alteração
             sql = `UPDATE Peca SET pecNome = ?, pecDescricao = ?, pecDataAquisicao = ?, pecStatus = ?, pecExibirCatalogo = ?, 
                    pecPrecoVenda = ?, pecPrecoHora = ? WHERE pecId = ?`;
-            valores = [this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.equipamentoStatus, this.#pecaExibirCatalogo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.#pecaId];
+            valores = [ this.#pecaNome, this.#pecaDescricao, this.#pecaDataAquisicao, this.equipamentoStatus, 
+                this.#pecaExibirCatalogo, this.#pecaPrecoVenda, this.#pecaPrecoHora, this.#pecaId];
+    
+            result = await db.ExecutaComandoNonQuery(sql, valores);
+            return result;
         }
-
-        let result = await db.ExecutaComandoNonQuery(sql, valores);
-        return result;
-    }
+    }    
 
     async obter(id) {
         let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecExibirCatalogo, 

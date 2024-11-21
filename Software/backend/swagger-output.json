@@ -345,6 +345,15 @@
                   },
                   "pecaPrecoVenda": {
                     "example": "any"
+                  },
+                  "nomeImagemPrincipal": {
+                    "example": "any"
+                  },
+                  "imagensBancoExcluir": {
+                    "example": "any"
+                  },
+                  "imagensBanco": {
+                    "example": "any"
                   }
                 }
               }
@@ -448,6 +457,9 @@
                     "example": "any"
                   },
                   "pecaPrecoVenda": {
+                    "example": "any"
+                  },
+                  "nomeImagemPrincipal": {
                     "example": "any"
                   }
                 }

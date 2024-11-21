@@ -1,6 +1,7 @@
 import express from 'express';
 import PecaController from '../controllers/pecaController.js'
 import Autenticar from '../middlewares/autenticar.js';
+import upload from '../middlewares/multer.js';
 
 const router = express.Router();
 const ctrl = new PecaController();
@@ -16,12 +17,12 @@ router.get('/:id', (req, res) => {
     ctrl.obterPeca(req, res)
 })
 
-router.post('/cadastrar', (req, res) => {
+router.post('/cadastrar', upload, (req, res) => {
     // #swagger.summary = 'Cadsatrar uma peça'
     ctrl.cadastrarPeca(req, res)
 })
 
-router.put("/", (req, res) => {
+router.put("/", upload, (req, res) => {
     // #swagger.summary = 'Alterar uma peça'
     ctrl.alterarPeca(req, res);
 })

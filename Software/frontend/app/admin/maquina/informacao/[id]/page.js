@@ -152,7 +152,6 @@ export default function InfoMaquina({ params: { id } }) {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>ID</th>
                                     <th>Preço Diário</th>
                                     <th>Preço Semanal</th>
                                     <th>Preço Quinzenal</th>
@@ -161,7 +160,6 @@ export default function InfoMaquina({ params: { id } }) {
                             </thead>
                             <tbody>   
                                 <tr>
-                                    <td>{alugueisMaquina.maqAluId}</td>
                                     <td>R$ {parseFloat(alugueisMaquina.maqAluPrecoDiario)}</td>
                                     <td>R$ {parseFloat(alugueisMaquina.maqAluPrecoSemanal)}</td>
                                     <td>R$ {parseFloat(alugueisMaquina.maqAluPrecoQuinzenal)}</td>

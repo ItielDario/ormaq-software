@@ -89,7 +89,7 @@ export default function AlterarMaquina({ params: { id } }) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = 'Por favor, escolha uma imagem para utilizada de capa!';
+        alertMsg.current.textContent = 'Por favor, escolha uma imagem para ser utilizada de capa!'; 
       }, 100);
       document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
       return;

@@ -51,7 +51,7 @@ export default function CadastrarMaquina() {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = 'Por favor, escolha uma imagem para utilizada de capa!';
+        alertMsg.current.textContent = 'Por favor, escolha uma imagem para ser utilizada de capa!'; 
       }, 100);
       document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
       return;
@@ -89,8 +89,6 @@ export default function CadastrarMaquina() {
       imagens.forEach((imagem) => {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
-
-      console.log(nomeImagemPrincipal)
 
       fetch("http://localhost:5000/maquina/cadastrar", {
         method: "POST",
@@ -266,7 +264,7 @@ export default function CadastrarMaquina() {
         </section>
 
         <section className="image-upload">
-          <label htmlFor="inputImagem">Imagens do Máquina</label>
+          <label htmlFor="inputImagem">Imagens da Máquina</label>
           <input
             className="input-img"
             onChange={exibirImagem}

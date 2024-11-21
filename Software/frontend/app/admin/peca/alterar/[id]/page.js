@@ -15,6 +15,10 @@ export default function AlterarPeca({ params: { id } }) {
 
   const [pecaDescricao, setPecaDescricao] = useState('');
   const [pecaSelecionada, setPecaSelecionada] = useState(null);
+  const [imagens, setImagens] = useState([]); 
+  const [imagensBanco, setImagensBanco] = useState([]); 
+  const [imagemPrincipal, setImagemPrincipal] = useState(null);
+  const [nomeImagemPrincipal, setNomeImagemPrincipal] = useState(null);
 
   useEffect(() => {
     carregarPeca();
@@ -24,22 +28,53 @@ export default function AlterarPeca({ params: { id } }) {
     httpClient.get(`/peca/${id}`)
       .then(r => r.json())
       .then(r => {
-        r.pecDataAquisicao = new Date(r.pecDataAquisicao).toISOString().split('T')[0];
-        setPecaSelecionada(r);
-        setPecaDescricao(r.pecDescricao);
-      });
+        console.log(r)
+        console.log(r.imagensPeca)
+        r.peca.pecDataAquisicao = new Date(r.peca.pecDataAquisicao).toISOString().split('T')[0];
+        setPecaSelecionada(r.peca);
+        setPecaDescricao(r.peca.pecDescricao);
+
+        // Atualiza imagens no estado
+        const imagensBanco = r.imagensPeca.map(imagem => ({
+          id: imagem.imgId,
+          file: { name: imagem.imgNome }, // Criando um objeto `file` para acessar o `name`
+          url: imagem.imgUrl,
+          principal: imagem.imgPrincipal === 1
+        }));
+        setImagens(imagensBanco);
+        setImagensBanco(imagensBanco)
+
+        // Define imagem principal
+        const principal = imagensBanco.find(img => img.principal);
+        if (principal) {
+          setImagemPrincipal(principal.id);
+          setNomeImagemPrincipal(principal.file.name);
+        }
+      })
+      .catch(error => console.error("Erro ao carregar os dados da peça:", error));
   }
 
   const alterarPeca = () => {
     const dados = {
-      pecaId: id,
       pecaNome: pecaNomeRef.current.value,
       pecaDataAquisicao: pecaDataAquisicaoRef.current.value,
-      pecaDescricao: pecaDescricao,
-      pecaPrecoVenda: pecaPrecoVendaRef.current.value,
+      pecaPrecoVenda: pecaPrecoVendaRef.current.value, 
       pecaPrecoHora: pecaPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
+      pecaDescricao: pecaDescricao,
+      imagens: imagens,
+      nomeImagemPrincipal: nomeImagemPrincipal
     };
+
+    if (imagens.length > 0 && imagemPrincipal == null) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, escolha uma imagem para ser utilizada de capa!'; 
+      }, 100);
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    } 
 
     if (verificaCampoVazio(dados)) {
       setTimeout(() => {
@@ -50,12 +85,40 @@ export default function AlterarPeca({ params: { id } }) {
     } 
     else {
       var status = null;
+      const formData = new FormData();
+
+      const imagensExcluidas = imagensBanco.filter(imagemBanco => 
+        !imagens.some(imagem => imagem.id === imagemBanco.id)
+      );
+    
+      const imagensBancoString = JSON.stringify(imagensBanco);
+      const imagensExcluidasString = JSON.stringify(imagensExcluidas);
+
+      formData.append("pecaNome", pecaNomeRef.current.value); 
+      formData.append("pecaDataAquisicao", pecaDataAquisicaoRef.current.value); 
+      formData.append("pecaDescricao", pecaDescricao || ""); 
+      formData.append("pecaExibirCatalogo", pecaExibirCatalogoRef.current.value); 
+      formData.append("pecaPrecoVenda", pecaPrecoVendaRef.current.value); 
+      formData.append("pecaPrecoHora", pecaPrecoHoraRef.current.value);
+      formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
+      formData.append("imagensBancoExcluir", imagensExcluidasString);
+      formData.append("imagensBanco", imagensBancoString);
+
+      // Adicione as imagens
+      imagens.forEach((imagem) => {
+        formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
+      });
+
+      console.log(nomeImagemPrincipal)
       
-      httpClient.put(`/peca`, dados)
-        .then((r) => {
+      fetch("http://localhost:5000/peca", {
+        method: "PUT",
+        body: formData
+      })
+      .then(r => {
           status = r.status;
           return r.json();
-        })
+      })
         .then(r => {
           setTimeout(() => {
             if(status == 201){
@@ -79,6 +142,32 @@ export default function AlterarPeca({ params: { id } }) {
 
   const handleCustomEditorChange = (data) => {
     setPecaDescricao(data);
+  };
+
+  const exibirImagem = (e) => {
+    const arquivos = Array.from(e.target.files); // Obtém os arquivos selecionados
+  
+    const novasImagens = arquivos.map((file, index) => ({
+      id: index + Date.now(), // ID único
+      file, // Arquivo da imagem
+      url: URL.createObjectURL(file), // URL temporária para exibição
+    }));
+  
+    setImagens((prev) => [...prev, ...novasImagens]); // Adiciona as novas imagens ao estado
+  };
+
+  const selecionarImagemPrincipal = (image) => {
+    setImagemPrincipal(image.id); // Define a imagem selecionada como principal
+    setNomeImagemPrincipal(image.file.name);
+  };
+
+  const excluirImagem = (id) => {
+    setImagens(imagens.filter((imagem) => imagem.id !== id));
+
+    if (imagemPrincipal === id) {
+      setImagemPrincipal(null);
+      setNomeImagemPrincipal(null);
+    }
   };
 
   return (
@@ -167,6 +256,59 @@ export default function AlterarPeca({ params: { id } }) {
                   onChange={handleCustomEditorChange} 
                   initialValue={pecaDescricao} 
                 />
+              </section>
+
+              <section className="image-upload">
+                <label htmlFor="inputImagem">Imagens da Peça</label>
+                <input
+                  className="input-img"
+                  type="file"
+                  id="inputImagem"
+                  multiple
+                  accept=".jpg,.png"
+                  onChange={exibirImagem}
+                />
+
+                {imagens.length > 0 && (
+                  <section className="image-table">
+                    <h2>Imagens Selecionadas</h2>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Imagem</th>
+                          <th>Definir imagem principal</th>
+                          <th>Excluir</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {imagens.map((imagem) => (
+                          <tr key={imagem.id}>
+                            <td>
+                              <img
+                                src={imagem.url}
+                                alt={imagem.nome}
+                                className={imagemPrincipal === imagem.id ? "selected" : ""}
+                                style={{ width: "100px", height: "auto" }}
+                              />
+                            </td>
+                            <td>
+                              <button
+                                type="button"
+                                onClick={() => selecionarImagemPrincipal(imagem)}
+                                className={imagemPrincipal === imagem.id ? "btn-selected" : "btn-default"}
+                              >
+                                {imagemPrincipal === imagem.id ? "Selecionada como Capa" : "Selecionar como Capa"}
+                              </button>
+                            </td>
+                            <td>
+                              <a onClick={() => excluirImagem(imagem.id)}><i className="nav-icon fas fa-trash"></i></a>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </section>
+                )}
               </section>
             </form>
           </article>

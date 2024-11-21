@@ -163,11 +163,7 @@ export default class maquinaController {
                         let imagensEquipamento = new ImagensEquipamentoModel();
 
                         if (typeof imagensBanco === 'string') {imagensBanco = JSON.parse(imagensBanco)}
-                        imagensBanco.forEach(imagem => { console.log(imagem) });
-
                         if (typeof imagensBancoExcluir === 'string') {imagensBancoExcluir = JSON.parse(imagensBancoExcluir)}
-                        imagensBancoExcluir.forEach(imagem => { console.log(imagem) });
-
 
                         for (let i = 0; i < imagensBancoExcluir.length; i++){
                             await imagensEquipamento.excluir(imagensBancoExcluir[i].id);

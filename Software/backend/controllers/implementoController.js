@@ -89,7 +89,7 @@ export default class ImplementoController {
     async alterarImplemento(req, res) {
         try {
             let { impId, impNome, impDataAquisicao, impDescricao, impExibirCatalogo, impPrecoHora, impPrecoVenda, nomeImagemPrincipal, imagensBancoExcluir, imagensBanco} = req.body;
-            
+             
             if (impId && impNome && impDataAquisicao && impDescricao && impExibirCatalogo != null && impPrecoHora && impPrecoVenda) {
                 let implemento = new ImplementoModel(impId, impNome, impDescricao, impDataAquisicao, 1, impExibirCatalogo, impPrecoVenda, impPrecoHora);
 

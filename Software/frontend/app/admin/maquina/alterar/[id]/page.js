@@ -138,7 +138,8 @@ export default function AlterarMaquina({ params: { id } }) {
 
       fetch(`http://localhost:5000/maquina`, {
         method: "PUT",
-        body: formData
+        body: formData,
+        credentials: 'include',
       })
       .then(r => {
           status = r.status;
@@ -376,7 +377,7 @@ export default function AlterarMaquina({ params: { id } }) {
 
           {imagens.length > 0 && (
             <section className="image-table">
-              <h2>Imagens Selecionadas</h2>
+              <h2 className="title-image-table">Imagens Selecionadas</h2>
               <table>
                 <thead>
                   <tr>

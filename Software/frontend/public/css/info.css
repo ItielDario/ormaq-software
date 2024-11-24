@@ -71,6 +71,10 @@
     font-weight: bold;
 }
 
+#historico-section {
+    margin-top: 4vw;
+}
+
 @media print {
     .container-table {
         page-break-after: avoid; /* Evita quebra de página */

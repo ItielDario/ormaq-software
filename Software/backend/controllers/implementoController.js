@@ -159,28 +159,41 @@ export default class ImplementoController {
         try {
             let { id } = req.params;
             let implemento = new ImplementoModel();
-
-            if (await implemento.isLocado(id) == false) {
-
+    
+            // Verifica se o implemento está locado ou em manutenção
+            if (await implemento.isLocado(id) == false && await implemento.isManutencao(id) == false) {
+    
+                // Exclui as imagens associadas ao implemento
                 const imagensEquipamento = new ImagensEquipamentoModel();
                 await imagensEquipamento.excluirImgImplemento(id);
-
+    
+                // Tenta excluir o implemento
                 let result = await implemento.excluir(id);
-
+    
                 if (result) {
                     res.status(200).json({ msg: `Implemento excluído com sucesso!` });
                 } 
                 else {
                     res.status(500).json({ msg: "Erro durante a exclusão do implemento" });
                 }
-            } else {
-                res.status(400).json({ msg: "Esse implemento está alugado!" });
+            } 
+            else {
+                res.status(400).json({ msg: "Esse implemento está alugado ou em manutenção!" });
             }
-        } catch (ex) {
+        } 
+        catch (ex) {
             console.log(ex);
-            res.status(500).json({ msg: "Erro interno de servidor!" });
+    
+            // Trata o erro específico de integridade referencial (chave estrangeira)
+            if (ex.code === 'ER_ROW_IS_REFERENCED_2') {
+                res.status(400).json({ msg: "Exclua as manutenções feitas nesse implemento antes de excluí-lo." });
+            } 
+            else {
+                // Resposta genérica para outros erros
+                res.status(500).json({ msg: "Erro interno de servidor!" });
+            }
         }
-    }
+    }    
 
     async listarImplementosDisponiveis(req, res){ 
         try{

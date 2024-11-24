@@ -169,12 +169,8 @@ export default function Cliente() {
                                 <td>{cliente.cliTelefone || "Sem Telefone"}</td>
                                 <td>{cliente.cliEmail || "Sem Email"}</td>
                                 <td>
-                                    <a href={`/admin/cliente/alterar/${cliente.cliId}`}>
-                                        <i className="nav-icon fas fa-pen"></i>
-                                    </a>
-                                    <a onClick={() => excluirCliente(cliente.cliId)}>
-                                        <i className="nav-icon fas fa-trash"></i>
-                                    </a>
+                                    <a href={`/admin/cliente/alterar/${cliente.cliId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                    <a onClick={() => excluirCliente(cliente.cliId)}><i className="nav-icon fas fa-trash"></i></a>
                                 </td>
                             </tr>
                         ))}

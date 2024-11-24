@@ -157,33 +157,43 @@ export default class pecaController {
     }
 
     async excluirPeca(req, res) {
-        try{
-            let {id} = req.params;
+        try {
+            let { id } = req.params;
             let peca = new PecaModel();
-
-            if(await peca.isLocado(id) == false){
-                
+    
+            // Verifica se a peça está locada ou em manutenção
+            if (await peca.isLocado(id) == false && await peca.isManutencao(id) == false) {
+    
+                // Exclui as imagens associadas à peça
                 const imagensEquipamento = new ImagensEquipamentoModel();
                 await imagensEquipamento.excluirImgPeca(id);
-
+    
+                // Tenta excluir a peça
                 let result = await peca.excluir(id);
-
-                if(result) {
-                    res.status(200).json({msg: `Peca excluída com sucesso!`});
+    
+                if (result) {
+                    res.status(200).json({ msg: `Peça excluída com sucesso!` });
+                } 
+                else {
+                    res.status(500).json({ msg: "Erro durante a exclusão da peça" });
                 }
-                else{
-                    res.status(500).json({msg: "Erro durante a exclusão da peca"});
-                }
+            } 
+            else {
+                res.status(400).json({ msg: "Essa peça está alugada ou em manutenção!" });
             }
-            else{
-                res.status(400).json({msg: "Essa peca está alugada!"})
+        } 
+        catch (ex) {
+            console.log(ex);
+    
+            // Trata o erro específico de integridade referencial (chave estrangeira)
+            if (ex.code === 'ER_ROW_IS_REFERENCED_2') {
+                res.status(400).json({ msg: "Exclua as manutenções feitas nessa peça antes de excluí-la." });
+            } else {
+                // Resposta genérica para outros erros
+                res.status(500).json({ msg: "Erro interno de servidor!" });
             }
         }
-        catch(ex) {
-            console.log(ex)
-            res.status(500).json({msg: "Erro interno de servidor!"});
-        }
-    }
+    }    
 
     async listarPecasDisponiveis(req, res){ 
         try{

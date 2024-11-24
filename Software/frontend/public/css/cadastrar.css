@@ -243,6 +243,11 @@ input::placeholder{
     display: none;
 }
 
+.title-image-table{
+    color: #1d1d1d;
+    font-size: 1.2vw;
+}
+
 .image-upload {
     display: flex;
     flex-direction: column;

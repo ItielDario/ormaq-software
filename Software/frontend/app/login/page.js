@@ -30,7 +30,6 @@ export default function LoginPage() {
       return r.json();
     })
     .then((r) => {
-      console.log(r)
       setTimeout(() => {
         if (status === 200) {
           router.push("/admin");
@@ -58,7 +57,6 @@ export default function LoginPage() {
 
           <button type="submit">Entrar</button>
           <div className="links">
-            <a href="/login/cadastrar">Cadastrar</a>
             <a href="/forgot-password">Esqueci a Senha</a>
           </div>
         </form>

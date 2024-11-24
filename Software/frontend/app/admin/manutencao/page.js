@@ -77,16 +77,8 @@ export default function Manutencao() {
         setShowModal(true);
     }
 
-    function abrirModalInfo(id) {
-        const manutencao = listaManutencoes.find(item => item.manId === id);
-        setManutencaoId(id);
-        setManutencaoSelecionada(manutencao);
-        setShowModalInfo(true);
-    }
-
     function fecharModal() {
         setShowModal(false); // Fechar modal de finalizar manutenção
-        setShowModalInfo(false); // Fechar modal de informações
         setManutencaoSelecionada(null);
     }
 
@@ -259,7 +251,7 @@ export default function Manutencao() {
                         {listaManutencoes.map((manutencao) => (
                             <tr key={manutencao.manId}>
                                 <td>
-                                    <a onClick={() => abrirModalInfo(manutencao.manId)}><i className="nav-icon fas fa-info-circle"></i></a>
+                                    <a href={`/admin/manutencao/informacao/${manutencao.manId}`}><i className="nav-icon fas fa-info-circle"></i></a>
                                 </td>
                                 <td>{manutencao.manEqpNome}</td>
                                 <td>{manutencao.maqEqpTipo}</td>
@@ -311,31 +303,6 @@ export default function Manutencao() {
                         <div className="modal-footer">
                             <button type="button" className='btn-voltar' onClick={fecharModal}>Cancelar</button>
                             <button type="button" className='btn-cadastrar' onClick={finalizarManutencao}>Finalizar Manutenção</button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {showModalInfo && manutencaoSelecionada && (
-                <div className="modal-overlay">
-                    <div className="modal">
-                        <div className="modal-header">
-                            <h2>Informações da Manutenção</h2>
-                            <button className="modal-close" onClick={fecharModal} aria-label="Fechar modal">✕</button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="modal-data modal-data-info">
-                                <p className="data-info"><strong>Nome do Equipamento:</strong> {manutencaoSelecionada.manEqpNome}</p>
-                                <p className="data-info"><strong>Tipo do Equipamento:</strong> {manutencaoSelecionada.maqEqpTipo}</p>
-                                <p className="data-info"><strong>Data de Início:</strong> {manutencaoSelecionada.manDataInicio}</p>
-                                <p className="data-info"><strong>Data de Término:</strong> {manutencaoSelecionada.manDataTermino}</p>
-                                <p className="data-info"><strong>Descrição:</strong> {manutencaoSelecionada.manDescricao}</p>
-                                <p className="data-info"><strong>Status:</strong> {manutencaoSelecionada.manStatus}</p>
-                                <p className="data-info data-info-ultimo"><strong>Observações:</strong> {manutencaoSelecionada.manObservacao}</p>
-                            </div>
-                        </div>
-                        <div className="modal-footer">
-                            <button type="button" className='btn-voltar' onClick={fecharModal}>Voltar</button>
                         </div>
                     </div>
                 </div>

@@ -9,7 +9,7 @@ export default class Autenticar {
         
         if(req.cookies.jwt) {
             let token = "";
-
+            
             try{
                 token = req.cookies.jwt;
                 let usuario = jwt.verify(token, jwt_segredo);

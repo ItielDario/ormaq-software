@@ -169,4 +169,27 @@ export default class manutencaoController {
             res.status(500).json({ msg: "Erro interno de servidor!" });
         }
     }
+
+    async buscarHitorico(req, res) {
+        try {
+            let { equipamentoTipo, equipamentoId } = req.body;
+            let tipo = null;
+
+            if(equipamentoTipo == 'Máquina') {tipo = 'ma.maqId'}
+            if(equipamentoTipo == 'Peça') {tipo = 'p.pecId'}
+            if(equipamentoTipo == 'Implemento') {tipo = 'i.impId'}
+
+            let manutencao = new ManutencaoModel();
+            manutencao = await manutencao.obterHistorico(tipo, equipamentoId);
+
+            if (!manutencao) {
+                res.status(404).json({ msg: `Manutenção de ${equipamentoTipo} não encontrada!` });
+            } else {
+                res.status(200).json(manutencao);
+            }
+        } catch (ex) {
+            console.log(ex);
+            res.status(500).json({ msg: "Erro interno de servidor!" });
+        }
+    }
 }

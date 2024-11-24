@@ -3,6 +3,7 @@ import "./globals.css";
 import UserContext from "../context/userContext.js";
 import { useContext, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function RootLayout({ children }) {
 
@@ -74,18 +75,18 @@ export default function RootLayout({ children }) {
             <nav>
               <ul className="itens-nav">
                 <article>
-                  <a href="/admin/maquina"><li className="itens"><i className="nav-icon fas fa-tractor"></i>Máquinas</li></a>
-                  <a href="/admin/peca"><li className="itens"><i className="nav-icon fas fa-tools"></i>Peças</li></a>
-                  <a href="/admin/implemento"><li className="itens"><i className="nav-icon fas fa-cogs"></i>Implementos</li></a>
-                  <a href="/admin/cliente"><li className="itens"><i className="nav-icon fas fa-address-book"></i>Clientes</li></a>
-                  <a href="/admin/locacao"><li className="itens"><i className="nav-icon fas fa-truck"></i>Locações</li></a>
-                  <a href="/admin/manutencao"><li className="itens"><i className="nav-icon fas fa-wrench"></i>Manutenções</li></a>
-                  <a href="/admin/relatorio"><li className="itens"><i className="nav-icon fas fa-file-alt"></i>Relatórios</li></a>
-                  <a href="/admin/usuario"><li className="itens"><i className="nav-icon fas fa-user-shield"></i>Usuários</li></a>
+                  <Link href="/admin/maquina"><li className="itens"><i className="nav-icon fas fa-tractor"></i>Máquinas</li></Link>
+                  <Link href="/admin/peca"><li className="itens"><i className="nav-icon fas fa-tools"></i>Peças</li></Link>
+                  <Link href="/admin/implemento"><li className="itens"><i className="nav-icon fas fa-cogs"></i>Implementos</li></Link>
+                  <Link href="/admin/cliente"><li className="itens"><i className="nav-icon fas fa-address-book"></i>Clientes</li></Link>
+                  <Link href="/admin/locacao"><li className="itens"><i className="nav-icon fas fa-truck"></i>Locações</li></Link>
+                  <Link href="/admin/manutencao"><li className="itens"><i className="nav-icon fas fa-wrench"></i>Manutenções</li></Link>
+                  <Link href="/admin/relatorio"><li className="itens"><i className="nav-icon fas fa-file-alt"></i>Relatórios</li></Link>
+                  <Link href="/admin/usuario"><li className="itens"><i className="nav-icon fas fa-user-shield"></i>Usuários</li></Link>
                 </article>
 
                 <article>
-                  <a href="/login" onClick={handleLogout} className="itens logout"><i className="nav-icon fas fa-sign-out-alt"></i>Sair</a>
+                  <Link href="/login" onClick={handleLogout} className="itens logout"><i className="nav-icon fas fa-sign-out-alt"></i>Sair</Link>
                 </article>
               </ul>
             </nav>

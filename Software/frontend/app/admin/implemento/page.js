@@ -171,12 +171,8 @@ export default function Implemento() {
                                 <td>R$ {implemento.impPrecoHora}</td>
                                 <td>{implemento.equipamentoStatus.equipamentoStatusDescricao}</td>
                                 <td>
-                                    <a href={`/admin/implemento/alterar/${implemento.impId}`}>
-                                        <i className="nav-icon fas fa-pen"></i>
-                                    </a>
-                                    <a onClick={() => excluirImplemento(implemento.impId)}>
-                                        <i className="nav-icon fas fa-trash"></i>
-                                    </a>
+                                    <a href={`/admin/implemento/alterar/${implemento.impId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                    <a onClick={() => excluirImplemento(implemento.impId)}><i className="nav-icon fas fa-trash"></i></a>
                                 </td>
                             </tr>
                         ))}

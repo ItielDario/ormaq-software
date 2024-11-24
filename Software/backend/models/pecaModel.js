@@ -87,10 +87,11 @@ export default class PecaModel {
     async listarPecas() {
         const sql = `
             SELECT p.pecId, p.pecNome, p.pecDataAquisicao, p.pecDescricao, p.pecExibirCatalogo, 
-                   p.pecPrecoVenda, p.pecPrecoHora,
-                   es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
+                p.pecPrecoVenda, p.pecPrecoHora,
+                es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Peca p
-            JOIN Equipamento_Status es ON p.pecStatus = es.eqpStaId;`;
+            JOIN Equipamento_Status es ON p.pecStatus = es.eqpStaId
+            ORDER BY p.pecNome ASC`;
 
         const rows = await db.ExecutaComando(sql);
         const listaPecas = this.toMAP(rows);
@@ -149,6 +150,17 @@ export default class PecaModel {
         let sql = `SELECT Peca.pecId, Peca.pecNome
                     FROM Peca
                     WHERE Peca.pecStatus = 2
+                    AND Peca.pecId = ?`;
+        let valores = [idPeca]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async isManutencao(idPeca) {
+        let sql = `SELECT Peca.pecId, Peca.pecNome
+                    FROM Peca
+                    WHERE Peca.pecStatus = 3
                     AND Peca.pecId = ?`;
         let valores = [idPeca]
 

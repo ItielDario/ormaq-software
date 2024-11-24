@@ -141,7 +141,7 @@ export default class ManutencaoModel {
 
     async obter(id) {
         const sql = `
-            SELECT m.manId, m.manDataInicio, m.manDataTermino, m.manDescricao, m.manStatus,
+            SELECT m.manId, m.manDataInicio, m.manDataTermino, m.manDescricao, m.manStatus, m.manObservacao,
                 COALESCE(ma.maqId, p.pecId, i.impId) AS manEqpId,
                 COALESCE(ma.maqNome, p.pecNome, i.impNome) AS manEqpNome,
             CASE 
@@ -156,6 +156,28 @@ export default class ManutencaoModel {
             WHERE m.manId = ?`;
         
         const valores = [id];
+        const rows = await db.ExecutaComando(sql, valores);
+        return rows;
+    }
+
+    async obterHistorico(tipo, id) {
+        const sql = `
+            SELECT m.manId, m.manDataInicio, m.manDataTermino, m.manDescricao, m.manStatus, m.manObservacao,
+                COALESCE(ma.maqId, p.pecId, i.impId) AS manEqpId,
+                COALESCE(ma.maqNome, p.pecNome, i.impNome) AS manEqpNome,
+            CASE 
+                WHEN ma.maqId IS NOT NULL THEN 'Máquina'
+                WHEN p.pecId IS NOT NULL THEN 'Peça'
+                WHEN i.impId IS NOT NULL THEN 'Implemento'
+            END AS maqEqpTipo
+            FROM Manutencao_Equipamento m
+            LEFT JOIN Peca p ON m.manPecId = p.pecId
+            LEFT JOIN Implemento i ON m.manImpId = i.impId
+            LEFT JOIN Maquina ma ON m.manMaqId = ma.maqId
+            WHERE ${tipo} = ?
+            ORDER BY m.manDataInicio DESC;`;
+        const valores = [id];
+
         const rows = await db.ExecutaComando(sql, valores);
         return rows;
     }

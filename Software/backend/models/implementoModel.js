@@ -1,3 +1,4 @@
+import { isReadableStream } from "oci-common/lib/helper.js";
 import Database from "../utils/database.js";
 import EquipamentoStatusModel from "./equipamentoStatusModel.js";
 
@@ -87,10 +88,11 @@ export default class ImplementoModel {
     async listarImplementos() {
         const sql = `
             SELECT i.impId, i.impNome, i.impDataAquisicao, i.impDescricao, i.impExibirCatalogo, 
-                   i.impPrecoVenda, i.impPrecoHora,
-                   es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
+                i.impPrecoVenda, i.impPrecoHora,
+                es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Implemento i
-            JOIN Equipamento_Status es ON i.impStatus = es.eqpStaId;`;
+            JOIN Equipamento_Status es ON i.impStatus = es.eqpStaId
+            ORDER BY i.impNome ASC`;
 
         const rows = await db.ExecutaComando(sql);
         const listaImplementos = this.toMAP(rows);
@@ -145,6 +147,17 @@ export default class ImplementoModel {
         let sql = `SELECT Implemento.impId, Implemento.impNome
                     FROM Implemento
                     WHERE Implemento.impStatus = 2
+                    AND Implemento.impId = ?`;
+        let valores = [idImplemento];
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async isManutencao(idImplemento) {
+        let sql = `SELECT Implemento.impId, Implemento.impNome
+                    FROM Implemento
+                    WHERE Implemento.impStatus = 3
                     AND Implemento.impId = ?`;
         let valores = [idImplemento];
 

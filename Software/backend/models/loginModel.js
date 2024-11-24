@@ -4,8 +4,12 @@ const bd = new Database()
 
 export default class LoginModel{
 
+    #usuId;
     #usuNome;
     #usuSenha;
+
+    get usuId() { return this.#usuId }
+    set usuId(usuId) { this.#usuId = usuId }
 
     get usuNome() { return this.#usuNome }
     set usuNome(usuNome) { this.#usuNome = usuNome }
@@ -23,11 +27,14 @@ export default class LoginModel{
         let valores = [this.#usuNome, this.#usuSenha];
 
         let rows = await bd.ExecutaComando(sql, valores);
+        this.usuId = rows[0].usuId
+        
         return rows.length > 0;
     }
 
     toJSON() {
         return {
+            "usuId": this.#usuId,
             "usuNome": this.#usuNome,
             "usuSenha": this.#usuSenha
         }

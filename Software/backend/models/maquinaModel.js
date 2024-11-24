@@ -119,10 +119,11 @@ export default class MaquinaModel {
     async listarMaquinas() {
         const sql = `
             SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqModelo, m.maqSerie, m.maqAnoFabricacao,
-                   m.maqDescricao, m.maqExibirCatalogo, m.maqHorasUso, m.maqPrecoVenda,
-                   es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
+                m.maqDescricao, m.maqExibirCatalogo, m.maqHorasUso, m.maqPrecoVenda,
+                es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
             FROM Maquina m
-            JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId;`;
+            JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId
+            ORDER BY m.maqNome ASC`;
 
         const rows = await db.ExecutaComando(sql);
         return this.toMAP(rows);
@@ -197,11 +198,21 @@ export default class MaquinaModel {
         return null;
     }
     
-
     async isLocado(idMaquina) {
         let sql = `SELECT Maquina.maqId, Maquina.maqNome
                     FROM Maquina
                     WHERE Maquina.maqStatus = 2
+                    AND Maquina.maqId = ?`;
+        let valores = [idMaquina]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows.length > 0;
+    }
+
+    async isManutancao(idMaquina) {
+        let sql = `SELECT Maquina.maqId, Maquina.maqNome
+                    FROM Maquina
+                    WHERE Maquina.maqStatus = 3
                     AND Maquina.maqId = ?`;
         let valores = [idMaquina]
 

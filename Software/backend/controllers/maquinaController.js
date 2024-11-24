@@ -221,33 +221,45 @@ export default class maquinaController {
     }    
     
     async excluirMaquina(req, res) {
-        try{
-            let {id} = req.params;
+        try {
+            let { id } = req.params;
             let maquina = new MaquinaModel();
-
-            if(await maquina.isLocado(id) == false){
-
+    
+            // Verifica se a máquina está locada ou em manutenção
+            if (await maquina.isLocado(id) == false && await maquina.isManutancao(id) == false) {
+    
+                // Exclui as imagens associadas à máquina
                 const imagensEquipamento = new ImagensEquipamentoModel();
                 await imagensEquipamento.excluirImgMaquina(id);
-
+    
+                // Tenta excluir a máquina
                 let result = await maquina.excluir(id);
-
-                if(result) {
-                    res.status(200).json({msg: `Máquina excluída com sucesso!`});
+    
+                if (result) {
+                    res.status(200).json({ msg: `Máquina excluída com sucesso!` });
+                } 
+                else {
+                    res.status(500).json({ msg: "Erro durante a exclusão da máquina" });
                 }
-                else{
-                    res.status(500).json({msg: "Erro durante a exclusão da máquina"});
-                }
+            } 
+            else {
+                res.status(400).json({ msg: "Essa máquina está alugada ou em manutenção!" });
             }
-            else{
-                res.status(400).json({msg: "Essa máquina está alugada!"})
+        } 
+        catch (ex) {
+            console.log(ex);
+    
+            // Trata o erro específico de integridade referencial (chave estrangeira)
+            if (ex.code === 'ER_ROW_IS_REFERENCED_2') {
+                res.status(400).json({ msg: "Exclua as manutenções e as locações feitas nessa máquina antes de excluí-la." });
+            } 
+            else {
+                // Resposta genérica para outros erros
+                res.status(500).json({ msg: "Erro interno de servidor!" });
             }
-        }
-        catch(ex) {
-            console.log(ex)
-            res.status(500).json({msg: "Erro interno de servidor!"});
         }
     }
+    
 
     async listarMaquinasDisponiveis(req, res){ 
         try{

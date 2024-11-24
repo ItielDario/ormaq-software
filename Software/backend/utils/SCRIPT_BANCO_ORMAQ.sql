@@ -184,7 +184,7 @@
     (1, 'Disponível'),
     (2, 'Locado'),
     (3, 'Em Manutenção'),
-    (4, 'Vendida');
+    (4, 'Vendido');
 
   INSERT INTO Maquina (maqNome, maqDataAquisicao, maqTipo, maqModelo, maqSerie, maqAnoFabricacao, maqDescricao, maqExibirCatalogo, maqHorasUso, maqStatus, maqPrecoVenda)
   VALUES

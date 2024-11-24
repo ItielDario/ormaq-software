@@ -20,7 +20,9 @@ export default function AlterarMaquina({ params: { id } }) {
   const maqPrecoAluguelQuinzenalRef = useRef(null);
   const maqPrecoAluguelMensalRef = useRef(null);
   const maqExibirCatalogoRef = useRef(null);
+  const maqStatusRef = useRef(null);
   const [maqDescricao, setMaqDescricao] = useState('');
+
   const [maquinaSelecionada, setMaquinaSelecionada] = useState(null);
   const [maquinaAluguelSelecionada, setMaquinaAluguelSelecionada] = useState(null);
   const [imagens, setImagens] = useState([]); 
@@ -80,9 +82,10 @@ export default function AlterarMaquina({ params: { id } }) {
       maqPrecoAluguelQuinzenal: maqPrecoAluguelQuinzenalRef.current.value,
       maqPrecoAluguelMensal: maqPrecoAluguelMensalRef.current.value,
       maqExibirCatalogo: maqExibirCatalogoRef.current.value,
+      maqStatus: maqStatusRef.current.value,
       maqDescricao: maqDescricao,
     };
-
+    
     if (imagens.length > 0 && imagemPrincipal == null) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
@@ -126,6 +129,7 @@ export default function AlterarMaquina({ params: { id } }) {
       formData.append("maqPrecoAluguelQuinzenal", maqPrecoAluguelQuinzenalRef.current.value);
       formData.append("maqPrecoAluguelMensal", maqPrecoAluguelMensalRef.current.value);
       formData.append("maqExibirCatalogo", maqExibirCatalogoRef.current.value);
+      formData.append("maqStatus", maqStatusRef.current.value);
       formData.append("maqDescricao", maqDescricao);
       formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
       formData.append("imagensBancoExcluir", imagensExcluidasString);
@@ -294,6 +298,22 @@ export default function AlterarMaquina({ params: { id } }) {
                   ref={maqHorasUsoRef}
                 />
               </section>
+
+              {(maquinaSelecionada.eqpStaId == 1 || maquinaSelecionada.eqpStaId == 4) && (
+                  <section>
+                    <label htmlFor="maqStatus">Status da Máquina</label>
+                    <select 
+                      id="maqStatus" 
+                      name="maqStatus" 
+                      defaultValue={maquinaSelecionada.eqpStaDescricao} 
+                      ref={maqStatusRef} 
+                      required
+                    >
+                      <option value="1">Disponível</option>
+                      <option value="4">Vendido</option>
+                    </select>
+                  </section>
+                )}
 
               <section>
                 <label htmlFor="maqExibirCatalogo">Exibir nos classificados</label>

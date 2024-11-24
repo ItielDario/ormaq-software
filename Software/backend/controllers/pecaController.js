@@ -89,10 +89,10 @@ export default class pecaController {
 
     async alterarPeca(req, res) {
         try {
-            let { pecaId, pecaNome, pecaDataAquisicao, pecaDescricao, pecaExibirCatalogo, pecaPrecoHora, pecaPrecoVenda, nomeImagemPrincipal, imagensBancoExcluir, imagensBanco } = req.body;
+            let { pecaId, pecaNome, pecaDataAquisicao, pecaDescricao, pecaExibirCatalogo, pecaPrecoHora, pecaPrecoVenda, pecaStatus, nomeImagemPrincipal, imagensBancoExcluir, imagensBanco } = req.body;
 
-            if(pecaId != "" && pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaExibirCatalogo != "" && pecaPrecoHora != "" && pecaPrecoVenda != "") {
-                let peca = new PecaModel(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, 1, pecaExibirCatalogo, pecaPrecoVenda, pecaPrecoHora);
+            if(pecaId != "" && pecaNome != "" && pecaDataAquisicao != "" && pecaDescricao != "" && pecaExibirCatalogo != "" && pecaPrecoHora != "" && pecaPrecoVenda != "" && pecaStatus != "") {
+                let peca = new PecaModel(pecaId, pecaNome, pecaDescricao, pecaDataAquisicao, pecaStatus, pecaExibirCatalogo, pecaPrecoVenda, pecaPrecoHora);
 
                 let result  = await peca.gravar();
 

@@ -122,7 +122,7 @@ export default class maquinaController {
             let { 
                 maqId, maqNome, maqDataAquisicao, maqTipo, maqModelo, maqSerie, maqAnoFabricacao, 
                 maqHorasUso, maqPrecoVenda, maqPrecoAluguelDiario, maqPrecoAluguelSemanal, 
-                maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal, maqExibirCatalogo, maqDescricao, nomeImagemPrincipal, 
+                maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal, maqExibirCatalogo, maqDescricao, maqStatus, nomeImagemPrincipal, 
                 imagensBancoExcluir, imagensBanco 
             } = req.body;
     
@@ -130,7 +130,7 @@ export default class maquinaController {
                 maqId && maqNome && maqDataAquisicao && maqTipo && maqModelo && maqSerie && 
                 maqAnoFabricacao && maqHorasUso !== undefined && maqPrecoVenda && 
                 maqPrecoAluguelDiario && maqPrecoAluguelSemanal && maqPrecoAluguelQuinzenal && 
-                maqPrecoAluguelMensal && maqExibirCatalogo !== undefined && maqDescricao
+                maqPrecoAluguelMensal && maqExibirCatalogo !== undefined && maqDescricao && maqStatus
             ) {
                 // Validação da hora de uso
                 if (parseFloat(maqHorasUso) < 0) {
@@ -143,7 +143,7 @@ export default class maquinaController {
                 }
     
                 let maquina = new MaquinaModel(maqId, maqNome, maqDataAquisicao, maqTipo, maqModelo, maqSerie, 
-                    maqAnoFabricacao, maqDescricao, maqExibirCatalogo, maqHorasUso, 1, maqPrecoVenda);
+                    maqAnoFabricacao, maqDescricao, maqExibirCatalogo, maqHorasUso, maqStatus, maqPrecoVenda);
                 let result = await maquina.gravar(); 
     
                 if (result) {

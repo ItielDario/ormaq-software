@@ -39,12 +39,15 @@ export default function CadastrarLocacao() {
       if (cliente) {
         alertMsg.current.style.display = 'none';
         clienteIdRef.current.dataset.clienteId = cliente.cliId;
-      } else {
+        return true;
+      } 
+      else {
         setTimeout(() => {
           alertMsg.current.className = 'alertError';
           alertMsg.current.style.display = 'block';
           alertMsg.current.textContent = 'Cliente não cadastrado!';
         }, 100);
+        return false;
       }
     }
   };
@@ -214,13 +217,19 @@ export default function CadastrarLocacao() {
       locCliId: obterClienteIdSelecionado(), // Usa o ID do cliente
       itens: itensLocacao, // Array de itens da locação
     };
+
+    // Verifica de o cliente existe
+    if(!verificaClienteExiste()){
+      document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
+      return;
+    }
   
     // Validação de campos vazios
     if (verificaCampoVazio(dados) || itensLocacao.length === 0) {
       setTimeout(() => {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
-        alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locação!';
+        alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios e adicione pelo menos um item de locaçãoaaaaaaaa!';
         document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
       }, 100);
       return;

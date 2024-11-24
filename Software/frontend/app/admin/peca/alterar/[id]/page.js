@@ -12,6 +12,7 @@ export default function AlterarPeca({ params: { id } }) {
   const pecaPrecoVendaRef = useRef(null);
   const pecaPrecoHoraRef = useRef(null);
   const pecaExibirCatalogoRef = useRef(null);
+  const pecaStatusRef = useRef(null);
 
   const [pecaDescricao, setPecaDescricao] = useState('');
   const [pecaSelecionada, setPecaSelecionada] = useState(null);
@@ -60,8 +61,11 @@ export default function AlterarPeca({ params: { id } }) {
       pecaPrecoVenda: pecaPrecoVendaRef.current.value, 
       pecaPrecoHora: pecaPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
+      pecaStatus: pecaStatusRef.current.value,
       pecaDescricao: pecaDescricao,
     };
+
+    console.log(dados)
 
     if (imagens.length > 0 && imagemPrincipal == null) {
       setTimeout(() => {
@@ -96,6 +100,7 @@ export default function AlterarPeca({ params: { id } }) {
       formData.append("pecaDataAquisicao", pecaDataAquisicaoRef.current.value); 
       formData.append("pecaDescricao", pecaDescricao || ""); 
       formData.append("pecaExibirCatalogo", pecaExibirCatalogoRef.current.value); 
+      formData.append("pecaStatus", pecaStatusRef.current.value); 
       formData.append("pecaPrecoVenda", pecaPrecoVendaRef.current.value); 
       formData.append("pecaPrecoHora", pecaPrecoHoraRef.current.value);
       formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
@@ -233,6 +238,22 @@ export default function AlterarPeca({ params: { id } }) {
                   />
                 </section>
 
+                {(pecaSelecionada.pecStatus == 1 || pecaSelecionada.pecStatus == 4) && (
+                  <section>
+                    <label htmlFor="pecaStatus">Status da Peça</label>
+                    <select 
+                      id="pecaStatus" 
+                      name="pecaStatus" 
+                      defaultValue={pecaSelecionada.eqpStaDescricao} 
+                      ref={pecaStatusRef} 
+                      required
+                    >
+                      <option value="1">Disponível</option>
+                      <option value="4">Vendido</option>
+                    </select>
+                  </section>
+                )}
+                
                 <section>
                   <label htmlFor="pecaExibirCatalogo">Exibir nos classificados</label>
                   <select 

@@ -183,6 +183,7 @@ export default class MaquinaModel {
                 Maquina.maqExibirCatalogo,  
                 Maquina.maqHorasUso, 
                 Maquina.maqPrecoVenda, 
+                Equipamento_Status.eqpStaId,
                 Equipamento_Status.eqpStaDescricao
             FROM Maquina 
             INNER JOIN Equipamento_Status

@@ -130,7 +130,7 @@ export default class ImplementoModel {
     async obter(id) {
         let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impDataAquisicao, Implemento.impDescricao, Implemento.impExibirCatalogo, 
                           Implemento.impPrecoVenda, Implemento.impPrecoHora, Implemento.impStatus,
-                          Equipamento_Status.eqpStaDescricao
+                          Equipamento_Status.eqpStaDescricao, Equipamento_Status.eqpStaId
                     FROM Implemento 
                     INNER JOIN Equipamento_Status ON Implemento.impStatus = Equipamento_Status.eqpStaId
                     WHERE Implemento.impId = ?;`;

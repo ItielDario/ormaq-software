@@ -88,10 +88,10 @@ export default class ImplementoController {
 
     async alterarImplemento(req, res) {
         try {
-            let { impId, impNome, impDataAquisicao, impDescricao, impExibirCatalogo, impPrecoHora, impPrecoVenda, nomeImagemPrincipal, imagensBancoExcluir, imagensBanco} = req.body;
+            let { impId, impNome, impDataAquisicao, impDescricao, impExibirCatalogo, impPrecoHora, impPrecoVenda, impStatus, nomeImagemPrincipal, imagensBancoExcluir, imagensBanco} = req.body;
              
-            if (impId && impNome && impDataAquisicao && impDescricao && impExibirCatalogo != null && impPrecoHora && impPrecoVenda) {
-                let implemento = new ImplementoModel(impId, impNome, impDescricao, impDataAquisicao, 1, impExibirCatalogo, impPrecoVenda, impPrecoHora);
+            if (impId && impNome && impDataAquisicao && impDescricao && impExibirCatalogo != null && impPrecoHora && impPrecoVenda && impStatus) {
+                let implemento = new ImplementoModel(impId, impNome, impDescricao, impDataAquisicao, impStatus, impExibirCatalogo, impPrecoVenda, impPrecoHora);
 
                 let result = await implemento.gravar();
 

@@ -85,6 +85,8 @@ export default function AlterarMaquina({ params: { id } }) {
       maqStatus: maqStatusRef.current.value,
       maqDescricao: maqDescricao,
     };
+
+    console.log(dados)
     
     if (imagens.length > 0 && imagemPrincipal == null) {
       setTimeout(() => {
@@ -212,6 +214,19 @@ export default function AlterarMaquina({ params: { id } }) {
         {maquinaSelecionada && (
           <>
             <section className="input-group">
+            <section>
+                <label htmlFor="maqSerie">Série/Chassi da Máquina - Campo de leitura</label>
+                <input
+                  type="text"
+                  id="maqSerie"
+                  className="input-estatico"
+                  defaultValue={maquinaSelecionada.maqSerie}
+                  ref={maqSerieRef}
+                  readOnly
+                  title="Este campo é somente leitura. Não é possível alterar a Série/Chassi da máquina."
+                />
+              </section>
+
               <section>
                 <label htmlFor="maqNome">Nome da Máquina</label>
                 <input
@@ -229,16 +244,6 @@ export default function AlterarMaquina({ params: { id } }) {
                   id="maqModelo"
                   defaultValue={maquinaSelecionada.maqModelo}
                   ref={maqModeloRef}
-                />
-              </section>
-
-              <section>
-                <label htmlFor="maqSerie">Série/Chassi da Máquina</label>
-                <input
-                  type="text"
-                  id="maqSerie"
-                  defaultValue={maquinaSelecionada.maqSerie}
-                  ref={maqSerieRef}
                 />
               </section>
             </section>
@@ -305,7 +310,7 @@ export default function AlterarMaquina({ params: { id } }) {
                     <select 
                       id="maqStatus" 
                       name="maqStatus" 
-                      defaultValue={maquinaSelecionada.eqpStaDescricao} 
+                      defaultValue={maquinaSelecionada.eqpStaId} 
                       ref={maqStatusRef} 
                       required
                     >

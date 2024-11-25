@@ -154,11 +154,11 @@ export default class MaquinaModel {
             }
         } else {
             sql = `UPDATE Maquina 
-                   SET maqNome = ?, maqDataAquisicao = ?, maqTipo = ?, maqModelo = ?, maqSerie = ?, maqAnoFabricacao = ?, 
+                   SET maqNome = ?, maqDataAquisicao = ?, maqTipo = ?, maqModelo = ?, maqAnoFabricacao = ?, 
                        maqDescricao = ?, maqExibirCatalogo = ?, maqHorasUso = ?, maqStatus = ?, maqPrecoVenda = ?
                    WHERE maqId = ?`;
             valores = [
-                this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqModelo, this.#maqSerie,
+                this.#maqNome, this.#maqDataAquisicao, this.#maqTipo, this.#maqModelo,
                 this.#maqAnoFabricacao, this.#maqDescricao, this.#maqExibirCatalogo, this.#maqHorasUso,
                 this.#equipamentoStatus, this.#maqPrecoVenda, this.#maqId
             ];
@@ -304,5 +304,15 @@ export default class MaquinaModel {
         let rows = await db.ExecutaComando(sql, valores);
     
         return rows;
-    }   
+    } 
+    
+    async varificarSerieChassi(serie) {
+        let sql = `SELECT COUNT(*) AS Total
+                    FROM Maquina
+                    WHERE maqSerie = ?;`;
+        let valores = [serie]
+
+        let rows = await db.ExecutaComando(sql, valores);
+        return rows
+    }
 }

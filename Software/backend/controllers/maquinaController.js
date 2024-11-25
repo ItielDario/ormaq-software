@@ -67,44 +67,52 @@ export default class maquinaController {
     
                 let maquina = new MaquinaModel(0, maqNome, maqDataAquisicao, maqTipo, maqModelo, maqSerie, 
                     maqAnoFabricacao, maqDescricao, maqExibirCatalogo, maqHorasUso, 1, maqPrecoVenda);
-                let maquinaId = await maquina.gravar();
-    
-                if (maquinaId) {
-                    let maquinaAluguel = new MaquinaAluguelModel(0, maquinaId, maqPrecoAluguelDiario, maqPrecoAluguelSemanal, maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal);
-                    let maquinaAluguelResult = await maquinaAluguel.gravar();
 
-                    if(maquinaAluguelResult){
-                        const imagens = req.files;  
-                        let achouImagemPrincipal = true
-    
-                        if (imagens) {
-                            for (let i = 0; i < imagens.length; i++) { // Loop para enviar todas as imagens para o Oracle Cloud Storage
-                                const imagem = imagens[i];
-                                let imagensEquipamento = null
-    
-                                const nomeImagem = new Date().getTime() + '-' + imagem.originalname;  // Gerar um nome único
-                                await enviarObjeto(nomeImagem, imagem.buffer); // Envia a imagem para o Oracle Cloud Storage
-                                const urlImagem = `https://objectstorage.us-phoenix-1.oraclecloud.com/n/axfyzw7gyrvi/b/bucket-ormaq/o/${nomeImagem}`; // Cria a URL pública da imagem
+                let encontrouMaquina = await maquina.varificarSerieChassi(maqSerie)
 
-                                if(nomeImagemPrincipal == imagem.originalname && achouImagemPrincipal){
-                                    imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 1,  null, maquinaId, null);
-                                    achouImagemPrincipal = false;
-                                }
-                                else{
-                                    imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 0,  null, maquinaId, null);
-                                }
+                if(encontrouMaquina[0].Total == 0){
+                    let maquinaId = await maquina.gravar();
     
-                                await imagensEquipamento.gravar();
+                    if (maquinaId) {
+                        let maquinaAluguel = new MaquinaAluguelModel(0, maquinaId, maqPrecoAluguelDiario, maqPrecoAluguelSemanal, maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal);
+                        let maquinaAluguelResult = await maquinaAluguel.gravar();
+    
+                        if(maquinaAluguelResult){
+                            const imagens = req.files;  
+                            let achouImagemPrincipal = true
+        
+                            if (imagens) {
+                                for (let i = 0; i < imagens.length; i++) { // Loop para enviar todas as imagens para o Oracle Cloud Storage
+                                    const imagem = imagens[i];
+                                    let imagensEquipamento = null
+        
+                                    const nomeImagem = new Date().getTime() + '-' + imagem.originalname;  // Gerar um nome único
+                                    await enviarObjeto(nomeImagem, imagem.buffer); // Envia a imagem para o Oracle Cloud Storage
+                                    const urlImagem = `https://objectstorage.us-phoenix-1.oraclecloud.com/n/axfyzw7gyrvi/b/bucket-ormaq/o/${nomeImagem}`; // Cria a URL pública da imagem
+    
+                                    if(nomeImagemPrincipal == imagem.originalname && achouImagemPrincipal){
+                                        imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 1,  null, maquinaId, null);
+                                        achouImagemPrincipal = false;
+                                    }
+                                    else{
+                                        imagensEquipamento = new ImagensEquipamentoModel(0, urlImagem, imagem.originalname, 0,  null, maquinaId, null);
+                                    }
+        
+                                    await imagensEquipamento.gravar();
+                                }
                             }
+                        
+                            return res.status(201).json({ msg: "Máquina cadastrada com sucesso!" });
                         }
-                    
-                        return res.status(201).json({ msg: "Máquina cadastrada com sucesso!" });
+    
+                        return res.status(500).json({ msg: "Erro durante o cadastro dos valores da máquina!" });
+                    } 
+                    else {
+                        return res.status(500).json({ msg: "Erro durante o cadastro da Máquina!" });
                     }
-
-                    return res.status(500).json({ msg: "Erro durante o cadastro dos valores da máquina!" });
-                } 
+                }
                 else {
-                    return res.status(500).json({ msg: "Erro durante o cadastro da Máquina!" });
+                    return res.status(500).json({ msg: "Já exite uma máquina cadastrada com a série/chassi: " + maqSerie});
                 }
             } 
             else {
@@ -201,7 +209,7 @@ export default class maquinaController {
                             }
                         }
                     
-                        return res.status(201).json({ msg: "Máquina cadastrada com sucesso!" });
+                        return res.status(201).json({ msg: "Máquina alterada com sucesso!" });
                     }
     
                     return res.status(500).json({ msg: "Erro durante a alteração dos valores de aluguel da máquina!" });

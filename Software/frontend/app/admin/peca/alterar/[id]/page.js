@@ -29,6 +29,7 @@ export default function AlterarPeca({ params: { id } }) {
     httpClient.get(`/peca/${id}`)
       .then(r => r.json())
       .then(r => {
+        console.log(r.peca)
         r.peca.pecDataAquisicao = new Date(r.peca.pecDataAquisicao).toISOString().split('T')[0];
         setPecaSelecionada(r.peca);
         setPecaDescricao(r.peca.pecDescricao);
@@ -244,7 +245,7 @@ export default function AlterarPeca({ params: { id } }) {
                     <select 
                       id="pecaStatus" 
                       name="pecaStatus" 
-                      defaultValue={pecaSelecionada.eqpStaDescricao} 
+                      defaultValue={pecaSelecionada.pecStatus} 
                       ref={pecaStatusRef} 
                       required
                     >

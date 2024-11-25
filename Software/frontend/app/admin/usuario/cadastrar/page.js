@@ -34,7 +34,7 @@ export default function CadastrarUsuario() {
       usuNome: usuNomeRef.current.value,
       usuSenha: usuSenhaRef.current.value,
       usuTelefone: telefone || 'Sem Telefone',
-      usuEmail: usuEmailRef.current.value || 'Sem Email',
+      usuEmail: usuEmailRef.current.value,
       usuPerfil: usuPerfilRef.current.value
     };
 
@@ -43,6 +43,16 @@ export default function CadastrarUsuario() {
         alertMsg.current.className = 'alertError';
         alertMsg.current.style.display = 'block';
         alertMsg.current.textContent = 'Por favor, preencha todos os campos obrigatórios!';
+      }, 100);
+      return;
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(usuEmailRef.current.value)) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, insira um endereço de email válido!';
       }, 100);
       return;
     }
@@ -123,7 +133,11 @@ export default function CadastrarUsuario() {
 
           <section>
             <label htmlFor="usuEmail">Email</label>
-            <input type="email" id="usuEmail" ref={usuEmailRef} />
+            <input
+              type="email"
+              id="usuEmail"
+              ref={usuEmailRef}
+            />
           </section>
         </section>
       </form>

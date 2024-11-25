@@ -30,7 +30,7 @@ export default class clienteController {
         try {
             let { cliNome, cliCPF_CNPJ, cliTelefone, cliEmail } = req.body;
     
-            if (cliNome && cliCPF_CNPJ) {
+            if (cliNome && cliCPF_CNPJ && cliEmail) {
 
                 const cliente = new ClienteModel(0, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail);
                 const clienteExistente = await cliente.existeClientePorCPF_CNPJ(cliCPF_CNPJ);
@@ -57,7 +57,7 @@ export default class clienteController {
     async alterarCliente(req, res) {
         try {
             let { cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail } = req.body;
-            if (cliId && cliNome && cliCPF_CNPJ) {
+            if (cliId && cliNome && cliCPF_CNPJ && cliEmail) {
 
                 let cliente = new ClienteModel(cliId, cliNome, cliCPF_CNPJ, cliTelefone, cliEmail);
                 let result = await cliente.gravar();

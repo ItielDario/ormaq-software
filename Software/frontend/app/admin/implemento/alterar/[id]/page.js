@@ -247,7 +247,7 @@ export default function AlterarImplemento({ params: { id } }) {
                     <select 
                       id="impStatus" 
                       name="impStatus" 
-                      defaultValue={implementoSelecionado.eqpStaDescricao} 
+                      defaultValue={implementoSelecionado.eqpStaId} 
                       ref={impStatusRef} 
                       required
                     >

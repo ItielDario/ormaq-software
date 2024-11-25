@@ -74,6 +74,16 @@ export default function AlterarUsuario({ params: { id } }) {
       return;
     }
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(usuEmailRef.current.value)) {
+      setTimeout(() => {
+        alertMsg.current.className = 'alertError';
+        alertMsg.current.style.display = 'block';
+        alertMsg.current.textContent = 'Por favor, insira um endereço de email válido!';
+      }, 100);
+      return;
+    }
+
     httpClient.put(`/usuario`, dados)
       .then((r) => {
         status = r.status;

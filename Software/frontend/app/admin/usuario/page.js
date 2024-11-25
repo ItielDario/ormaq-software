@@ -147,8 +147,8 @@ export default function Usuario() {
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Telefone</th>
                             <th>Email</th>
+                            <th>Telefone</th>
                             <th>Perfil</th>
                             <th>Ações</th>
                         </tr>
@@ -158,8 +158,8 @@ export default function Usuario() {
                             <tr key={usuario.usuId}>
                                 <td>{usuario.usuId}</td>
                                 <td>{usuario.usuNome}</td>
+                                <td>{usuario.usuEmail}</td>
                                 <td>{usuario.usuTelefone || 'Sem Telefone'}</td>
-                                <td>{usuario.usuEmail || 'Sem Email'}</td>
                                 <td>{usuario.usuPerDescricao}</td>
                                 <td>
                                     <a href={`/admin/usuario/alterar/${usuario.usuId}`}>

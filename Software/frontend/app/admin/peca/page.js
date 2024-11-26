@@ -135,6 +135,34 @@ export default function Peca() {
         };
     }
 
+    function alternarExibicaoClassificados(idPeca, statusAtual) {
+        const novoStatus = statusAtual === 1 ? 0 : 1; // Alterna entre 1 (exibir) e 0 (não exibir)
+        let status = 0;
+    
+        httpClient.put(`/peca/exibir/${idPeca}`, { pecExibirCatalogo: novoStatus })
+        .then(r => { 
+            status = r.status;
+            return r.json();
+        })
+        .then(r => {
+            if (status === 200) {
+                carregarPecas(); 
+                alertMsg.current.className = 'alertSuccess';
+            } else {
+                alertMsg.current.className = 'alertError';
+            }
+
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = r.msg;
+        })
+        .catch((ex) => {
+            console.log(ex)
+            alertMsg.current.className = 'alertError';
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = 'Erro ao alterar exibição nos classificados.';
+        });
+    }    
+
     return (
         <section className="content-main-children-listar">
             <article className="title">
@@ -152,7 +180,7 @@ export default function Peca() {
                 <table id="tabela-pecas" className="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Exibir</th>
                             <th>Nome</th>
                             <th>Data de Aquisição</th>
                             <th>Preço Venda</th>
@@ -164,19 +192,21 @@ export default function Peca() {
                     <tbody>
                         {listaPecas.map(peca => (
                             <tr key={peca.pecaId}>
-                                <td>{peca.pecaId}</td>
+                                <td>
+                                    <a onClick={() => alternarExibicaoClassificados(peca.pecaId, peca.pecaExibirCatalogo)}>
+                                        <i className={peca.pecaExibirCatalogo === 1 ? "nav-icon fas fa-eye" : "nav-icon fas fa-eye-slash"}></i>
+                                    </a>
+                                </td>
                                 <td>{peca.pecaNome}</td>
                                 <td>{peca.pecaDataAquisicao}</td>
                                 <td>R$ {peca.pecaPrecoVenda}</td>
                                 <td>R$ {peca.pecaPrecoHora}</td>
                                 <td>{peca.equipamentoStatus.equipamentoStatusDescricao}</td>
                                 <td>
-                                    <a href={`/admin/peca/alterar/${peca.pecaId}`}>
-                                        <i className="nav-icon fas fa-pen"></i>
-                                    </a>
-                                    <a onClick={() => excluirPeca(peca.pecaId)}>
-                                        <i className="nav-icon fas fa-trash"></i>
-                                    </a>
+                                    <div className="btn-acoes">
+                                        <a href={`/admin/peca/alterar/${peca.pecaId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                        <a onClick={() => excluirPeca(peca.pecaId)}><i className="nav-icon fas fa-trash"></i></a>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

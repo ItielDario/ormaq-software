@@ -2,6 +2,7 @@
 import { useState, useEffect, useRef } from "react";
 import CriarBotao from "../components/criarBotao.js";
 import httpClient from "../utils/httpClient.js";
+import { ColorSelectorView } from "ckeditor5";
 
 export default function Implemento() {
     const [listaImplementos, setListaImplementos] = useState([]);
@@ -134,6 +135,34 @@ export default function Implemento() {
            document.body.removeChild(iframe); // Remover o iframe após a impressão
        };
     }
+
+    function alternarExibicaoClassificados(idImplemento, statusAtual) {
+        const novoStatus = statusAtual === 1 ? 0 : 1; // Alterna entre 1 (exibir) e 0 (não exibir)
+        let status = 0;
+    
+        httpClient.put(`/implemento/exibir/${idImplemento}`, { impExibirCatalogo: novoStatus })
+        .then(r => { 
+            status = r.status;
+            return r.json();
+        })
+        .then(r => {
+            if (status === 200) {
+                carregarImplementos(); 
+                alertMsg.current.className = 'alertSuccess';
+            } else {
+                alertMsg.current.className = 'alertError';
+            }
+
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = r.msg;
+        })
+        .catch((ex) => {
+            console.log(ex)
+            alertMsg.current.className = 'alertError';
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = 'Erro ao alterar exibição nos classificados.';
+        });
+    } 
     
     return (
         <section className="content-main-children-listar">
@@ -152,7 +181,7 @@ export default function Implemento() {
                 <table id="tabela-implementos" className="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Exibir</th>
                             <th>Nome</th>
                             <th>Data de Aquisição</th>
                             <th>Preço Venda</th>
@@ -164,15 +193,21 @@ export default function Implemento() {
                     <tbody>
                         {listaImplementos.map(implemento => (
                             <tr key={implemento.impId}>
-                                <td>{implemento.impId}</td>
+                                <td>
+                                    <a onClick={() => alternarExibicaoClassificados(implemento.impId, implemento.impExibirCatalogo)}>
+                                        <i className={implemento.impExibirCatalogo === 1 ? "nav-icon fas fa-eye" : "nav-icon fas fa-eye-slash"}></i>
+                                    </a>
+                                </td>
                                 <td>{implemento.impNome}</td>
                                 <td>{implemento.impDataAquisicao}</td>
                                 <td>R$ {implemento.impPrecoVenda}</td>
                                 <td>R$ {implemento.impPrecoHora}</td>
                                 <td>{implemento.equipamentoStatus.equipamentoStatusDescricao}</td>
                                 <td>
-                                    <a href={`/admin/implemento/alterar/${implemento.impId}`}><i className="nav-icon fas fa-pen"></i></a>
-                                    <a onClick={() => excluirImplemento(implemento.impId)}><i className="nav-icon fas fa-trash"></i></a>
+                                    <div className="btn-acoes">
+                                        <a href={`/admin/implemento/alterar/${implemento.impId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                        <a onClick={() => excluirImplemento(implemento.impId)}><i className="nav-icon fas fa-trash"></i></a>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

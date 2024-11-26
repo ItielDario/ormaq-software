@@ -43,4 +43,9 @@ router.get('/obter/locacao/:id', auth.validar, (req, res) => {
     ctrl.listarMaquinasDaLocacao(req, res)
 })
 
+router.put('/exibir/:id', auth.validar, (req, res) => {
+    // #swagger.summary = 'Exibir ou deixar de exibir uma máquina nos classificados'
+    ctrl.exibicaoClassificados(req, res)
+})
+
 export default router;

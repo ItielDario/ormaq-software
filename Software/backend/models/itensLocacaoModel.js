@@ -105,12 +105,17 @@ export default class ItensLocacaoModel {
                 M.maqAnoFabricacao, 
                 M.maqDescricao, 
                 M.maqPrecoVenda,
-                L.locId
+                L.locId,
+                img.imgId AS maqImgId,            
+                img.imgUrl AS maqImagem,         
+                img.imgNome AS maqImgNome 
             FROM Itens_Locacao IL
             JOIN Maquina M 
             ON IL.iteLocMaqId = M.maqId
             JOIN Locacao L
             ON IL.IteLocLocacaoId = L.locId
+            LEFT JOIN Imagens_Equipamento img 
+            ON M.maqId = img.imgMaqId AND img.imgPrincipal = TRUE
             WHERE L.IteLocLocacaoId = ?;
         `;
         const rows = await db.ExecutaComando(sql, [locacaoId]);
@@ -135,12 +140,17 @@ export default class ItensLocacaoModel {
                 M.maqDescricao,
                 M.maqHorasUso, 
                 M.maqPrecoVenda,
-                L.locId
+                L.locId,
+                img.imgId AS maqImgId,            
+                img.imgUrl AS maqImagem,         
+                img.imgNome AS maqImgNome 
             FROM Itens_Locacao IL
             JOIN Maquina M 
             ON IL.iteLocMaqId = M.maqId
             JOIN Locacao L
             ON IL.IteLocLocacaoId = L.locId
+            LEFT JOIN Imagens_Equipamento img 
+            ON M.maqId = img.imgMaqId AND img.imgPrincipal = TRUE
             WHERE L.locId = ?;
         `;
         const valores = [id];

@@ -9,6 +9,7 @@ export default class LoginController {
 
                 let { usuNome, usuSenha} = req.body;
                 let usuario = new LoginModel(usuNome, usuSenha)
+
                 let usuarioExiste = await usuario.autenticar()
 
                 if(usuarioExiste) {
@@ -30,6 +31,7 @@ export default class LoginController {
             } 
         }
         catch(ex) {
+            console.log(ex)
             res.status(500).json({msg: "Erro interno de servidor"});
         }
         

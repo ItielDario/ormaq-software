@@ -22,7 +22,6 @@ export default function Maquina() {
         httpClient.get("/maquina")
             .then(r => r.json())
             .then((r) => {
-                console.log(r)
                 r.map(maquina => maquina.maqDataAquisicao = new Date(maquina.maqDataAquisicao).toLocaleDateString());
                 setListaMaquinas(r);
             });
@@ -129,9 +128,33 @@ export default function Maquina() {
         };
     }
 
-    function exirbirClassificados() {
+    function alternarExibicaoClassificados(idMaquina, statusAtual) {
+        const novoStatus = statusAtual === 1 ? 0 : 1; // Alterna entre 1 (exibir) e 0 (não exibir)
+        let status = 0;
+    
+        httpClient.put(`/maquina/exibir/${idMaquina}`, { maqExibirCatalogo: novoStatus })
+        .then(r => { 
+            status = r.status;
+            return r.json();
+        })
+        .then(r => {
+            if (status === 200) {
+                carregarMaquinas(); 
+                alertMsg.current.className = 'alertSuccess';
+            } else {
+                alertMsg.current.className = 'alertError';
+            }
 
-    }
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = r.msg;
+        })
+        .catch((ex) => {
+            console.log(ex)
+            alertMsg.current.className = 'alertError';
+            alertMsg.current.style.display = 'block';
+            alertMsg.current.textContent = 'Erro ao alterar exibição nos classificados.';
+        });
+    }    
 
     return (
         <section className="content-main-children-listar">
@@ -163,7 +186,11 @@ export default function Maquina() {
                     <tbody>
                         {listaMaquinas.map(maquina => (
                             <tr key={maquina.maqId}>
-                                <td><a onClick={() => exirbirClassificados(maquina.maqId)}><i className="nav-icon fas fa-eye"></i></a></td>
+                                <td>
+                                    <a onClick={() => alternarExibicaoClassificados(maquina.maqId, maquina.maqExibirCatalogo)}>
+                                        <i className={maquina.maqExibirCatalogo === 1 ? "nav-icon fas fa-eye" : "nav-icon fas fa-eye-slash"}></i>
+                                    </a>
+                                </td>
                                 <td>{maquina.maqNome}</td>
                                 <td>{maquina.maqModelo}</td>
                                 <td>{maquina.maqSerie}</td>
@@ -171,9 +198,11 @@ export default function Maquina() {
                                 <td>{maquina.maqHorasUso}</td>
                                 <td>{maquina.equipamentoStatus.equipamentoStatusDescricao}</td>
                                 <td>
-                                    <a href={`/admin/maquina/informacao/${maquina.maqId}`}><i className="nav-icon fas fa-info-circle"></i></a>
-                                    <a href={`/admin/maquina/alterar/${maquina.maqId}`}><i className="nav-icon fas fa-pen"></i></a>
-                                    <a onClick={() => excluirMaquina(maquina.maqId)}><i className="nav-icon fas fa-trash"></i></a>
+                                    <div className="btn-acoes">
+                                        <a href={`/admin/maquina/informacao/${maquina.maqId}`}><i className="nav-icon fas fa-info-circle"></i></a>
+                                        <a href={`/admin/maquina/alterar/${maquina.maqId}`}><i className="nav-icon fas fa-pen"></i></a>
+                                        <a onClick={() => excluirMaquina(maquina.maqId)}><i className="nav-icon fas fa-trash"></i></a>
+                                    </div>
                                 </td>
                             </tr>
                         ))}

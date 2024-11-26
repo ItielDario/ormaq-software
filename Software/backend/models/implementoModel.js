@@ -1,6 +1,7 @@
 import { isReadableStream } from "oci-common/lib/helper.js";
 import Database from "../utils/database.js";
 import EquipamentoStatusModel from "./equipamentoStatusModel.js";
+import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils/index.js";
 
 const db = new Database();
 
@@ -189,5 +190,13 @@ export default class ImplementoModel {
 
         let rows = await db.ExecutaComando(sql, valores);
         return rows;
+    }
+
+    async alterarExibicao(impId, exibir) {
+        const sql = `UPDATE Implemento SET impExibirCatalogo = ? WHERE impId = ?`;
+        const valores = [exibir, impId];
+
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
     }
 }

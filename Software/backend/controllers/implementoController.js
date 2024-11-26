@@ -205,4 +205,32 @@ export default class ImplementoController {
             res.status(500).json(error)
         }
     }
+
+    async exibicaoClassificados(req, res){ 
+        try{
+            const { id } = req.params;
+            const { impExibirCatalogo } = req.body;
+            
+            let implementoModel = new ImplementoModel()
+            let implemento = await implementoModel.obter(id)
+            
+            if(implemento[0].impStatus == 1){
+                if(await implementoModel.alterarExibicao(id, impExibirCatalogo)){
+                    res.status(200).json({ msg:`Exibição do implemento ${implemento[0].impNome} alterada!` });
+                }
+                else{
+                    res.status(404).json({ msg:`Erro ao alterar a exibição da implemento ${implemento[0].impNome}!` });
+                }
+            }
+            else{
+                if(implemento.impStatus == 2){ res.staus(404).json({ msg: `O implemento ${implemento[0].impNome} está locado!` })}
+                if(implemento.impStatus == 3){ res.staus(404).json({ msg: `O implemento ${implemento[0].impNome} está em manutenção!` })}
+                if(implemento.impStatus == 4){ res.staus(404).json({ msg: `O implemento ${implemento[0].impNome} está vendido!` })}
+            }
+        }
+        catch(error){
+            console.log(error)
+            res.status(500).json(error)
+        }
+    }
 }

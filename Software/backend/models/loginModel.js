@@ -27,7 +27,10 @@ export default class LoginModel{
         let valores = [this.#usuNome, this.#usuSenha];
 
         let rows = await bd.ExecutaComando(sql, valores);
-        this.usuId = rows[0].usuId
+
+        if(rows.length > 0){
+            this.usuId = rows[0].usuId
+        }
         
         return rows.length > 0;
     }

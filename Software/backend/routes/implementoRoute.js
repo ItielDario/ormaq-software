@@ -37,4 +37,9 @@ router.get('/obter/disponivel', auth.validar, (req, res) => {
     ctrl.listarImplementosDisponiveis(req, res)
 })
 
+router.put('/exibir/:id', auth.validar, (req, res) => {
+    // #swagger.summary = 'Exibir ou deixar de exibir um implemento nos classificados'
+    ctrl.exibicaoClassificados(req, res)
+})
+
 export default router;

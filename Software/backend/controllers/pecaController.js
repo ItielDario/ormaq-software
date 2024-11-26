@@ -205,4 +205,32 @@ export default class pecaController {
             res.status(500).json(error)
         }
     }
+
+    async exibicaoClassificados(req, res){ 
+        try{
+            const { id } = req.params;
+            const { pecExibirCatalogo } = req.body;
+
+            let pecaModel = new PecaModel()
+            let peca = await pecaModel.obter(id)
+
+            if(peca[0].pecStatus == 1){
+                if(await pecaModel.alterarExibicao(id, pecExibirCatalogo)){
+                    res.status(200).json({ msg:`Exibição da peça ${peca[0].pecNome} alterada!` });
+                }
+                else{
+                    res.status(404).json({ msg:`Erro ao alterar a exibição da peca ${peca[0].pecNome}!` });
+                }
+            }
+            else{
+                if(peca.pecStatus == 2){ res.staus(404).json({ msg: `A peca ${peca[0].pecNome} está locada!` })}
+                if(peca.pecStatus == 3){ res.staus(404).json({ msg: `A peca ${peca[0].pecNome} está em manutenção!` })}
+                if(peca.pecStatus == 4){ res.staus(404).json({ msg: `A peca ${peca[0].pecNome} está vendida!` })}
+            }
+        }
+        catch(error){
+            console.log(error)
+            res.status(500).json(error)
+        }
+    }
 }

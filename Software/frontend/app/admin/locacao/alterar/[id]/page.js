@@ -56,6 +56,8 @@ export default function AlterarLocacao({ params: { id } }) {
       valorTotalRef.current.innerHTML = `R$ ${valorTotalAux}`;
       clienteIdRef.current.dataset.clienteId = r.locacao.cliId
 
+      console.log(r.itensLocacao)
+
       setLocacaoBuscada(r.locacao); 
       setItensLocacao(r.itensLocacao); 
       setvalorTotal(valorTotalAux);
@@ -145,6 +147,7 @@ export default function AlterarLocacao({ params: { id } }) {
             alertMsg.current.className = 'alertError';
             alertMsg.current.style.display = 'block';
             alertMsg.current.textContent = `A máquina já foi adicionada à lista de locações!`;
+            document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
           }, 100);
           return;
         }
@@ -169,6 +172,7 @@ export default function AlterarLocacao({ params: { id } }) {
         result = true;
         equipamentoDados = {
           maqId: equipamentoDados[0].maqId,
+          maqImagem: equipamentoDados[0].imagemUrl,
           maqNome: equipamentoDados[0].maqNome,
           maqModelo: equipamentoDados[0].maqModelo,
           maqSerie: equipamentoDados[0].maqSerie,
@@ -426,7 +430,7 @@ export default function AlterarLocacao({ params: { id } }) {
           <table id="table-itens-locacao">
             <thead>
               <tr className="thead-itens-locacao">
-                <th>ID</th>
+                <th>Imagem</th>
                 <th>Nome</th>
                 <th>Modelo</th>
                 <th>Serie/Chassi </th>
@@ -439,7 +443,8 @@ export default function AlterarLocacao({ params: { id } }) {
             <tbody className="tbody-itens-locacao">
               {itensLocacao.map((item) => (
                 <tr key={item.maqId}>
-                  <td>{item.maqId}</td>
+                  {console.log(item)}
+                  <td className="td-img-table-locacao"><img className="img-table-locacao" src={item.maqImagem != null ? item.maqImagem : "/image/sem-imagem.jpg"} alt={`Imagem da Máquina ${item.maqImagem}`} /></td>
                   <td>{item.maqNome}</td>
                   <td>{item.maqModelo}</td>
                   <td>{item.maqSerie}</td>

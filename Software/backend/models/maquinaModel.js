@@ -118,11 +118,27 @@ export default class MaquinaModel {
 
     async listarMaquinas() {
         const sql = `
-            SELECT m.maqId, m.maqNome, m.maqDataAquisicao, m.maqTipo, m.maqModelo, m.maqSerie, m.maqAnoFabricacao,
-                m.maqDescricao, m.maqExibirCatalogo, m.maqHorasUso, m.maqPrecoVenda,
-                es.eqpStaId AS equipamentoStatusId, es.eqpStaDescricao
+            SELECT 
+                m.maqId, 
+                m.maqNome, 
+                m.maqDataAquisicao, 
+                m.maqTipo, 
+                m.maqModelo, 
+                m.maqSerie, 
+                m.maqAnoFabricacao,
+                m.maqDescricao, 
+                m.maqExibirCatalogo, 
+                m.maqHorasUso, 
+                m.maqPrecoVenda,
+                es.eqpStaId AS equipamentoStatusId, 
+                es.eqpStaDescricao,
+                img.imgId AS imagemId,
+                img.imgUrl AS imagemUrl,
+                img.imgNome AS nomeImagem
             FROM Maquina m
             JOIN Equipamento_Status es ON m.maqStatus = es.eqpStaId
+            LEFT JOIN Imagens_Equipamento img 
+            ON m.maqId = img.imgMaqId AND img.imgPrincipal = TRUE
             ORDER BY m.maqNome ASC`;
 
         const rows = await db.ExecutaComando(sql);
@@ -262,10 +278,15 @@ export default class MaquinaModel {
                 Maquina_Aluguel.maqAluPrecoDiario,
                 Maquina_Aluguel.maqAluPrecoSemanal,
                 Maquina_Aluguel.maqAluPrecoQuinzenal,
-                Maquina_Aluguel.maqAluPrecoMensal
+                Maquina_Aluguel.maqAluPrecoMensal,
+                img.imgId AS imagemId,
+                img.imgUrl AS imagemUrl,
+                img.imgNome AS nomeImagem
             FROM Maquina
             LEFT JOIN Maquina_Aluguel 
             ON Maquina.maqId = Maquina_Aluguel.maqId
+            LEFT JOIN Imagens_Equipamento img 
+            ON Maquina.maqId = img.imgMaqId AND img.imgPrincipal = TRUE
             WHERE Maquina.maqStatus = 1;`;
     
         let valores = [idMaquina];
@@ -293,11 +314,16 @@ export default class MaquinaModel {
                 MA.maqAluPrecoDiario,
                 MA.maqAluPrecoSemanal,
                 MA.maqAluPrecoQuinzenal,
-                MA.maqAluPrecoMensal
+                MA.maqAluPrecoMensal,
+                img.imgId AS imagemId,            
+                img.imgUrl AS imagemUrl,         
+                img.imgNome AS nomeImagem         
             FROM Locacao L
             JOIN Itens_Locacao IL ON IL.IteLocLocacaoId = L.locId
             JOIN Maquina M ON M.maqId = IL.iteLocMaqId
             JOIN Maquina_Aluguel MA ON MA.maqId = M.maqId
+            LEFT JOIN Imagens_Equipamento img 
+            ON M.maqId = img.imgMaqId AND img.imgPrincipal = TRUE
             WHERE L.locId = ?`;
     
         let valores = [idLocacao];
@@ -314,5 +340,13 @@ export default class MaquinaModel {
 
         let rows = await db.ExecutaComando(sql, valores);
         return rows
+    }
+
+    async alterarExibicao(maqId, exibir) {
+        const sql = `UPDATE Maquina SET maqExibirCatalogo = ? WHERE maqId = ?`;
+        const valores = [exibir, maqId];
+
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
     }
 }

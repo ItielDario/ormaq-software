@@ -1,3 +1,4 @@
+import { convertStringToType } from "oci-common";
 import Database from "../utils/database.js";
 import EquipamentoStatusModel from "./equipamentoStatusModel.js";
 
@@ -192,5 +193,13 @@ export default class PecaModel {
 
         let rows = await db.ExecutaComando(sql, valores);
         return rows;
+    }
+
+    async alterarExibicao(pecId, exibir) {
+        const sql = `UPDATE Peca SET pecExibirCatalogo = ? WHERE pecId = ?`;
+        const valores = [exibir, pecId];
+
+        const result = await db.ExecutaComandoNonQuery(sql, valores);
+        return result;
     }
 }

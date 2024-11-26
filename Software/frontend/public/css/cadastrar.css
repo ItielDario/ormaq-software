@@ -328,6 +328,17 @@ input::placeholder{
     cursor: pointer;
 }
 
+.td-img-table-locacao{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img-table-locacao{
+    width: 5vw;
+    height: 4vw;
+}
+
 @media (max-width: 60vw) {
     
 }

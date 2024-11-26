@@ -267,7 +267,6 @@ export default class maquinaController {
             }
         }
     }
-    
 
     async listarMaquinasDisponiveis(req, res){ 
         try{
@@ -296,6 +295,34 @@ export default class maquinaController {
         catch(ex) {
             console.log(ex)
             res.status(500).json({msg: "Erro interno de servidor!"});
+        }
+    }
+
+    async exibicaoClassificados(req, res){ 
+        try{
+            const { id } = req.params;
+            const { maqExibirCatalogo } = req.body;
+
+            let maquinaModel = new MaquinaModel()
+            let maquina = await maquinaModel.obter(id)
+            
+            if(maquina.eqpStaId == 1){
+                if(await maquinaModel.alterarExibicao(id, maqExibirCatalogo)){
+                    res.status(200).json({ msg:`Exibição da maquina com a série/chassi ${maquina.maqSerie} alterada!` });
+                }
+                else{
+                    res.status(404).json({ msg:`Erro ao alterar a exibição da maquina com a série/chassi ${maquina.maqSerie}!` });
+                }
+            }
+            else{
+                if(maquina.eqpStaId == 2){ res.staus(404).json({ msg: `A maquina com a série/chassi ${maquina.maqSerie} está locada!` })}
+                if(maquina.eqpStaId == 3){ res.staus(404).json({ msg: `A maquina com a série/chassi ${maquina.maqSerie} está em manutenção!` })}
+                if(maquina.eqpStaId == 4){ res.staus(404).json({ msg: `A maquina com a série/chassi ${maquina.maqSerie} está vendida!` })}
+            }
+        }
+        catch(error){
+            console.log(error)
+            res.status(500).json(error)
         }
     }
 }

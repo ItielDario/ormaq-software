@@ -310,6 +310,53 @@
         }
       }
     },
+    "/maquina/exibir/{id}": {
+      "put": {
+        "tags": [
+          "Maquina"
+        ],
+        "summary": "Exibir ou deixar de exibir uma máquina nos classificados",
+        "description": "Lista todas as máquinas.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "maqExibirCatalogo": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/peca/": {
       "get": {
         "tags": [
@@ -527,6 +574,53 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/peca/exibir/{id}": {
+      "put": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Exibir ou deixar de exibir uma peça nos classificados",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "pecExibirCatalogo": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -751,6 +845,53 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/implemento/exibir/{id}": {
+      "put": {
+        "tags": [
+          "Implementos"
+        ],
+        "summary": "Exibir ou deixar de exibir um implemento nos classificados",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "impExibirCatalogo": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }

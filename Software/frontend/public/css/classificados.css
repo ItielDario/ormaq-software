@@ -1,0 +1,47 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.header-classificados{
+    background-color: rgb(255, 255, 255);
+    width: 100vw ;
+    height: 10vw;
+    border-bottom: none;
+    box-shadow: none;
+}
+
+.info-classificados{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0.5vw 0.3vw 1vw rgba(0, 0, 0, 0.182);
+    border-bottom: 0.1vw solid rgb(202, 202, 202);
+    padding: 1vw 3vw;
+}
+
+.img-logo img{
+    width: 6vw;
+}
+
+input[type="text"]{
+    margin: 0 !important;
+}
+
+
+
+.search{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-button{
+    height: 2vw;
+    padding: 1vw;
+}
+
+.links-cassificados{
+    background-color: white;
+}

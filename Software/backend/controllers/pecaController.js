@@ -97,6 +97,11 @@ export default class pecaController {
                 let result  = await peca.gravar();
 
                 if(result) {
+
+                    // Altera o exibe nos classificados se a máquina estiver vendida/disponível
+                    if(pecaStatus == 4){ await peca.alterarExibicao(pecaId, 2) }
+                    if(pecaStatus == 1){ await peca.alterarExibicao(pecaId, 1) }
+
                     const imagens = req.files;  
                     let achouImagemPrincipal = true
                     let imagensEquipamento = new ImagensEquipamentoModel();
@@ -214,7 +219,10 @@ export default class pecaController {
             let pecaModel = new PecaModel()
             let peca = await pecaModel.obter(id)
 
-            if(peca[0].pecStatus == 1){
+            if(peca[0].pecStatus == 4){
+                res.status(404).json({ msg: `Não é possivel exibir nos classificados, pois a peça ${peca[0].pecNome} está vendida!` })   
+            }
+            else{
                 if(await pecaModel.alterarExibicao(id, pecExibirCatalogo)){
                     res.status(200).json({ msg:`Exibição da peça ${peca[0].pecNome} alterada!` });
                 }
@@ -222,14 +230,20 @@ export default class pecaController {
                     res.status(404).json({ msg:`Erro ao alterar a exibição da peca ${peca[0].pecNome}!` });
                 }
             }
-            else{
-                if(peca.pecStatus == 2){ res.staus(404).json({ msg: `A peca ${peca[0].pecNome} está locada!` })}
-                if(peca.pecStatus == 3){ res.staus(404).json({ msg: `A peca ${peca[0].pecNome} está em manutenção!` })}
-                if(peca.pecStatus == 4){ res.staus(404).json({ msg: `A peca ${peca[0].pecNome} está vendida!` })}
-            }
         }
         catch(error){
             console.log(error)
+            res.status(500).json(error)
+        }
+    }
+
+    async listarPecasParaExibicao(req, res){ 
+        try{
+            let peca = new PecaModel()
+            peca = await peca.listarPecasParaExibicao()
+            res.status(200).json(peca);
+        }
+        catch(error){
             res.status(500).json(error)
         }
     }

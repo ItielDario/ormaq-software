@@ -129,6 +129,7 @@ export default function Maquina() {
     }
 
     function alternarExibicaoClassificados(idMaquina, statusAtual) {
+        alertMsg.current.style.display = 'none';
         const novoStatus = statusAtual === 1 ? 0 : 1; // Alterna entre 1 (exibir) e 0 (não exibir)
         let status = 0;
     
@@ -138,15 +139,19 @@ export default function Maquina() {
             return r.json();
         })
         .then(r => {
-            if (status === 200) {
-                carregarMaquinas(); 
-                alertMsg.current.className = 'alertSuccess';
-            } else {
-                alertMsg.current.className = 'alertError';
-            }
+            timeoutId = setTimeout(() => {
+                if (status === 200) {
+                    carregarMaquinas(); 
+                    alertMsg.current.className = 'alertSuccess';
+                } else {
+                    alertMsg.current.className = 'alertError';
+                }
 
-            alertMsg.current.style.display = 'block';
-            alertMsg.current.textContent = r.msg;
+                alertMsg.current.style.display = 'block';
+                alertMsg.current.textContent = r.msg;
+            }, 100);
+
+            document.getElementById('topAnchor').scrollIntoView({ behavior: 'auto' });
         })
         .catch((ex) => {
             console.log(ex)

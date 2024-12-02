@@ -357,6 +357,26 @@
         }
       }
     },
+    "/maquina/obter/exibir-classificados": {
+      "get": {
+        "tags": [
+          "Maquina"
+        ],
+        "summary": "Listar as máquinas que são para exibir nos classificados",
+        "description": "Lista todas as máquinas.",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/peca/": {
       "get": {
         "tags": [
@@ -621,6 +641,26 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/peca/obter/exibir-classificados": {
+      "get": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Listar as peça que são para exibir nos classificados",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }
@@ -892,6 +932,26 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/implemento/obter/exibir-classificados": {
+      "get": {
+        "tags": [
+          "Implementos"
+        ],
+        "summary": "Listar os implementos que são para exibir nos classificados",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal Server Error"
           }
         }
       }

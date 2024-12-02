@@ -1,7 +1,7 @@
-import { isReadableStream } from "oci-common/lib/helper.js";
+
 import Database from "../utils/database.js";
 import EquipamentoStatusModel from "./equipamentoStatusModel.js";
-import { RESPONSE_LIMIT_DEFAULT } from "next/dist/server/api-utils/index.js";
+
 
 const db = new Database();
 
@@ -198,5 +198,30 @@ export default class ImplementoModel {
 
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
+    }
+
+    async listarImplementosParaExibicao() {
+        let sql = `
+            SELECT 
+                Implemento.impId, 
+                Implemento.impNome, 
+                Implemento.impDataAquisicao, 
+                Implemento.impDescricao, 
+                Implemento.impExibirCatalogo, 
+                Implemento.impPrecoVenda,
+                Implemento.impPrecoHora,
+                img.imgId AS imagemId,
+                img.imgUrl AS imagemUrl,
+                img.imgNome AS nomeImagem
+            FROM Implemento
+            LEFT JOIN Imagens_Equipamento img 
+                ON Implemento.impId = img.imgImpId
+                AND (img.imgPrincipal = TRUE OR img.imgPrincipal IS NULL)
+            WHERE Implemento.impExibirCatalogo = 1
+            ORDER BY Implemento.impId DESC
+        `;
+      
+        let rows = await db.ExecutaComando(sql);
+        return rows;
     }
 }

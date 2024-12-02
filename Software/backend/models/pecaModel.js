@@ -141,7 +141,7 @@ export default class PecaModel {
         let valores = [id];
 
         let rows = await db.ExecutaComando(sql, valores);
-        if(rows.length > 0) {           
+        if(rows.length > 0) {       
             return rows;
         }
         return null;
@@ -198,8 +198,33 @@ export default class PecaModel {
     async alterarExibicao(pecId, exibir) {
         const sql = `UPDATE Peca SET pecExibirCatalogo = ? WHERE pecId = ?`;
         const valores = [exibir, pecId];
-
+        
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
+    }
+
+    async listarPecasParaExibicao() {
+        let sql = `
+            SELECT 
+                Peca.pecId, 
+                Peca.pecNome, 
+                Peca.pecDataAquisicao, 
+                Peca.pecDescricao, 
+                Peca.pecExibirCatalogo, 
+                Peca.pecPrecoVenda,
+                Peca.pecPrecoHora,
+                img.imgId AS imagemId,
+                img.imgUrl AS imagemUrl,
+                img.imgNome AS nomeImagem
+            FROM Peca
+            LEFT JOIN Imagens_Equipamento img 
+                ON Peca.pecId = img.imgPecId
+                AND (img.imgPrincipal = TRUE OR img.imgPrincipal IS NULL)
+            WHERE Peca.pecExibirCatalogo = 1
+            ORDER BY Peca.pecId DESC
+        `;
+    
+        let rows = await db.ExecutaComando(sql);
+        return rows;
     }
 }

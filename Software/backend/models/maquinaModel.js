@@ -349,4 +349,39 @@ export default class MaquinaModel {
         const result = await db.ExecutaComandoNonQuery(sql, valores);
         return result;
     }
+
+    async listarMaquinasParaExibicao() {
+        let sql = `
+            SELECT 
+                Maquina.maqId, 
+                Maquina.maqNome, 
+                Maquina.maqDataAquisicao, 
+                Maquina.maqTipo, 
+                Maquina.maqModelo,         
+                Maquina.maqSerie,           
+                Maquina.maqAnoFabricacao,   
+                Maquina.maqDescricao, 
+                Maquina.maqExibirCatalogo,  
+                Maquina.maqHorasUso, 
+                Maquina.maqPrecoVenda,
+                Maquina_Aluguel.maqAluPrecoDiario,
+                Maquina_Aluguel.maqAluPrecoSemanal,
+                Maquina_Aluguel.maqAluPrecoQuinzenal,
+                Maquina_Aluguel.maqAluPrecoMensal,
+                img.imgId AS imagemId,
+                img.imgUrl AS imagemUrl,
+                img.imgNome AS nomeImagem
+            FROM Maquina
+            LEFT JOIN Maquina_Aluguel 
+                ON Maquina.maqId = Maquina_Aluguel.maqId
+            LEFT JOIN Imagens_Equipamento img 
+                ON Maquina.maqId = img.imgMaqId 
+                AND (img.imgPrincipal = TRUE OR img.imgPrincipal IS NULL) 
+            WHERE Maquina.maqExibirCatalogo = 1
+            ORDER BY Maquina.maqId DESC
+            `;
+        
+        let rows = await db.ExecutaComando(sql);   
+        return rows;
+    }
 }

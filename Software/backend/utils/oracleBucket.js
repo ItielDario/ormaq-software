@@ -17,7 +17,7 @@ async function enviarObjeto(nome, objeto) {
 
   try {
       const putObjectResponse = await client.putObject(putObjectRequest);
-      console.log("Put Object executed successfully", putObjectResponse);
+      console.log("Put Object executed successfully");
       return putObjectResponse;
   } catch (error) {
       console.error("Erro ao enviar objeto:", error);

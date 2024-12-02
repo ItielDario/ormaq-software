@@ -1,14 +1,43 @@
 'use client';
 
 import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { useState, useEffect, useRef } from "react";
+import httpClient from "./admin/utils/httpClient.js";
 import Link from "next/link";
 
 export default function Home() {
-  const equipamentos = [
-    { id: 1, nome: "Escavadeira", imagem: "/image/escavadeira.jpg", descricao: "Modelo X, potência 200HP" },
-    { id: 2, nome: "Trator Agrícola", imagem: "/image/trator.jpg", descricao: "Trator Y, ideal para plantio" },
-    { id: 3, nome: "Betoneira", imagem: "/image/betoneira.jpg", descricao: "Capacidade 500L" },
-  ];
+
+  const [equipamentos, setEquipamentos] = useState([]);
+  const [equipamentosExbir, setEquipamentosExbir] = useState([]);
+
+  // Campos do filtro
+  const checkMaquinaRef = useRef(null)
+  const checkPecaRef = useRef(null)
+  const checkImplementoRef = useRef(null)
+
+  useEffect(() => {
+    // Buscando os dados de máquinas, peças e implementos
+    Promise.all([
+      httpClient.get("/maquina/obter/exibir-classificados").then(r => r.json()),
+      httpClient.get("/peca/obter/exibir-classificados").then(r => r.json()),
+      httpClient.get("/implemento/obter/exibir-classificados").then(r => r.json())
+    ]).then(([maquinas, pecas, implementos]) => {
+      // Combinando os dados em uma única lista
+      const todosEquipamentos = [...maquinas, ...pecas, ...implementos];
+  
+      // Ordenando os equipamentos pelo ID, do mais novo para o mais antigo
+      const equipamentosOrdenados = todosEquipamentos.sort((a, b) => (b.id || b.maqId || b.pecId || b.impId) - (a.id || a.maqId || a.pecId || a.impId));
+  
+      // Atualizando o estado com os equipamentos ordenados
+      setEquipamentos(equipamentosOrdenados);
+      setEquipamentosExbir(equipamentosOrdenados);
+    });
+  }, []);
+
+  const filtrarEquipamentos = () => {
+    console.log(checkMaquinaRef.current.checked)
+    
+  }
 
   return (
     <section className="content-main-children">
@@ -81,17 +110,17 @@ export default function Home() {
                 <legend>Tipo</legend>
 
                 <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="maquina" style={{ width: 'auto' }}/> 
+                  <input type="checkbox" name="tipo" value="maquina" ref={checkMaquinaRef} onClick={filtrarEquipamentos} style={{ width: 'auto' }}/> 
                   <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Máquinas</label>
                 </article>
 
                 <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="peca" style={{ width: 'auto' }}/> 
+                  <input type="checkbox" name="tipo" value="peca" ref={checkPecaRef} onClick={filtrarEquipamentos} style={{ width: 'auto' }}/> 
                   <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Peças</label>
                 </article>
 
                 <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="implemento" style={{ width: 'auto' }}/> 
+                  <input type="checkbox" name="tipo" value="implemento" ref={checkImplementoRef} onClick={filtrarEquipamentos} style={{ width: 'auto' }}/> 
                   <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Implementos</label>
                 </article>
               </fieldset>
@@ -132,54 +161,36 @@ export default function Home() {
           </aside>
 
           <article className="equipamentos">
-            <article className="card-equipamento">
-              <section className="img-equipamento">
-                <img src="https://i.ytimg.com/vi/yYxiXY8_bFY/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLDWa0DqSYOHScbc0fS4GqoTLsG71g" />
-              </section>
+            {equipamentos.map((equipamento) => (
+              <article key={equipamento.id || equipamento.maqId || equipamento.pecId || equipamento.impId} className="card-equipamento">
+                <section className="img-equipamento">
+                  <img src={equipamento.imagemUrl || "/image/sem-imagem.jpg"} alt={'Imagem do equipemento'} />
+                </section>
 
-              <section className="dados-equipamentos">
-                <h4 className="nome-equipamento">Escavadeira Anfíbia 35ton AIZM</h4>
-                <h5>John Deere 6110B</h5>
-                <p>R$ 320.000,00</p>
-              </section>
-            </article>
+                <section className="dados-equipamentos">
+                  <h4 className="nome-equipamento">
+                    {equipamento.maqNome}
+                  </h4>
+                  
+                  {/* Renderiza o modelo apenas para máquinas */}
+                  {equipamento.maqModelo ? (
+                    <h5>{equipamento.maqModelo}</h5>
+                  ) : null}
 
-            <article className="card-equipamento">
-              <section className="img-equipamento">
-                <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEimW3RXYSyH_EmTICrXzU2dKB4p7RGFPPgEJHiE32goe2IAv_2ZYnPe6tXNM9BR6VGyGG3rD2c711C0f8fMITnVWo2V-hRhs36JlGQDQFOVr5wYiX8_4Xk72k2B4AVfrtwQuLDIZmjiJT4/s1600/Muito+esquisito.jpg" />
-              </section>
+                  {/* Caso não seja máquina, exibe o tipo para implementos e peças */}
+                  {!equipamento.maqModelo && (equipamento.pecNome || equipamento.impNome) && (
+                    <article className="dados-peca-implemento">
+                      <h4 className="nome-equipamento">{equipamento.pecNome || equipamento.impNome}</h4>
+                      <h5>{equipamento.pecNome ? "Peça" : "Implemento"}</h5>
+                    </article>
+                  )}
 
-              <section className="dados-equipamentos">
-                <h4 className="nome-equipamento">Escavadeira Anfíbia 35ton AIZM</h4>
-                <h5>John Deere 6110B</h5>
-                <p>R$ 320.000,00</p>
-              </section>
-            </article>
-
-            <article className="card-equipamento">
-              <section className="img-equipamento">
-                <img src="https://i.ytimg.com/vi/lIPFbPAJ5oI/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLB56WJG6RT3_zV1_eS30P7rCpgGlQ" />
-              </section>
-
-              <section className="dados-equipamentos">
-                <h4 className="nome-equipamento">Escavadeira Anfíbia 35ton AIZM</h4>
-                <h5>John Deere 6110B</h5>
-                <p>R$ 320.000,00</p>
-              </section>
-            </article>
-
-            <article className="card-equipamento">
-              <section className="img-equipamento">
-                <img src="https://i.ytimg.com/vi/Y6Y4J0E2oHg/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLBR4BwvvNp4A2W04wP144vMKayqIQ" />
-              </section>
-
-              <section className="dados-equipamentos">
-                <h4 className="nome-equipamento">Escavadeira Anfíbia 35ton AIZM</h4>
-                <h5>John Deere 6110B</h5>
-                <p>R$ 320.000,00</p>
-              </section>
-            </article>
+                  <p>SAIBA MAIS</p>
+                </section>
+              </article>
+            ))}
           </article>
+
         </section>
       </section>
 

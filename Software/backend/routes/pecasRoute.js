@@ -42,4 +42,9 @@ router.put('/exibir/:id', auth.validar, (req, res) => {
     ctrl.exibicaoClassificados(req, res)
 })
 
+router.get('/obter/exibir-classificados', auth.validar, (req, res) => {
+    // #swagger.summary = 'Listar as peça que são para exibir nos classificados'
+    ctrl.listarPecasParaExibicao(req, res)
+})
+
 export default router;

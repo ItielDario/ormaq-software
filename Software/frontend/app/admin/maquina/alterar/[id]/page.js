@@ -82,11 +82,9 @@ export default function AlterarMaquina({ params: { id } }) {
       maqPrecoAluguelQuinzenal: maqPrecoAluguelQuinzenalRef.current.value,
       maqPrecoAluguelMensal: maqPrecoAluguelMensalRef.current.value,
       maqExibirCatalogo: maqExibirCatalogoRef.current.value,
-      maqStatus: maqStatusRef.current.value,
+      maqStatus: maqStatusRef.current ? maqStatusRef.current.value : maquinaSelecionada.eqpStaId,
       maqDescricao: maqDescricao,
     };
-
-    console.log(dados)
     
     if (imagens.length > 0 && imagemPrincipal == null) {
       setTimeout(() => {
@@ -131,7 +129,7 @@ export default function AlterarMaquina({ params: { id } }) {
       formData.append("maqPrecoAluguelQuinzenal", maqPrecoAluguelQuinzenalRef.current.value);
       formData.append("maqPrecoAluguelMensal", maqPrecoAluguelMensalRef.current.value);
       formData.append("maqExibirCatalogo", maqExibirCatalogoRef.current.value);
-      formData.append("maqStatus", maqStatusRef.current.value);
+      formData.append("maqStatus", maqStatusRef.current ? maqStatusRef.current.value : maquinaSelecionada.eqpStaId);
       formData.append("maqDescricao", maqDescricao);
       formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
       formData.append("imagensBancoExcluir", imagensExcluidasString);

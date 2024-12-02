@@ -155,6 +155,11 @@ export default class maquinaController {
                 let result = await maquina.gravar(); 
     
                 if (result) {
+
+                    // Altera o exibe nos classificados se a máquina estiver vendida/disponível
+                    if(maqStatus == 4){ await maquina.alterarExibicao(maqId, 2) }
+                    if(maqStatus == 1){ await maquina.alterarExibicao(maqId, 1) }
+
                     // Atualizando os valores de aluguel da máquina
                     let maquinaAluguel = new MaquinaAluguelModel(0, maqId, maqPrecoAluguelDiario, maqPrecoAluguelSemanal, maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal);
 
@@ -306,7 +311,10 @@ export default class maquinaController {
             let maquinaModel = new MaquinaModel()
             let maquina = await maquinaModel.obter(id)
             
-            if(maquina.eqpStaId == 1){
+            if(maquina.eqpStaId == 4){
+                res.status(404).json({ msg: `Não é possivel exibir nos classificados, pois a maquina com a série/chassi ${maquina.maqSerie} está vendida!` }) 
+            }
+            else{
                 if(await maquinaModel.alterarExibicao(id, maqExibirCatalogo)){
                     res.status(200).json({ msg:`Exibição da maquina com a série/chassi ${maquina.maqSerie} alterada!` });
                 }
@@ -314,14 +322,20 @@ export default class maquinaController {
                     res.status(404).json({ msg:`Erro ao alterar a exibição da maquina com a série/chassi ${maquina.maqSerie}!` });
                 }
             }
-            else{
-                if(maquina.eqpStaId == 2){ res.staus(404).json({ msg: `A maquina com a série/chassi ${maquina.maqSerie} está locada!` })}
-                if(maquina.eqpStaId == 3){ res.staus(404).json({ msg: `A maquina com a série/chassi ${maquina.maqSerie} está em manutenção!` })}
-                if(maquina.eqpStaId == 4){ res.staus(404).json({ msg: `A maquina com a série/chassi ${maquina.maqSerie} está vendida!` })}
-            }
         }
         catch(error){
             console.log(error)
+            res.status(500).json(error)
+        }
+    }
+
+    async listarMaquinasParaExibicao(req, res){ 
+        try{
+            let maquinas = new MaquinaModel()
+            maquinas = await maquinas.listarMaquinasParaExibicao()
+            res.status(200).json(maquinas);
+        }
+        catch(error){
             res.status(500).json(error)
         }
     }

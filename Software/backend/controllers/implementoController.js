@@ -96,6 +96,11 @@ export default class ImplementoController {
                 let result = await implemento.gravar();
 
                 if (result) {
+
+                    // Altera o exibe nos classificados se a máquina estiver vendida/disponível
+                    if(impStatus == 4){ await implemento.alterarExibicao(impId, 2) }
+                    if(impStatus == 1){ await implemento.alterarExibicao(impId, 1) }
+
                     const imagens = req.files;  
                     let achouImagemPrincipal = true
                     let imagensEquipamento = new ImagensEquipamentoModel();
@@ -214,7 +219,10 @@ export default class ImplementoController {
             let implementoModel = new ImplementoModel()
             let implemento = await implementoModel.obter(id)
             
-            if(implemento[0].impStatus == 1){
+            if(implemento[0].impStatus == 4){
+                res.status(404).json({ msg: `Não é possivel exibir nos classificados, pois o implemento ${implemento[0].impNome} está vendido!` })
+            }
+            else{
                 if(await implementoModel.alterarExibicao(id, impExibirCatalogo)){
                     res.status(200).json({ msg:`Exibição do implemento ${implemento[0].impNome} alterada!` });
                 }
@@ -222,14 +230,20 @@ export default class ImplementoController {
                     res.status(404).json({ msg:`Erro ao alterar a exibição da implemento ${implemento[0].impNome}!` });
                 }
             }
-            else{
-                if(implemento.impStatus == 2){ res.staus(404).json({ msg: `O implemento ${implemento[0].impNome} está locado!` })}
-                if(implemento.impStatus == 3){ res.staus(404).json({ msg: `O implemento ${implemento[0].impNome} está em manutenção!` })}
-                if(implemento.impStatus == 4){ res.staus(404).json({ msg: `O implemento ${implemento[0].impNome} está vendido!` })}
-            }
         }
         catch(error){
             console.log(error)
+            res.status(500).json(error)
+        }
+    }
+
+    async listarImplementosParaExibicao(req, res){ 
+        try{
+            let implemento = new ImplementoModel()
+            implemento = await implemento.listarImplementosParaExibicao()
+            res.status(200).json(implemento);
+        }
+        catch(error){
             res.status(500).json(error)
         }
     }

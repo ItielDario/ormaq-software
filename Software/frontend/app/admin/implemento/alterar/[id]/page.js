@@ -30,7 +30,6 @@ export default function AlterarImplemento({ params: { id } }) {
     httpClient.get(`/implemento/${id}`)
       .then(r => r.json())
       .then(r => {
-        console.log(r.implemento)
         r.implemento.impDataAquisicao = new Date(r.implemento.impDataAquisicao).toISOString().split('T')[0];
         setImplementoSelecionado(r.implemento);
         setImpDescricao(r.implemento.impDescricao);
@@ -64,10 +63,8 @@ export default function AlterarImplemento({ params: { id } }) {
       impPrecoVenda: impPrecoVendaRef.current.value,
       impPrecoHora: impPrecoHoraRef.current.value,
       impExibirCatalogo: impExibirCatalogoRef.current.value,
-      impStatus: impStatusRef.current.value,
+      impStatus: impStatusRef.current ? impStatusRef.current.value : implementoSelecionado.impStatus,
     };
-
-    console.log(dados)
 
     if (imagens.length > 0 && imagemPrincipal == null) {
       setTimeout(() => {
@@ -102,7 +99,7 @@ export default function AlterarImplemento({ params: { id } }) {
       formData.append("impDataAquisicao", impDataAquisicaoRef.current.value); 
       formData.append("impDescricao", impDescricao || ""); 
       formData.append("impExibirCatalogo", impExibirCatalogoRef.current.value); 
-      formData.append("impStatus", impStatusRef.current.value); 
+      formData.append("impStatus", impStatusRef.current ? impStatusRef.current.value : implementoSelecionado.impStatus); 
       formData.append("impPrecoVenda", impPrecoVendaRef.current.value); 
       formData.append("impPrecoHora", impPrecoHoraRef.current.value);
       formData.append("nomeImagemPrincipal", nomeImagemPrincipal);

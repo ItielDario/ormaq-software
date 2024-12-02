@@ -29,7 +29,6 @@ export default function AlterarPeca({ params: { id } }) {
     httpClient.get(`/peca/${id}`)
       .then(r => r.json())
       .then(r => {
-        console.log(r.peca)
         r.peca.pecDataAquisicao = new Date(r.peca.pecDataAquisicao).toISOString().split('T')[0];
         setPecaSelecionada(r.peca);
         setPecaDescricao(r.peca.pecDescricao);
@@ -62,11 +61,9 @@ export default function AlterarPeca({ params: { id } }) {
       pecaPrecoVenda: pecaPrecoVendaRef.current.value, 
       pecaPrecoHora: pecaPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
-      pecaStatus: pecaStatusRef.current.value,
+      pecaStatus: pecaStatusRef.current ? pecaStatusRef.current.value : pecaSelecionada.pecStatus,
       pecaDescricao: pecaDescricao,
     };
-
-    console.log(dados)
 
     if (imagens.length > 0 && imagemPrincipal == null) {
       setTimeout(() => {
@@ -101,7 +98,7 @@ export default function AlterarPeca({ params: { id } }) {
       formData.append("pecaDataAquisicao", pecaDataAquisicaoRef.current.value); 
       formData.append("pecaDescricao", pecaDescricao || ""); 
       formData.append("pecaExibirCatalogo", pecaExibirCatalogoRef.current.value); 
-      formData.append("pecaStatus", pecaStatusRef.current.value); 
+      formData.append("pecaStatus", pecaStatusRef.current ? pecaStatusRef.current.value : pecaSelecionada.pecStatus); 
       formData.append("pecaPrecoVenda", pecaPrecoVendaRef.current.value); 
       formData.append("pecaPrecoHora", pecaPrecoHoraRef.current.value);
       formData.append("nomeImagemPrincipal", nomeImagemPrincipal);

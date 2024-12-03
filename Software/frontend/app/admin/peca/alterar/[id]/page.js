@@ -282,7 +282,7 @@ export default function AlterarPeca({ params: { id } }) {
                   type="file"
                   id="inputImagem"
                   multiple
-                  accept=".jpg,.png"
+                  accept=".jpg, .png, .jpeg"
                   onChange={exibirImagem}
                 />
 

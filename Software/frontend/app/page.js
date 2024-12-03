@@ -8,12 +8,17 @@ import Link from "next/link";
 export default function Home() {
 
   const [equipamentos, setEquipamentos] = useState([]);
-  const [equipamentosExbir, setEquipamentosExbir] = useState([]);
+  const [maquinas, setMaquinas] = useState([]);
+  const [pecas, setPecas] = useState([]);
+  const [implementos, setImplementos] = useState([]);
 
   // Campos do filtro
   const checkMaquinaRef = useRef(null)
   const checkPecaRef = useRef(null)
   const checkImplementoRef = useRef(null)
+
+  // Auxiliares
+  const equipamentosContainerRef = useRef(null)
 
   useEffect(() => {
     // Buscando os dados de máquinas, peças e implementos
@@ -26,18 +31,45 @@ export default function Home() {
       const todosEquipamentos = [...maquinas, ...pecas, ...implementos];
   
       // Ordenando os equipamentos pelo ID, do mais novo para o mais antigo
-      const equipamentosOrdenados = todosEquipamentos.sort((a, b) => (b.id || b.maqId || b.pecId || b.impId) - (a.id || a.maqId || a.pecId || a.impId));
+      const equipamentosOrdenados = todosEquipamentos.sort((a, b) => (b.maqId || b.pecId || b.impId) - (a.maqId || a.pecId || a.impId));
   
       // Atualizando o estado com os equipamentos ordenados
       setEquipamentos(equipamentosOrdenados);
-      setEquipamentosExbir(equipamentosOrdenados);
+      setEquipamentos(equipamentosOrdenados);
+      setMaquinas(maquinas);
+      setPecas(pecas);
+      setImplementos(implementos);
+      
     });
   }, []);
 
   const filtrarEquipamentos = () => {
-    console.log(checkMaquinaRef.current.checked)
-    
-  }
+    let equipamentosFiltrados = [];
+    setEquipamentos([]);
+
+    if (checkMaquinaRef.current.checked) {
+      equipamentosFiltrados.push(...maquinas);
+    }
+
+    if (checkPecaRef.current.checked) {
+      equipamentosFiltrados.push(...pecas);
+    }
+
+    if (checkImplementoRef.current.checked) {
+      equipamentosFiltrados.push(...implementos);
+    }
+
+    console.log('Equipamentos filtrados:', equipamentosFiltrados);
+
+    // Atualiza o estado e faz o React renderizar a lista novamente
+    setEquipamentos(equipamentosFiltrados);  // Atualiza o estado e recria a tag
+
+    equipamentosContainerRef.current.innerHTML = ''
+}
+
+useEffect(() => {
+  console.log(equipamentos); // Verificando se o array foi corretamente atualizado
+}, [equipamentos]); // Esse useEffect será chamado sempre que equipamentosExbir mudar
 
   return (
     <section className="content-main-children">
@@ -110,17 +142,17 @@ export default function Home() {
                 <legend>Tipo</legend>
 
                 <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="maquina" ref={checkMaquinaRef} onClick={filtrarEquipamentos} style={{ width: 'auto' }}/> 
+                  <input type="checkbox" name="tipo" value="maquina" ref={checkMaquinaRef} onClick={filtrarEquipamentos} defaultChecked={true} style={{ width: 'auto' }}/> 
                   <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Máquinas</label>
                 </article>
 
                 <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="peca" ref={checkPecaRef} onClick={filtrarEquipamentos} style={{ width: 'auto' }}/> 
+                  <input type="checkbox" name="tipo" value="peca" ref={checkPecaRef} onClick={filtrarEquipamentos} defaultChecked={true} style={{ width: 'auto' }}/> 
                   <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Peças</label>
                 </article>
 
                 <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="implemento" ref={checkImplementoRef} onClick={filtrarEquipamentos} style={{ width: 'auto' }}/> 
+                  <input type="checkbox" name="tipo" value="implemento" ref={checkImplementoRef} onClick={filtrarEquipamentos} defaultChecked={true} style={{ width: 'auto' }}/> 
                   <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Implementos</label>
                 </article>
               </fieldset>
@@ -160,28 +192,40 @@ export default function Home() {
             </form>
           </aside>
 
-          <article className="equipamentos">
-            {equipamentos.map((equipamento) => (
-              <article key={equipamento.id || equipamento.maqId || equipamento.pecId || equipamento.impId} className="card-equipamento">
+          {equipamentos.length > 0 ? (
+          <article ref={equipamentosContainerRef} className="equipamentos">
+
+            {equipamentos.map((equipamento, index) => (
+              <article key={(equipamento.maqId || equipamento.pecId || equipamento.impId)} className={"card-equipamento " + index}>
+
                 <section className="img-equipamento">
                   <img src={equipamento.imagemUrl || "/image/sem-imagem.jpg"} alt={'Imagem do equipemento'} />
                 </section>
 
                 <section className="dados-equipamentos">
-                  <h4 className="nome-equipamento">
-                    {equipamento.maqNome}
-                  </h4>
-                  
-                  {/* Renderiza o modelo apenas para máquinas */}
-                  {equipamento.maqModelo ? (
-                    <h5>{equipamento.maqModelo}</h5>
+                  {/* Renderiza apenas para máquinas */}
+                  {equipamento.maqNome ? (
+                    <section className="dados-maquinas">
+                      <h4 className="nome-equipamento">{equipamento.maqNome}</h4>
+                      <h5>{equipamento.maqModelo}</h5>
+
+                      <h5>R$ {(equipamento.maqPrecoVenda || equipamento.pecPrecoVenda || equipamento.impPrecoVenda)
+                          .replace('.', ',') // Substitui ponto por vírgula
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.')} {/* Formata o número com pontos */}
+                      </h5>
+                    </section>
                   ) : null}
 
-                  {/* Caso não seja máquina, exibe o tipo para implementos e peças */}
-                  {!equipamento.maqModelo && (equipamento.pecNome || equipamento.impNome) && (
+                  {/* Caso não seja máquina, exibe para implementos e peças */}
+                  {(equipamento.pecNome || equipamento.impNome) && (
                     <article className="dados-peca-implemento">
                       <h4 className="nome-equipamento">{equipamento.pecNome || equipamento.impNome}</h4>
                       <h5>{equipamento.pecNome ? "Peça" : "Implemento"}</h5>
+
+                      <h5>R$ {(equipamento.maqPrecoVenda || equipamento.pecPrecoVenda || equipamento.impPrecoVenda)
+                          .replace('.', ',') // Substitui ponto por vírgula
+                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.')} {/* Formata o número com pontos */}
+                      </h5>
                     </article>
                   )}
 
@@ -189,7 +233,10 @@ export default function Home() {
                 </section>
               </article>
             ))}
-          </article>
+            </article>
+            ) : (
+              <p>Nenhum equipamento encontrado.</p> // Mensagem de quando não houver dados
+            )}
 
         </section>
       </section>

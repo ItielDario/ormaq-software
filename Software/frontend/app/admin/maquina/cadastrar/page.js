@@ -270,7 +270,7 @@ export default function CadastrarMaquina() {
             type="file"
             id="inputImagem"
             multiple
-            accept=".jpg,.png"
+            accept=".jpg, .png, .jpeg"
           />
 
           {imagens.length > 0 && (

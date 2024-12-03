@@ -192,7 +192,7 @@ export default function CadastrarImplemento() {
             type="file"
             id="inputImagem"
             multiple
-            accept=".jpg,.png"
+            accept=".jpg, .png, .jpeg"
           />
 
           {imagens.length > 0 && (

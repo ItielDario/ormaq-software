@@ -191,7 +191,7 @@ export default function CadastrarPeca() {
             type="file"
             id="inputImagem"
             multiple
-            accept=".jpg,.png"
+            accept=".jpg, .png, .jpeg"
           />
 
           {imagens.length > 0 && (

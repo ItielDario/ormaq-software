@@ -48,7 +48,7 @@ router.put('/exibir/:id', auth.validar, (req, res) => {
     ctrl.exibicaoClassificados(req, res)
 })
 
-router.get('/obter/exibir-classificados', auth.validar, (req, res) => {
+router.get('/obter/exibir-classificados', (req, res) => {
     // #swagger.summary = 'Listar as máquinas que são para exibir nos classificados'
     ctrl.listarMaquinasParaExibicao(req, res)
 })

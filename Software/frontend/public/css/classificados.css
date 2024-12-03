@@ -132,7 +132,7 @@
 
 .card-equipamento {
     width: 30%;
-    height: 25vw;
+    height: 27vw;
     display: flex;
     flex-direction: column;
     border-radius: 0.3vw;
@@ -144,7 +144,7 @@
   
 .card-equipamento:hover {
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.150), 0 12px 24px rgba(0, 0, 0, 0.150);
-    transform: translateY(-0.4vw); /* Move o card para cima */
+    transform: translateY(-0.3vw); /* Move o card para cima */
 }
   
 .img-equipamento{
@@ -166,13 +166,13 @@
     text-align: center;
 }
 
-.dados-equipamentos > h4, .dados-peca-implemento > h4{
+.dados-peca-implemento > h4, .dados-maquinas > h4{
     font-weight: bold;
     font-size: 1.2vw;
     color: #353535;
 }
 
-.dados-equipamentos > h5, .dados-peca-implemento > h5{
+.dados-peca-implemento > h5, .dados-maquinas > h5{
     font-size: 1.15vw;
     margin-top: 0.5vw;
     color: #353535;
@@ -189,6 +189,10 @@
     padding: 1vw;
     border-radius: 0.3vw;
     cursor: pointer;
+}
+
+.dados-equipamentos > p:hover{
+    background-color: rgb(35, 167, 233);
 }
   
 /* FILTROS */

@@ -1,0 +1,271 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.main-container-equipamento{
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.container-princial{
+    width: 100%;
+    height: 40vw;
+    margin-top: 2vw;
+    display: flex;
+    gap: 2vw
+}
+
+.imagens-equipamento{
+    width: 60%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6vw;
+}
+
+.informações-equipamento{
+    width: 40%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.imagem-principal {
+    display: flex; /* Habilita o alinhamento flex */
+    justify-content: center; /* Centraliza horizontalmente */
+    align-items: center; /* Centraliza verticalmente */
+    width: 100%;
+    height: 87.5%;
+    overflow: hidden; /* Garante que partes extras da imagem sejam cortadas */
+    position: relative; /* Garante que o posicionamento interno funcione */
+}
+
+.imagem-principal > img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    object-position: center; 
+    border-radius: 0.3vw;
+    border: 0.1vw solid rgb(193, 193, 193);
+}
+
+.container-todas-imagens{
+    width: 100%;
+    height: 12.5%;
+    display: flex;
+    gap: 1.6vw;
+}
+
+.container-todas-imagens > .imagem{
+    width: 14%; 
+    height: 100%;
+    border-radius: 0.3vw;
+}
+
+.container-todas-imagens > .imagem > img {
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover; 
+    object-position: center; 
+    cursor: pointer;
+    border: 0.1vw solid rgb(193, 193, 193);
+    border-radius: 0.3vw;
+}
+
+.imagem-destaque {
+    border: 0.15vw solid #292929 !important; /* Cor de destaque */
+    transform: scale(1.05); /* Aumenta um pouco a imagem */
+    border-radius: 0.3vw;
+}
+
+.imagem-destaque > img{
+    border: none !important
+}
+
+.separacao{
+    border-left: 0.1vw rgb(189, 189, 189) solid;
+}
+
+.detalhes-maquina > h4{
+    font-size: 2vw;
+    color: #333;
+    margin-bottom: 0.5vw;
+}
+
+.detalhes-maquina h5{
+    font-size: 1.5vw !important;
+    color: #393939 !important;
+    margin-bottom: 2vw !important;
+    font-weight: normal;
+}
+  
+.aluguel-maquina > h4 {
+    font-size: 1.4vw;
+    color: #333;
+    margin-bottom: 1vw;
+}
+
+.info-lista {
+    list-style-type: none;
+    padding: 0;
+    font-size: 1.2vw;
+    color: #555;
+}
+
+.info-lista li {
+    margin-bottom: 1vw;
+}
+
+.info-lista li strong {
+    font-weight: bold;
+    color: #222;
+}
+
+.tabela-aluguel > thead > tr > th{
+    font-size: 1.2vw !important;
+    padding: 0.5vw !important;
+}
+
+.tabela-aluguel > tbody > tr > td{
+    font-size: 1.1vw !important;
+    padding: 0.5vw !important;
+    color: #272727 !important;
+}
+
+.btn-whats{
+    background-color: rgb(36, 177, 36);
+    padding: 1vw;
+    border-radius: 0.4vw;
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    gap: 0.3vw;
+    font-weight: bold;
+    color: white;
+    letter-spacing: 0.1vw;
+}
+
+.btn-whats:hover{
+    background-color: rgb(28, 184, 28);
+}
+
+
+/* DESCRIÇÃO */
+
+.descricao-equipemanto{
+    margin-top: 5vw;
+}
+
+.title-descricao > h4{
+    font-size: 1.4vw;
+    color: #333;
+    margin-bottom: 2vw;
+}
+
+/* Para o parágrafo */
+.title-descricao p {
+    margin: 0.2vw 2vw;
+    font-size: 1.2vw;
+    line-height: 1.8vw;
+    color: #333;
+}
+
+/* Para títulos (strong dentro de p ou solo) */
+.title-descricao strong {
+    font-size: 1.2vw;
+    font-weight: bold;
+    color: #161616;
+}
+
+/* Para links */
+.title-descricao a {
+    color: #0066cc;
+    text-decoration: underline;
+    font-size: 1.2vw;
+}
+
+.title-descricao a:hover {
+    color: #004499;
+    text-decoration: none;
+}
+
+/* Para listas não ordenadas */
+.title-descricao ul {
+    margin-left: 3vw;
+    font-size: 1.2vw;
+    list-style: disc;
+    color: #444;
+}
+
+.title-descricao ul li {
+    margin-bottom: 0.8vw;
+}
+
+/* Para listas ordenadas */
+.title-descricao ol {
+    margin-left: 3vw;
+    font-size: 1.2vw;
+    list-style: decimal;
+    color: #444;
+}
+
+.title-descricao ol li {
+    margin-bottom: 0.8vw;
+}
+
+/* Para blocos de citação */
+.title-descricao blockquote {
+    margin-left: 3vw;
+    margin-right: 3vw;
+    font-size: 1.1vw;
+    font-style: italic;
+    color: #666;
+    border-left: 0.5vw solid #ccc;
+    padding-left: 2vw;
+}
+
+/* Para tabelas */
+.title-descricao figure.table {
+    height: auto !important;
+    margin: 0 !important;
+    border-collapse: collapse;
+    font-size: 1.2vw;
+    color: #333;
+    background-color: white !important;
+}
+
+.title-descricao figure.table th,
+.title-descricao figure.table td {
+    border: 0.1vw solid #ddd !important;
+    padding: 1vw !important;
+    text-align: left !important;
+    background-color: white !important;
+    font-size: 1.2vw;
+}
+
+.ck-table-resized{
+    margin-bottom: -0.1vw !important;
+}
+
+/* Para imagens */
+.title-descricao img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 2vw auto;
+}
+
+/* Para figuras e legendas */
+.title-descricao figure {
+    margin: 2vw auto;
+    text-align: center;
+}
+
+.title-descricao figcaption {
+    font-size: 1vw;
+    color: #555;
+}

@@ -12,7 +12,7 @@ router.get('/', auth.validar, (req, res) => {
     ctrl.listarImplementos(req, res)
 })
 
-router.get('/:id', auth.validar, (req, res) => {
+router.get('/:id', (req, res) => {
     // #swagger.summary = 'Obter um implemento'
     ctrl.obterImplemento(req, res)
 })

@@ -16,9 +16,6 @@ export default function Home() {
   const precoMaiorInputRef = useRef(null);
   const precoMenorInputRef = useRef(null);
 
-  // Auxiliares
-  
-
   useEffect(() => {
     // Carregando os dados de máquinas, peças e implementos
     const fetchEquipamentos = async () => {
@@ -64,31 +61,17 @@ export default function Home() {
 
   const filtrarPorPreco = (equipamentos, precoMin, precoMax) => {
     return equipamentos.filter((equipamento) => {
-      const preco =
-        equipamento.maqPrecoVenda ||
-        equipamento.pecPrecoVenda ||
-        equipamento.impPrecoVenda ||
-        0;
+      const preco = equipamento.maqPrecoVenda || equipamento.pecPrecoVenda || equipamento.impPrecoVenda || 0;
       return preco >= precoMin && preco <= precoMax;
     });
   };
 
   const ordenarEquipamentos = (equipamentos, criterio) => {
     return [...equipamentos].sort((a, b) => {
-      const nomeA =
-        a.maqNome || a.pecNome || a.impNome || "";
-      const nomeB =
-        b.maqNome || b.pecNome || b.impNome || "";
-      const precoA =
-        a.maqPrecoVenda ||
-        a.pecPrecoVenda ||
-        a.impPrecoVenda ||
-        0;
-      const precoB =
-        b.maqPrecoVenda ||
-        b.pecPrecoVenda ||
-        b.impPrecoVenda ||
-        0;
+      const nomeA = a.maqNome || a.pecNome || a.impNome || "";
+      const nomeB = b.maqNome || b.pecNome || b.impNome || "";
+      const precoA = a.maqPrecoVenda || a.pecPrecoVenda || a.impPrecoVenda || 0;
+      const precoB = b.maqPrecoVenda || b.pecPrecoVenda || b.impPrecoVenda || 0;
   
       switch (criterio) {
         case "maior_preco":
@@ -166,6 +149,7 @@ export default function Home() {
           <nav className="links-classificados">
             <ul className="menu">
               <li><Link href="https://ormaq.com.br/">INÍCIO</Link></li>
+              <li><Link href="/">CLASSIFICADOS</Link></li>
               <li><Link href="https://ormaq.com.br/sobre-nos/">SOBRE NÓS</Link></li>
               <li><Link href="https://ormaq.com.br/servicos/">SERVIÇOS</Link></li>
               <li><Link href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
@@ -268,7 +252,7 @@ export default function Home() {
                           <h5>R$ {equipamento.maqPrecoVenda .replace(".", ",") .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</h5>
                         </section>
 
-                        <a href={`/maquina/${equipamento.maqId}`}><p>SAIBA MAIS</p></a>
+                        <Link href={`/maquina/${equipamento.maqId}`}><p>SAIBA MAIS</p></Link>
                       </section>
                     </article>
                   );
@@ -289,7 +273,7 @@ export default function Home() {
                           <h5>R$ {equipamento.pecPrecoVenda.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</h5>
                         </article>
 
-                        <a href={`/peca/${equipamento.pecId}`}><p>SAIBA MAIS</p></a>
+                        <Link href={`/peca/${equipamento.pecId}`}><p>SAIBA MAIS</p></Link>
                       </section>
                     </article>
                   );
@@ -310,7 +294,7 @@ export default function Home() {
                           <h5>R$ {equipamento.impPrecoVenda .replace(".", ",") .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</h5>
                         </article>
 
-                        <a href={`/implemento/${equipamento.impId}`}><p>SAIBA MAIS</p></a>
+                        <Link href={`/implemento/${equipamento.impId}`}><p>SAIBA MAIS</p></Link>
                       </section>
                     </article>
                   );
@@ -324,7 +308,7 @@ export default function Home() {
           )}
         </section>
       </section>
-
+      
       <article className="footer">
         <p>© 2024 ORMAQ. Todos os direitos reservados.</p>
       </article>

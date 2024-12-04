@@ -107,6 +107,11 @@
     border-bottom: 0.2vw solid #7e7e7e;
 }
 
+.link-voltar:hover{
+    text-decoration: underline;
+    color: black;
+}
+
 
 /* MAIN */
 

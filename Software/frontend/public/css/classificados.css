@@ -179,7 +179,7 @@
     font-weight: normal;
 }
 
-.dados-equipamentos > p{
+.dados-equipamentos p{
     font-size: 1.1vw;
     margin-top: 1.3vw;
     color: rgb(255, 251, 243);
@@ -191,7 +191,7 @@
     cursor: pointer;
 }
 
-.dados-equipamentos > p:hover{
+.dados-equipamentos p:hover{
     background-color: rgb(35, 167, 233);
 }
   
@@ -233,11 +233,16 @@
   
 .filtros input[type="text"],
 .filtros input[type="number"],
-.filtros input[type="checkbox"]{
+.filtros input[type="radio"]{
     width: 100%;
     padding: 0.5vw;
     border: 0.1vw solid #ccc;
     border-radius: 0.3vw;
+}
+
+.filtros input[type="radio"]{
+    width: 10% !important;
+    padding: 0 !important;
 }
 
 .select-tipo {
@@ -246,6 +251,7 @@
     justify-content: start;
     gap: 1vw;
     margin-bottom: 0.5vw;
+    text-align: start;
 }
 
 .input-group-filtro{

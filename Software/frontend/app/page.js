@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram } from 'react-icons/fa';
 import { useState, useEffect, useRef } from "react";
@@ -6,70 +6,128 @@ import httpClient from "./admin/utils/httpClient.js";
 import Link from "next/link";
 
 export default function Home() {
-
   const [equipamentos, setEquipamentos] = useState([]);
   const [maquinas, setMaquinas] = useState([]);
   const [pecas, setPecas] = useState([]);
   const [implementos, setImplementos] = useState([]);
 
-  // Campos do filtro
-  const checkMaquinaRef = useRef(null)
-  const checkPecaRef = useRef(null)
-  const checkImplementoRef = useRef(null)
+  // Referências para os filtros
+  const buscarInputRef = useRef(null);
+  const precoMaiorInputRef = useRef(null);
+  const precoMenorInputRef = useRef(null);
 
   // Auxiliares
-  const equipamentosContainerRef = useRef(null)
+  
 
   useEffect(() => {
-    // Buscando os dados de máquinas, peças e implementos
-    Promise.all([
-      httpClient.get("/maquina/obter/exibir-classificados").then(r => r.json()),
-      httpClient.get("/peca/obter/exibir-classificados").then(r => r.json()),
-      httpClient.get("/implemento/obter/exibir-classificados").then(r => r.json())
-    ]).then(([maquinas, pecas, implementos]) => {
-      // Combinando os dados em uma única lista
-      const todosEquipamentos = [...maquinas, ...pecas, ...implementos];
-  
-      // Ordenando os equipamentos pelo ID, do mais novo para o mais antigo
-      const equipamentosOrdenados = todosEquipamentos.sort((a, b) => (b.maqId || b.pecId || b.impId) - (a.maqId || a.pecId || a.impId));
-  
-      // Atualizando o estado com os equipamentos ordenados
-      setEquipamentos(equipamentosOrdenados);
-      setEquipamentos(equipamentosOrdenados);
-      setMaquinas(maquinas);
-      setPecas(pecas);
-      setImplementos(implementos);
-      
-    });
+    // Carregando os dados de máquinas, peças e implementos
+    const fetchEquipamentos = async () => {
+      try {
+        const [maquinasData, pecasData, implementosData] = await Promise.all([
+          httpClient.get("/maquina/obter/exibir-classificados").then((res) => res.json()),
+          httpClient.get("/peca/obter/exibir-classificados").then((res) => res.json()),
+          httpClient.get("/implemento/obter/exibir-classificados").then((res) => res.json()),
+        ]);
+
+        // Atualizando os estados
+        setMaquinas(maquinasData);
+        setPecas(pecasData);
+        setImplementos(implementosData);
+        setEquipamentos([...maquinasData]); // Inicialmente, exibe todos os equipamentos
+      } 
+      catch (error) {
+        console.error("Erro ao carregar os dados:", error);
+      }
+    };
+
+    fetchEquipamentos();
   }, []);
 
-  const filtrarEquipamentos = () => {
-    let equipamentosFiltrados = [];
-    setEquipamentos([]);
+  const filtrarPorTipo = (equipamentos, tipo) => {
+    return equipamentos.filter((equipamento) => {
+      if (tipo === "maquinas" && equipamento.maqNome) return true;
+      if (tipo === "pecas" && equipamento.pecNome) return true;
+      if (tipo === "implementos" && equipamento.impNome) return true;
+      return false;
+    });
+  };
 
-    if (checkMaquinaRef.current.checked) {
-      equipamentosFiltrados.push(...maquinas);
-    }
+  const filtrarPorNome = (equipamentos, nomeBusca) => {
+    if (!nomeBusca) return equipamentos;
+  
+    return equipamentos.filter((equipamento) =>
+      (equipamento.maqNome || equipamento.pecNome || equipamento.impNome)
+        .toLowerCase()
+        .includes(nomeBusca.toLowerCase())
+    );
+  };
 
-    if (checkPecaRef.current.checked) {
-      equipamentosFiltrados.push(...pecas);
-    }
+  const filtrarPorPreco = (equipamentos, precoMin, precoMax) => {
+    return equipamentos.filter((equipamento) => {
+      const preco =
+        equipamento.maqPrecoVenda ||
+        equipamento.pecPrecoVenda ||
+        equipamento.impPrecoVenda ||
+        0;
+      return preco >= precoMin && preco <= precoMax;
+    });
+  };
 
-    if (checkImplementoRef.current.checked) {
-      equipamentosFiltrados.push(...implementos);
-    }
+  const ordenarEquipamentos = (equipamentos, criterio) => {
+    return [...equipamentos].sort((a, b) => {
+      const nomeA =
+        a.maqNome || a.pecNome || a.impNome || "";
+      const nomeB =
+        b.maqNome || b.pecNome || b.impNome || "";
+      const precoA =
+        a.maqPrecoVenda ||
+        a.pecPrecoVenda ||
+        a.impPrecoVenda ||
+        0;
+      const precoB =
+        b.maqPrecoVenda ||
+        b.pecPrecoVenda ||
+        b.impPrecoVenda ||
+        0;
+  
+      switch (criterio) {
+        case "maior_preco":
+          return precoB - precoA;
+        case "menor_preco":
+          return precoA - precoB;
+        case "a_z":
+          return nomeA.localeCompare(nomeB);
+        case "z_a":
+          return nomeB.localeCompare(nomeA);
+        default:
+          return 0; // Novidades (ordem original)
+      }
+    });
+  };
 
-    console.log('Equipamentos filtrados:', equipamentosFiltrados);
+  const handleFilterChange = (e) => {
+    const formData = new FormData(e.target.form || e.target.closest('form')); // Obtém os dados do formulário
+    const tipo = formData.get("tipo-equipamento");
+    const nomeBusca = formData.get("nome") || "";
+    const precoMin = parseFloat(formData.get("preco-min")) || 0;
+    const precoMax = parseFloat(formData.get("preco-max")) || Infinity;
+    const ordenacao = formData.get("ordenar");
+  
+    // Aplica os filtros
+    let equipamentosFiltrados = [...maquinas, ...pecas, ...implementos];
+  
+    equipamentosFiltrados = filtrarPorTipo(equipamentosFiltrados, tipo);
+    equipamentosFiltrados = filtrarPorNome(equipamentosFiltrados, nomeBusca);
+    equipamentosFiltrados = filtrarPorPreco(equipamentosFiltrados, precoMin, precoMax);
+    equipamentosFiltrados = ordenarEquipamentos(equipamentosFiltrados, ordenacao);
+  
+    setEquipamentos(equipamentosFiltrados);
+  };
 
-    // Atualiza o estado e faz o React renderizar a lista novamente
-    setEquipamentos(equipamentosFiltrados);  // Atualiza o estado e recria a tag
-
-    equipamentosContainerRef.current.innerHTML = ''
-}
-
-useEffect(() => {
-  console.log(equipamentos); // Verificando se o array foi corretamente atualizado
-}, [equipamentos]); // Esse useEffect será chamado sempre que equipamentosExbir mudar
+  // Efeito para acompanhar mudanças no estado de equipamentos (se necessário para lógica adicional)
+  useEffect(() => {
+    console.log("Equipamentos atualizados:", equipamentos);
+  }, [equipamentos]);
 
   return (
     <section className="content-main-children">
@@ -139,105 +197,131 @@ useEffect(() => {
             <form style={{ width: 'auto', height: 'auto', margin: '0' }}>
               {/* Filtro por Tipo */}
               <fieldset>
-                <legend>Tipo</legend>
+                <legend>Tipo de Equipamentos</legend>
 
-                <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="maquina" ref={checkMaquinaRef} onClick={filtrarEquipamentos} defaultChecked={true} style={{ width: 'auto' }}/> 
-                  <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Máquinas</label>
+                <article className="select-tipo">
+                  <input type="radio" name="tipo-equipamento" value="maquinas" onChange={handleFilterChange} defaultChecked={true} />
+                  <label>Máquinas</label>
                 </article>
 
-                <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="peca" ref={checkPecaRef} onClick={filtrarEquipamentos} defaultChecked={true} style={{ width: 'auto' }}/> 
-                  <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Peças</label>
+                <article className="select-tipo">
+                  <input type="radio" name="tipo-equipamento" value="pecas" onChange={handleFilterChange} />
+                  <label>Peças</label>
                 </article>
 
-                <article className='select-tipo'>
-                  <input type="checkbox" name="tipo" value="implemento" ref={checkImplementoRef} onClick={filtrarEquipamentos} defaultChecked={true} style={{ width: 'auto' }}/> 
-                  <label style={{ width: 'auto', height: 'auto', margin: '0' }}>Implementos</label>
+                <article className="select-tipo">
+                  <input type="radio" name="tipo-equipamento" value="implementos" onChange={handleFilterChange} />
+                  <label>Implementos</label>
                 </article>
               </fieldset>
 
               {/* Ordenação */}
-              <label className='legend'>
+              <label className="legend">
                 Listar por:
-                <select name="ordenar">
+                <select name="ordenar" onChange={handleFilterChange}>
                   <option value="novidades">Novidades</option>
-                  <option value="maior_preco">Maior Preço</option>
                   <option value="menor_preco">Menor Preço</option>
+                  <option value="maior_preco">Maior Preço</option>
                   <option value="a_z">Nome: A a Z</option>
                   <option value="z_a">Nome: Z a A</option>
                 </select>
               </label>
 
               {/* Filtro por Nome */}
-              <label className='legend'>
+              <label className="legend">
                 Busca por Nome:
-                <input type="text" name="nome" placeholder="Digite o nome" />
+                <input type="text" name="nome" placeholder="Digite o nome" onChange={handleFilterChange} ref={buscarInputRef} />
               </label>
 
               {/* Filtro por Preço */}
               <section>
                 <legend>Preço</legend>
-
-                <article className='legend input-group-filtro'>
-                  <article className='input-50'>
-                    <input type="number" name="preco" placeholder="De" />
+                <article className="legend input-group-filtro">
+                  <article className="input-50">
+                    <input type="number" name="preco-min" placeholder="De" onChange={handleFilterChange} ref={precoMaiorInputRef} />
                   </article>
                   -
-                  <article className='input-50'>
-                    <input type="number" name="preco" placeholder="Até" />
+                  <article className="input-50">
+                    <input type="number" name="preco-max" placeholder="Até" onChange={handleFilterChange} ref={precoMenorInputRef} />
                   </article>
-                </article>                
+                </article>
               </section>
             </form>
+
           </aside>
 
           {equipamentos.length > 0 ? (
-          <article ref={equipamentosContainerRef} className="equipamentos">
+            <article className="equipamentos">
+              {equipamentos.map((equipamento, index) => {
+                // Renderiza máquinas
+                if (equipamento.maqNome) {
+                  return (
+                    <article key={equipamento.maqId} className={`card-equipamento ${index}`}>
+                      <section className="img-equipamento">
+                        <img src={equipamento.imagemUrl || "/image/sem-imagem.jpg"} alt="Imagem do equipamento" />
+                      </section>
 
-            {equipamentos.map((equipamento, index) => (
-              <article key={(equipamento.maqId || equipamento.pecId || equipamento.impId)} className={"card-equipamento " + index}>
+                      <section className="dados-equipamentos">
+                        <section className="dados-maquinas">
+                          <h4 className="nome-equipamento">{equipamento.maqNome}</h4>
+                          <h5>{equipamento.maqModelo}</h5>
+                          <h5>R$ {equipamento.maqPrecoVenda .replace(".", ",") .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</h5>
+                        </section>
 
-                <section className="img-equipamento">
-                  <img src={equipamento.imagemUrl || "/image/sem-imagem.jpg"} alt={'Imagem do equipemento'} />
-                </section>
-
-                <section className="dados-equipamentos">
-                  {/* Renderiza apenas para máquinas */}
-                  {equipamento.maqNome ? (
-                    <section className="dados-maquinas">
-                      <h4 className="nome-equipamento">{equipamento.maqNome}</h4>
-                      <h5>{equipamento.maqModelo}</h5>
-
-                      <h5>R$ {(equipamento.maqPrecoVenda || equipamento.pecPrecoVenda || equipamento.impPrecoVenda)
-                          .replace('.', ',') // Substitui ponto por vírgula
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.')} {/* Formata o número com pontos */}
-                      </h5>
-                    </section>
-                  ) : null}
-
-                  {/* Caso não seja máquina, exibe para implementos e peças */}
-                  {(equipamento.pecNome || equipamento.impNome) && (
-                    <article className="dados-peca-implemento">
-                      <h4 className="nome-equipamento">{equipamento.pecNome || equipamento.impNome}</h4>
-                      <h5>{equipamento.pecNome ? "Peça" : "Implemento"}</h5>
-
-                      <h5>R$ {(equipamento.maqPrecoVenda || equipamento.pecPrecoVenda || equipamento.impPrecoVenda)
-                          .replace('.', ',') // Substitui ponto por vírgula
-                          .replace(/\B(?=(\d{3})+(?!\d))/g, '.')} {/* Formata o número com pontos */}
-                      </h5>
+                        <a href={`/maquina/${equipamento.maqId}`}><p>SAIBA MAIS</p></a>
+                      </section>
                     </article>
-                  )}
+                  );
+                }
 
-                  <p>SAIBA MAIS</p>
-                </section>
-              </article>
-            ))}
+                // Renderiza peças
+                if (equipamento.pecNome) {
+                  return (
+                    <article key={equipamento.pecId} className={`card-equipamento ${index}`}>
+                      <section className="img-equipamento">
+                        <img src={equipamento.imagemUrl || "/image/sem-imagem.jpg"}malt="Imagem do equipamento" />
+                      </section>
+
+                      <section className="dados-equipamentos">
+                        <article className="dados-peca-implemento">
+                          <h4 className="nome-equipamento">{equipamento.pecNome}</h4>
+                          <h5>Peça</h5>
+                          <h5>R$ {equipamento.pecPrecoVenda.replace(".", ",").replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</h5>
+                        </article>
+
+                        <a href={`/peca/${equipamento.pecId}`}><p>SAIBA MAIS</p></a>
+                      </section>
+                    </article>
+                  );
+                }
+
+                // Renderiza implementos
+                if (equipamento.impNome) {
+                  return (
+                    <article key={equipamento.impId} className={`card-equipamento ${index}`}>
+                      <section className="img-equipamento">
+                        <img src={equipamento.imagemUrl || "/image/sem-imagem.jpg"} alt="Imagem do equipamento" />
+                      </section>
+
+                      <section className="dados-equipamentos">
+                        <article className="dados-peca-implemento">
+                          <h4 className="nome-equipamento">{equipamento.impNome}</h4>
+                          <h5>Implemento</h5>
+                          <h5>R$ {equipamento.impPrecoVenda .replace(".", ",") .replace(/\B(?=(\d{3})+(?!\d))/g, ".")}</h5>
+                        </article>
+
+                        <a href={`/implemento/${equipamento.impId}`}><p>SAIBA MAIS</p></a>
+                      </section>
+                    </article>
+                  );
+                }
+
+                return null;
+              })}
             </article>
-            ) : (
-              <p>Nenhum equipamento encontrado.</p> // Mensagem de quando não houver dados
-            )}
-
+          ) : (
+            <p>Nenhum equipamento encontrado.</p>
+          )}
         </section>
       </section>
 

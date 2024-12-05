@@ -377,6 +377,36 @@
         }
       }
     },
+    "/api/maquina/obter/exibir-classificados/{id}": {
+      "get": {
+        "tags": [
+          "Maquina"
+        ],
+        "summary": "Busca uma máquina pelo no id que está disponível para exibir nos classificados",
+        "description": "Lista todas as máquinas.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/peca/": {
       "get": {
         "tags": [
@@ -662,6 +692,36 @@
         }
       }
     },
+    "/api/peca/obter/exibir-classificados/{id}": {
+      "get": {
+        "tags": [
+          "Peças"
+        ],
+        "summary": "Busca uma peça pelo no id que está disponível para exibir nos classificados",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
     "/api/implemento/": {
       "get": {
         "tags": [
@@ -940,6 +1000,36 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/implemento/obter/exibir-classificados/{id}": {
+      "get": {
+        "tags": [
+          "Implementos"
+        ],
+        "summary": "Busca um implemento pelo no id que está disponível para exibir nos classificados",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"

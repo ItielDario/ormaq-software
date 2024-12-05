@@ -15,9 +15,10 @@ export default function ExibirMaquina({ params: { id } }) {
   const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
   useEffect(() => {
-    httpClient.get(`/maquina/${id}`)
+    httpClient.get(`/maquina/obter/exibir-classificados/${id}`)
       .then(r => r.json())
       .then(r => {
+        console.log(r)
         r.maquina.maqDataAquisicao = new Date(r.maquina.maqDataAquisicao).toISOString().split('T')[0];
 
         if(r.imagensMaquina.length == 0){
@@ -239,7 +240,7 @@ export default function ExibirMaquina({ params: { id } }) {
                         </article>
                     </section>
                 ) : (
-                    <p>Carregando...</p>
+                    <p className="carregando">Carregando...</p>
                 )}
             </section>
         )}

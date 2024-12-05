@@ -13,7 +13,7 @@ export default function ExibirImplemento({ params: { id } }) {
     const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
     useEffect(() => {
-        httpClient.get(`/implemento/${id}`)
+        httpClient.get(`/implemento/obter/exibir-classificados/${id}`)
         .then(r => r.json())
         .then(r => {
             r.implemento.impDataAquisicao = new Date(r.implemento.impDataAquisicao).toISOString().split('T')[0];
@@ -188,7 +188,7 @@ export default function ExibirImplemento({ params: { id } }) {
                             </article>
                         </section>
                     ) : (
-                        <p>Carregando...</p>
+                        <p className="carregando">Carregando...</p>
                     )}
                 </section>
             )}

@@ -247,4 +247,27 @@ export default class ImplementoController {
             res.status(500).json(error)
         }
     }
+
+    async buscaImplementoExibir(req, res) {
+        try {
+            let { id } = req.params;
+
+            let implemento = new ImplementoModel();
+            implemento = await implemento.buscaImplementoExibir(id);
+
+            if(implemento != null){
+                let imagensImplemento = new ImagensEquipamentoModel();
+                imagensImplemento = await imagensImplemento.obterImgImplemento(id);
+
+                res.status(200).json({implemento, imagensImplemento});
+            }
+            else {
+                res.status(404).json({ msg: `Peça não disponível para exibição!` });
+            }
+        } 
+        catch (ex) {
+            console.log(ex);
+            res.status(500).json({ msg: "Erro interno de servidor!" });
+        }
+    }
 }

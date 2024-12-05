@@ -47,4 +47,9 @@ router.get('/obter/exibir-classificados', (req, res) => {
     ctrl.listarPecasParaExibicao(req, res)
 })
 
+router.get('/obter/exibir-classificados/:id', (req, res) => {
+    // #swagger.summary = 'Busca uma peça pelo no id que está disponível para exibir nos classificados'
+    ctrl.buscaPecaExibir(req, res)
+})
+
 export default router;

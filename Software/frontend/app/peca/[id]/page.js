@@ -14,7 +14,7 @@ export default function ExibirPeca({ params: { id } }) {
   const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
   useEffect(() => {
-    httpClient.get(`/peca/${id}`)
+    httpClient.get(`/peca/obter/exibir-classificados/${id}`)
     .then(r => r.json())
     .then(r => {
         r.peca.pecDataAquisicao = new Date(r.peca.pecDataAquisicao).toISOString().split('T')[0];
@@ -192,7 +192,7 @@ export default function ExibirPeca({ params: { id } }) {
                         </article>
                     </section>
                 ) : (
-                    <p>Carregando...</p>
+                    <p className="carregando">Carregando...</p>
                 )}
             </section>
         )}

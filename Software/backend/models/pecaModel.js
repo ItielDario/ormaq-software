@@ -227,4 +227,20 @@ export default class PecaModel {
         let rows = await db.ExecutaComando(sql);
         return rows;
     }
+
+    async buscaPecaExibir(id) {
+        let sql = `SELECT Peca.pecId, Peca.pecNome, Peca.pecDataAquisicao, Peca.pecDescricao, Peca.pecExibirCatalogo, 
+                          Peca.pecPrecoVenda, Peca.pecPrecoHora, Peca.pecStatus,
+                          Equipamento_Status.eqpStaDescricao
+                    FROM Peca 
+                    INNER JOIN Equipamento_Status ON Peca.pecStatus = Equipamento_Status.eqpStaId
+                    WHERE Peca.pecId = ? AND Peca.pecExibirCatalogo = 1`;
+        let valores = [id];
+
+        let rows = await db.ExecutaComando(sql, valores);
+        if(rows.length > 0) {       
+            return rows[0];
+        }
+        return null;
+    }
 }

@@ -47,4 +47,9 @@ router.get('/obter/exibir-classificados', (req, res) => {
     ctrl.listarImplementosParaExibicao(req, res)
 })
 
+router.get('/obter/exibir-classificados/:id', (req, res) => {
+    // #swagger.summary = 'Busca um implemento pelo no id que está disponível para exibir nos classificados'
+    ctrl.buscaImplementoExibir(req, res)
+})
+
 export default router;

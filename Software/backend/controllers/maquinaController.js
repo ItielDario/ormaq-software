@@ -340,4 +340,35 @@ export default class maquinaController {
             res.status(500).json(error)
         }
     }
+
+    async buscaMaquinaExibir(req, res) {
+        try{
+            let { id } = req.params;
+
+            let maquina = new MaquinaModel();
+            maquina = await maquina.buscaMaquinaExibir(id);
+
+            if(maquina != null){
+                let maquinaAluguel = new MaquinaAluguelModel();
+                maquinaAluguel = await maquinaAluguel.obter(id);
+    
+                let imagensMaquina = new ImagensEquipamentoModel();
+                imagensMaquina = await imagensMaquina.obterImgMaquina(id);
+
+                if(maquinaAluguel != null) {
+                    res.status(200).json({maquina, maquinaAluguel, imagensMaquina});
+                }
+                else{
+                    res.status(404).json({msg: `Maquina com o id ${id} não encontrada!`})
+                }
+            }
+            else{
+                res.status(404).json({msg: `Maquina não disponível para exibição!`})
+            } 
+        }
+        catch(ex) {
+            console.log(ex)
+            res.status(500).json({msg: "Erro interno de servidor!"});
+        }
+    }
 }

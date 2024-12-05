@@ -224,4 +224,20 @@ export default class ImplementoModel {
         let rows = await db.ExecutaComando(sql);
         return rows;
     }
+
+    async buscaImplementoExibir(id) {
+        let sql = `SELECT Implemento.impId, Implemento.impNome, Implemento.impDataAquisicao, Implemento.impDescricao, Implemento.impExibirCatalogo, 
+                          Implemento.impPrecoVenda, Implemento.impPrecoHora, Implemento.impStatus,
+                          Equipamento_Status.eqpStaDescricao, Equipamento_Status.eqpStaId
+                    FROM Implemento 
+                    INNER JOIN Equipamento_Status ON Implemento.impStatus = Equipamento_Status.eqpStaId
+                    WHERE Implemento.impId = ? AND Implemento.impExibirCatalogo = 1`;
+        let valores = [id];
+
+        let rows = await db.ExecutaComando(sql, valores);
+        if(rows.length > 0) {           
+            return rows[0];
+        }
+        return null;
+    }
 }

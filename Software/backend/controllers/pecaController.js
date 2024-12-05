@@ -247,4 +247,27 @@ export default class pecaController {
             res.status(500).json(error)
         }
     }
+
+    async buscaPecaExibir(req, res) {
+        try{
+            let { id } = req.params;
+
+            let peca = new PecaModel();
+            peca = await peca.buscaPecaExibir(id);
+
+            if(peca != null){
+                let imagensPeca = new ImagensEquipamentoModel();
+                imagensPeca = await imagensPeca.obterImgPeca(id);
+
+                res.status(200).json({peca, imagensPeca});
+            }
+            else{
+                res.status(404).json({msg: `Peça não disponível para exibição!`})
+            }
+        }
+        catch(ex) {
+            console.log(ex)
+            res.status(500).json({msg: "Erro interno de servidor!"});
+        }
+    }
 }

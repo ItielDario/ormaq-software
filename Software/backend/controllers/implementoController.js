@@ -98,8 +98,8 @@ export default class ImplementoController {
                 if (result) {
 
                     // Altera o exibe nos classificados se a máquina estiver vendida/disponível
-                    if(impStatus == 4){ await implemento.alterarExibicao(impId, 2) }
-                    if(impStatus == 1){ await implemento.alterarExibicao(impId, 1) }
+                    if(impStatus == 4){ await implemento.alterarExibicao(impId, 0) }
+                    if(impStatus == 1){ await implemento.alterarExibicao(impId, impExibirCatalogo) }
 
                     const imagens = req.files;  
                     let achouImagemPrincipal = true

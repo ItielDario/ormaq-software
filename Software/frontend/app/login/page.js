@@ -32,7 +32,7 @@ export default function LoginPage() {
     .then((r) => {
       setTimeout(() => {
         if (status === 200) {
-          router.push("/admin");
+          router.push("/admin/maquina");
           setUser(r.usuario);
           localStorage.setItem("usuario", JSON.stringify(r.usuario));
         } 

@@ -29,7 +29,7 @@ export default class maquinaController {
             imagensMaquina = await imagensMaquina.obterImgMaquina(id);
 
             if(maquina == null && maquinaAluguel == null) {
-                res.staus(404).json({msg: `Maquina com o id ${id} não encontrada!`})
+                res.status(404).json({msg: `Maquina com o id ${id} não encontrada!`})
             }
             else{
                 res.status(200).json({maquina, maquinaAluguel, imagensMaquina});
@@ -157,8 +157,8 @@ export default class maquinaController {
                 if (result) {
 
                     // Altera o exibe nos classificados se a máquina estiver vendida/disponível
-                    if(maqStatus == 4){ await maquina.alterarExibicao(maqId, 2) }
-                    if(maqStatus == 1){ await maquina.alterarExibicao(maqId, 1) }
+                    if(maqStatus == 4){ await maquina.alterarExibicao(maqId, 0) }
+                    if(maqStatus == 1){ await maquina.alterarExibicao(maqId, maqExibirCatalogo) }
 
                     // Atualizando os valores de aluguel da máquina
                     let maquinaAluguel = new MaquinaAluguelModel(0, maqId, maqPrecoAluguelDiario, maqPrecoAluguelSemanal, maqPrecoAluguelQuinzenal, maqPrecoAluguelMensal);
@@ -290,8 +290,9 @@ export default class maquinaController {
 
             let maquina = new MaquinaModel();
             maquina = await maquina.listarMaquinasDaLocacao(id);
+
             if(maquina == null && maquinaAluguel == null) {
-                res.staus(404).json({msg: `Maquina com o id ${id} não encontrada!`})
+                res.status(404).json({msg: `Maquina com o id ${id} não encontrada!`})
             }
             else{
                 res.status(200).json({maquina});

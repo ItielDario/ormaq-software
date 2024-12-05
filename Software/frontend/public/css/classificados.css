@@ -87,24 +87,24 @@
 }
 
 .title-page{
-    padding: 4vw 9vw 3vw 7vw;
+    margin: 4vw 9vw 3vw 7vw;
+    border-bottom: 0.2vw solid #7e7e7e;
 }
 
-.title-page > h3{
+.title-page h3{
     font-weight: bold;
     font-size: 3vw;
     color: #353535;
     letter-spacing: 0.1vw;
-    
 }
 
-.title-page > p{
+.title-page p{
     margin-top: 0.3vw;
     padding-bottom:  1vw;
     font-weight: 300;
     font-size: 1vw;
     color: #353535;
-    border-bottom: 0.2vw solid #7e7e7e;
+    
 }
 
 .link-voltar:hover{
@@ -184,10 +184,10 @@
     font-weight: normal;
 }
 
-.dados-equipamentos p{
+.dados-equipamentos p, .btn-voltar-classificados{
     font-size: 1.1vw;
     margin-top: 1.3vw;
-    color: rgb(255, 251, 243);
+    color: rgb(255, 251, 243) !important;
     font-weight: bold;
     letter-spacing: 0.08vw;
     background-color: rgb(71, 180, 235);
@@ -196,7 +196,7 @@
     cursor: pointer;
 }
 
-.dados-equipamentos p:hover{
+.dados-equipamentos p:hover, .btn-voltar-classificados:hover{
     background-color: rgb(35, 167, 233);
 }
   

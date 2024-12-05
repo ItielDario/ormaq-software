@@ -24,7 +24,7 @@ export default class pecaController {
             imagensPeca = await imagensPeca.obterImgPeca(id);
 
             if(peca == null) {
-                res.staus(404).json({msg: `Peça com o id ${id} não encontrada!`})
+                res.status(404).json({msg: `Peça com o id ${id} não encontrada!`})
             }
             else{
                 peca = peca[0];
@@ -99,8 +99,8 @@ export default class pecaController {
                 if(result) {
 
                     // Altera o exibe nos classificados se a máquina estiver vendida/disponível
-                    if(pecaStatus == 4){ await peca.alterarExibicao(pecaId, 2) }
-                    if(pecaStatus == 1){ await peca.alterarExibicao(pecaId, 1) }
+                    if(pecaStatus == 4){ await peca.alterarExibicao(pecaId, 0) }
+                    if(pecaStatus == 1){ await peca.alterarExibicao(pecaId, pecaExibirCatalogo) }
 
                     const imagens = req.files;  
                     let achouImagemPrincipal = true

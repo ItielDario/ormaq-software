@@ -178,7 +178,6 @@ export default class MaquinaModel {
                 this.#maqAnoFabricacao, this.#maqDescricao, this.#maqExibirCatalogo, this.#maqHorasUso,
                 this.#equipamentoStatus, this.#maqPrecoVenda, this.#maqId
             ];
-    
             result = await db.ExecutaComandoNonQuery(sql, valores);
         }
     

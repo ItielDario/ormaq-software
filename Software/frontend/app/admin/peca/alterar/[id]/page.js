@@ -1,7 +1,7 @@
 'use client';
 export const dynamic = "force-dynamic";
 import CriarBotao from "../../../components/criarBotao.js";
-//import CustomEditor from "../../../components/custom-editor.js";
+import CustomEditor from "../../../components/custom-editor.js";
 import httpClient from "../../../utils/httpClient.js";
 import { useRef, useState, useEffect } from "react";
 
@@ -270,7 +270,10 @@ export default function AlterarPeca({ params: { id } }) {
 
               <section>
                 <label htmlFor="pecaDescricao">Descrição da Peça</label>
-                
+                <CustomEditor 
+                  onChange={handleCustomEditorChange} 
+                  initialValue={pecaDescricao} 
+                />
               </section>
 
               <section className="image-upload">

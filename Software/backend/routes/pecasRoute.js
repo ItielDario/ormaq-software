@@ -12,7 +12,7 @@ router.get('/', auth.validar, (req, res) => {
     ctrl.listarPeca(req, res)
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', auth.validar, (req, res) => {
     // #swagger.summary = 'Obter uma peça'
     ctrl.obterPeca(req, res)
 })

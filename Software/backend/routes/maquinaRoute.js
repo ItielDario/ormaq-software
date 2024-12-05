@@ -13,7 +13,7 @@ router.get('/', auth.validar, (req, res) => {
     ctrl.listarMaquinas(req, res)
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:id', auth.validar, (req, res) => {
     // #swagger.summary = 'Buscar Máquina'
     ctrl.obterMaquina(req, res)
 })

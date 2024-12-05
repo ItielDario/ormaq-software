@@ -79,7 +79,7 @@ export default class LoginModel{
     }
 
     async atualizarDataExpiracao(dataExpiracao, usuId) {
-        const sql = `UPDATE RecuperacaoSenha SET recSenDataExpiracao = ? WHERE recSenIdUsuario = ?`;
+        const sql = `UPDATE RecuperacaoSenha SET recSenDataExpiracao = ? WHERE recSenIdUsuario = ? AND recSenDataExpiracao IS NULL;`;
         const valores = [dataExpiracao, usuId];
 
         let rows = await bd.ExecutaComandoNonQuery(sql, valores);        

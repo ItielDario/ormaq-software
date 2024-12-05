@@ -1,8 +1,7 @@
 'use client';
-import { ColorSelectorView } from "ckeditor5";
+export const dynamic = "force-dynamic";
 import CriarBotao from "../../components/criarBotao.js";
-import CustomEditor from "../../components/custom-editor.js";
-import httpClient from "../../utils/httpClient.js";
+//import CustomEditor from "../../components/custom-editor.js";
 import { useRef, useState } from "react";
 
 export default function CadastrarMaquina() {
@@ -88,7 +87,7 @@ export default function CadastrarMaquina() {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
 
-      fetch("http://localhost:5000/maquina/cadastrar", {
+      fetch("http://localhost:5000/api/maquina/cadastrar", {
         method: "POST",
         body: formData,
         credentials: 'include',
@@ -257,9 +256,6 @@ export default function CadastrarMaquina() {
 
         <section>
           <label htmlFor="maqDescricao">Descrição da Máquina</label>
-          <CustomEditor
-            onChange={handleCustomEditorChange}
-          />
         </section>
 
         <section className="image-upload">

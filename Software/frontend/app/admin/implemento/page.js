@@ -2,7 +2,6 @@
 import { useState, useEffect, useRef } from "react";
 import CriarBotao from "../components/criarBotao.js";
 import httpClient from "../utils/httpClient.js";
-import { ColorSelectorView } from "ckeditor5";
 
 export default function Implemento() {
     const [listaImplementos, setListaImplementos] = useState([]);

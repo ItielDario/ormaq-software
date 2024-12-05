@@ -169,6 +169,18 @@
       REFERENCES Implemento (impId)
   );
 
+  CREATE TABLE RecuperacaoSenha (
+    recSenId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
+    recSenIdUsuario INT NOT NULL,
+    recSenCodigo INT NOT NULL,
+    recSenDataPedidoRecuperacao DATETIME NOT NULL,
+    recSenDataExpiracao DATETIME NULL,
+    CONSTRAINT fk_RecSenha_Usuario               
+      FOREIGN KEY (recSenIdUsuario)
+      REFERENCES Usuario(usuId)
+      ON DELETE CASCADE
+  );
+
   INSERT INTO Locacao_Status (locStaId, locStaDescricao)
   VALUES
     (1, 'Em andamento'),

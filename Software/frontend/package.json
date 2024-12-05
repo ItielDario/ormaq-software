@@ -11,7 +11,7 @@
   "dependencies": {
     "@ckeditor/ckeditor5-react": "^9.3.0",
     "ckeditor5": "^43.2.0",
-    "next": "14.2.13",
+    "next": "^14.1.0",
     "react": "^18",
     "react-dom": "^18",
     "react-icons": "^5.3.0"

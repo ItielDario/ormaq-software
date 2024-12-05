@@ -168,7 +168,7 @@
 
 /* Para o parágrafo */
 .title-descricao p {
-    margin: 0.2vw 2vw;
+    margin: 0.2vw 0;
     font-size: 1.2vw;
     line-height: 1.8vw;
     color: #333;
@@ -240,7 +240,7 @@
 
 .title-descricao figure.table th,
 .title-descricao figure.table td {
-    border: 0.1vw solid #ddd !important;
+    border: 0.1vw solid #c9c9c9 !important;
     padding: 1vw !important;
     text-align: left !important;
     background-color: white !important;

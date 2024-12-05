@@ -1,5 +1,5 @@
 'use client' 
-
+export const dynamic = "force-dynamic";
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import {
 	ClassicEditor,

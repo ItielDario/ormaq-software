@@ -1,6 +1,7 @@
 'use client';
+export const dynamic = "force-dynamic";
 import CriarBotao from "../../components/criarBotao.js"; 
-import CustomEditor from "../../components/custom-editor.js";
+//import CustomEditor from "../../components/custom-editor.js";
 import httpClient from "../../utils/httpClient.js";
 import { useRef, useState } from "react";
 
@@ -64,7 +65,7 @@ export default function CadastrarPeca() {
 
       console.log(nomeImagemPrincipal)
       
-      fetch("http://localhost:5000/peca/cadastrar", {
+      fetch("http://localhost:5000/api/peca/cadastrar", {
         method: "POST",
         body: formData,
         credentials: 'include',
@@ -177,10 +178,7 @@ export default function CadastrarPeca() {
 
         <section>
           <label htmlFor="pecDescricao">Descrição da Peça</label>
-          <CustomEditor
-            onChange={handleCustomEditorChange}
-            initialValue={pecDescricao}
-          />
+
         </section>
 
         <section className="image-upload">

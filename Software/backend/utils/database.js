@@ -7,10 +7,10 @@ export default class Database {
 
     constructor() {
         this.#conexao = mysql.createPool({
-            host: '127.0.0.1', 
-            database: 'ormaq_db', 
-            user: 'root', 
-            password: '',
+            host: '129.146.111.1',
+            database: 'ormaq_db',
+            user: '10442221998',
+            password: 'Rla#63687',
         });
     }
 

@@ -21,7 +21,7 @@
     background: rgba(255, 255, 255, 0.9);
     max-width: 50vw;
     padding: 2vw 3vw;
-    border-radius: 2vw;
+    border-radius: 1vw;
     box-shadow: 0 0.8vw 1.6vw rgba(0, 0, 0, 0.2);
     text-align: center;
 }
@@ -75,7 +75,7 @@ button {
     border: none;
     border-radius: 0.5vw;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: 0.3s;
 }
 
 button:hover {

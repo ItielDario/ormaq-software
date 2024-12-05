@@ -23,7 +23,7 @@ export default class LoginModel{
     }
 
     async autenticar() {
-        let sql = "SELECT usuId, usuNome, usuEmail, usuSenha FROM usuario WHERE usuNome = ? AND usuSenha = ?";
+        let sql = "SELECT usuId, usuNome, usuEmail, usuSenha FROM Usuario WHERE usuNome = ? AND usuSenha = ?";
         let valores = [this.#usuNome, this.#usuSenha];
 
         let rows = await bd.ExecutaComando(sql, valores);
@@ -33,6 +33,43 @@ export default class LoginModel{
         }
         
         return rows.length > 0;
+    }
+
+    async buscarEmail() {
+        let sql = "SELECT usuId, usuEmail FROM Usuario WHERE usuNome = ?";
+        let valores = [this.#usuNome];
+
+        let rows = await bd.ExecutaComando(sql, valores); 
+        return rows[0];
+    }
+
+    async gravarRecuperacaoSenha(usuId, codigo, dataAtual) {
+        const sql = `INSERT INTO RecuperacaoSenha (recSenIdUsuario, recSenCodigo, recSenDataPedidoRecuperacao, recSenDataExpiracao) VALUES (?, ?, ?, ?)`;
+        const valores = [usuId, codigo, dataAtual, null];
+
+        let rows = await bd.ExecutaComandoNonQuery(sql, valores);        
+        return rows;
+    }
+
+    async validarCodigo(usuId) {
+        let sql = `SELECT * 
+                    FROM RecuperacaoSenha
+                    WHERE recSenIdUsuario = ?  
+                    ORDER BY recSenDataPedidoRecuperacao DESC
+                    LIMIT 1;
+                    `;
+        let valores = [usuId];
+
+        let rows = await bd.ExecutaComando(sql, valores); 
+        return rows[0];
+    }
+
+    async buscarEmail() {
+        let sql = "SELECT usuId, usuEmail FROM Usuario WHERE usuNome = ?";
+        let valores = [this.#usuNome];
+
+        let rows = await bd.ExecutaComando(sql, valores); 
+        return rows[0];
     }
 
     toJSON() {

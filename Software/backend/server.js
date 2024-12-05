@@ -22,46 +22,46 @@ app.listen(5000, () => {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/docs', swaggerUi.serve, swaggerUi.setup(outputJson));
+app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(outputJson));
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(cookieParser());
 
-app.use('/maquina', 
+app.use('/api/maquina', 
     // #swagger.tags = ['Maquina']
     // #swagger.description = 'Lista todas as máquinas.'
     MaquinaRoute
 );
-app.use('/peca', 
+app.use('/api/peca', 
     // #swagger.tags = ['Peças']
     PecasRoute
 );
 
-app.use('/implemento', 
+app.use('/api/implemento', 
     // #swagger.tags = ['Implementos']
     ImplementoRoute
 );
 
-app.use('/locacao', 
+app.use('/api/locacao', 
     // #swagger.tags = ['Locações']
     LocacaoRoute
 );
 
-app.use('/cliente', 
+app.use('/api/cliente', 
     // #swagger.tags = ['Clientes']
     ClienteRoute
 );
 
-app.use('/manutencao', 
+app.use('/api/manutencao', 
     // #swagger.tags = ['Manutenção']
     ManuetencaoRoute
 );
 
-app.use('/usuario', 
+app.use('/api/usuario', 
     // #swagger.tags = ['Usuários']
     UsuarioRoute
 );
 
-app.use('/login', 
+app.use('/api/login', 
     // #swagger.tags = ['Login']
     LoginRoute
 );

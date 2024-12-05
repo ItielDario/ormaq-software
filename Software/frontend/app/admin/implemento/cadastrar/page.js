@@ -1,7 +1,8 @@
+
 'use client';
+export const dynamic = "force-dynamic";
 import CriarBotao from "../../components/criarBotao.js"; 
-import CustomEditor from "../../components/custom-editor.js";
-import httpClient from "../../utils/httpClient.js";
+//import CustomEditor from "../../components/custom-editor.js";
 import { useRef, useState } from "react";
 
 export default function CadastrarImplemento() {
@@ -64,7 +65,7 @@ export default function CadastrarImplemento() {
 
       console.log(nomeImagemPrincipal)
       
-      fetch("http://localhost:5000/implemento/cadastrar", {
+      fetch("http://localhost:5000/api/implemento/cadastrar", {
         method: "POST",
         body: formData,
         credentials: 'include',
@@ -178,10 +179,6 @@ export default function CadastrarImplemento() {
 
         <section>
           <label htmlFor="impDescricao">Descrição do Implemento</label>
-          <CustomEditor
-            onChange={handleCustomEditorChange}
-            initialValue={impDescricao}
-          />
         </section>
 
         <section className="image-upload">

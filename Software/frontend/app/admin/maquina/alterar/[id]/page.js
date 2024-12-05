@@ -1,4 +1,5 @@
 'use client';
+export const dynamic = "force-dynamic";
 import CriarBotao from "../../../components/criarBotao.js";
 import CustomEditor from "../../../components/custom-editor.js"; 
 import httpClient from "../../../utils/httpClient.js";
@@ -140,7 +141,7 @@ export default function AlterarMaquina({ params: { id } }) {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
 
-      fetch(`http://localhost:5000/maquina`, {
+      fetch(`http://localhost:5000/api/maquina`, {
         method: "PUT",
         body: formData,
         credentials: 'include',

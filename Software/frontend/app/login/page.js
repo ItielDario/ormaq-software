@@ -57,7 +57,7 @@ export default function LoginPage() {
 
           <button type="submit">Entrar</button>
           <div className="links">
-            <a href="/forgot-password">Esqueci a Senha</a>
+            <a href="/login/recuperar-senha">Esqueci a Senha</a>
           </div>
         </form>
       </section>

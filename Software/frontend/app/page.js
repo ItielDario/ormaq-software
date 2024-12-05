@@ -26,6 +26,8 @@ export default function Home() {
           httpClient.get("/implemento/obter/exibir-classificados").then((res) => res.json()),
         ]);
 
+        console.log(maquinasData)
+
         // Atualizando os estados
         setMaquinas(maquinasData);
         setPecas(pecasData);

@@ -11,7 +11,7 @@
     }
   ],
   "paths": {
-    "/maquina/": {
+    "/api/maquina/": {
       "get": {
         "tags": [
           "Maquina"
@@ -120,7 +120,7 @@
         }
       }
     },
-    "/maquina/{id}": {
+    "/api/maquina/{id}": {
       "get": {
         "tags": [
           "Maquina"
@@ -140,9 +140,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -181,7 +178,7 @@
         }
       }
     },
-    "/maquina/cadastrar": {
+    "/api/maquina/cadastrar": {
       "post": {
         "tags": [
           "Maquina"
@@ -260,7 +257,7 @@
         }
       }
     },
-    "/maquina/obter/disponivel": {
+    "/api/maquina/obter/disponivel": {
       "get": {
         "tags": [
           "Maquina"
@@ -280,7 +277,7 @@
         }
       }
     },
-    "/maquina/obter/locacao/{id}": {
+    "/api/maquina/obter/locacao/{id}": {
       "get": {
         "tags": [
           "Maquina"
@@ -310,7 +307,7 @@
         }
       }
     },
-    "/maquina/exibir/{id}": {
+    "/api/maquina/exibir/{id}": {
       "put": {
         "tags": [
           "Maquina"
@@ -357,7 +354,7 @@
         }
       }
     },
-    "/maquina/obter/exibir-classificados": {
+    "/api/maquina/obter/exibir-classificados": {
       "get": {
         "tags": [
           "Maquina"
@@ -374,7 +371,7 @@
         }
       }
     },
-    "/peca/": {
+    "/api/peca/": {
       "get": {
         "tags": [
           "Peças"
@@ -459,7 +456,7 @@
         }
       }
     },
-    "/peca/{id}": {
+    "/api/peca/{id}": {
       "get": {
         "tags": [
           "Peças"
@@ -479,9 +476,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           },
           "500": {
             "description": "Internal Server Error"
@@ -520,7 +514,7 @@
         }
       }
     },
-    "/peca/cadastrar": {
+    "/api/peca/cadastrar": {
       "post": {
         "tags": [
           "Peças"
@@ -575,7 +569,7 @@
         }
       }
     },
-    "/peca/obter/disponivel": {
+    "/api/peca/obter/disponivel": {
       "get": {
         "tags": [
           "Peças"
@@ -595,7 +589,7 @@
         }
       }
     },
-    "/peca/exibir/{id}": {
+    "/api/peca/exibir/{id}": {
       "put": {
         "tags": [
           "Peças"
@@ -642,7 +636,7 @@
         }
       }
     },
-    "/peca/obter/exibir-classificados": {
+    "/api/peca/obter/exibir-classificados": {
       "get": {
         "tags": [
           "Peças"
@@ -659,7 +653,7 @@
         }
       }
     },
-    "/implemento/": {
+    "/api/implemento/": {
       "get": {
         "tags": [
           "Implementos"
@@ -744,7 +738,7 @@
         }
       }
     },
-    "/implemento/{id}": {
+    "/api/implemento/{id}": {
       "get": {
         "tags": [
           "Implementos"
@@ -764,9 +758,6 @@
         "responses": {
           "200": {
             "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
           },
           "404": {
             "description": "Not Found"
@@ -808,7 +799,7 @@
         }
       }
     },
-    "/implemento/cadastrar": {
+    "/api/implemento/cadastrar": {
       "post": {
         "tags": [
           "Implementos"
@@ -863,7 +854,7 @@
         }
       }
     },
-    "/implemento/obter/disponivel": {
+    "/api/implemento/obter/disponivel": {
       "get": {
         "tags": [
           "Implementos"
@@ -883,7 +874,7 @@
         }
       }
     },
-    "/implemento/exibir/{id}": {
+    "/api/implemento/exibir/{id}": {
       "put": {
         "tags": [
           "Implementos"
@@ -930,7 +921,7 @@
         }
       }
     },
-    "/implemento/obter/exibir-classificados": {
+    "/api/implemento/obter/exibir-classificados": {
       "get": {
         "tags": [
           "Implementos"
@@ -947,7 +938,7 @@
         }
       }
     },
-    "/locacao/": {
+    "/api/locacao/": {
       "get": {
         "tags": [
           "Locações"
@@ -1023,7 +1014,7 @@
         }
       }
     },
-    "/locacao/{id}": {
+    "/api/locacao/{id}": {
       "get": {
         "tags": [
           "Locações"
@@ -1084,7 +1075,7 @@
         }
       }
     },
-    "/locacao/cadastrar": {
+    "/api/locacao/cadastrar": {
       "post": {
         "tags": [
           "Locações"
@@ -1139,7 +1130,7 @@
         }
       }
     },
-    "/locacao/finalizar": {
+    "/api/locacao/finalizar": {
       "put": {
         "tags": [
           "Locações"
@@ -1191,7 +1182,7 @@
         }
       }
     },
-    "/cliente/": {
+    "/api/cliente/": {
       "get": {
         "tags": [
           "Clientes"
@@ -1258,7 +1249,7 @@
         }
       }
     },
-    "/cliente/{id}": {
+    "/api/cliente/{id}": {
       "get": {
         "tags": [
           "Clientes"
@@ -1319,7 +1310,7 @@
         }
       }
     },
-    "/cliente/cadastrar": {
+    "/api/cliente/cadastrar": {
       "post": {
         "tags": [
           "Clientes"
@@ -1365,7 +1356,7 @@
         }
       }
     },
-    "/manutencao/": {
+    "/api/manutencao/": {
       "get": {
         "tags": [
           "Manutenção"
@@ -1438,7 +1429,7 @@
         }
       }
     },
-    "/manutencao/{id}": {
+    "/api/manutencao/{id}": {
       "get": {
         "tags": [
           "Manutenção"
@@ -1499,7 +1490,7 @@
         }
       }
     },
-    "/manutencao/cadastrar": {
+    "/api/manutencao/cadastrar": {
       "post": {
         "tags": [
           "Manutenção"
@@ -1545,7 +1536,7 @@
         }
       }
     },
-    "/manutencao/finalizar": {
+    "/api/manutencao/finalizar": {
       "put": {
         "tags": [
           "Manutenção"
@@ -1594,7 +1585,7 @@
         }
       }
     },
-    "/manutencao/historico": {
+    "/api/manutencao/historico": {
       "post": {
         "tags": [
           "Manutenção"
@@ -1634,7 +1625,7 @@
         }
       }
     },
-    "/usuario/": {
+    "/api/usuario/": {
       "get": {
         "tags": [
           "Usuários"
@@ -1704,7 +1695,7 @@
         }
       }
     },
-    "/usuario/{id}": {
+    "/api/usuario/{id}": {
       "get": {
         "tags": [
           "Usuários"
@@ -1765,7 +1756,7 @@
         }
       }
     },
-    "/usuario/cadastrar": {
+    "/api/usuario/cadastrar": {
       "post": {
         "tags": [
           "Usuários"
@@ -1814,7 +1805,7 @@
         }
       }
     },
-    "/login/": {
+    "/api/login/": {
       "post": {
         "tags": [
           "Login"
@@ -1854,7 +1845,7 @@
         }
       }
     },
-    "/login/logout": {
+    "/api/login/logout": {
       "get": {
         "tags": [
           "Login"
@@ -1867,6 +1858,83 @@
           },
           "500": {
             "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/login/buscar": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Buscar email pelo nome de usuário",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login/validar-codigo": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Buscar email pelo nome de usuário",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "usuId": {
+                    "example": "any"
+                  },
+                  "codigo": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
           }
         }
       }

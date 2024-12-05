@@ -5,7 +5,7 @@ import httpClient from "../../admin/utils/httpClient.js";
 
 export default function RecuperarSenhaPage() {
   const [step, setStep] = useState(1); // Etapa do formulário
-  const [username, setUsername] = useState("");
+  const [usuEmail, setUsuEmail] = useState("");
   const [usuId, setUsuId] = useState("");
   const [codigo, setCodigo] = useState("");
   const [novaSenha, setNovaSenha] = useState("");
@@ -17,23 +17,26 @@ export default function RecuperarSenhaPage() {
     alertMsg.current.style.display = "none";
     let status = 0;
 
-    httpClient.post("/login/buscar", { username })
+    httpClient.post("/login/buscar", { usuEmail })
     .then((r) => {
       status = r.status;
       return r.json();
     })
     .then((r) => {
-      if (status === 200) {
-        console.log(r)
-        console.log(r.usuId)
-        setUsuId(r.usuId)
-        setStep(2);
-      } 
-      else {
-        alertMsg.current.style.display = "block";
-        alertMsg.current.className = "alertError";
-        alertMsg.current.innerHTML = r.msg;
-      }
+      setTimeout(() => {
+        if (status === 200) {
+          setUsuId(r.usuId)
+          setStep(2);
+          alertMsg.current.style.display = "block";
+          alertMsg.current.className = "alertSuccess";
+          alertMsg.current.innerHTML = "Código enviado no e-mail!";
+        } 
+        else {
+          alertMsg.current.style.display = "block";
+          alertMsg.current.className = "alertError";
+          alertMsg.current.innerHTML = r.msg;
+        }
+      }, 100);
     });
   };
 
@@ -48,13 +51,19 @@ export default function RecuperarSenhaPage() {
       return r.json();
     })
     .then((r) => {
-      if (status === 200) {
-        setStep(3);
-      } else {
-        alertMsg.current.style.display = "block";
-        alertMsg.current.className = "alertError";
-        alertMsg.current.innerHTML = r.msg;
-      }
+      setTimeout(() => {
+        if (status === 200) {
+          setStep(3);
+          alertMsg.current.style.display = "block";
+          alertMsg.current.className = "alertSuccess";
+          alertMsg.current.innerHTML = "Redefina sua senha!";
+        } 
+        else {
+          alertMsg.current.style.display = "block";
+          alertMsg.current.className = "alertError";
+          alertMsg.current.innerHTML = r.msg;
+        }
+      }, 100);
     });
   };
 
@@ -63,30 +72,36 @@ export default function RecuperarSenhaPage() {
     alertMsg.current.style.display = "none";
 
     if (novaSenha !== confirmarSenha) {
-      alertMsg.current.style.display = "block";
-      alertMsg.current.className = "alertError";
-      alertMsg.current.innerHTML = "As senhas não coincidem.";
+      setTimeout(() => {
+        alertMsg.current.style.display = "block";
+        alertMsg.current.className = "alertError";
+        alertMsg.current.innerHTML = "As senhas não estão iguais.";
+      }, 100);
       return;
     }
 
     let status = 0;
-    httpClient.post("/recuperar-senha/nova-senha", { username, novaSenha })
-      .then((r) => {
-        status = r.status;
-        return r.json();
-      })
-      .then((r) => {
+    httpClient.post("/login/redefinir-senha", { usuId, novaSenha })
+    .then((r) => {
+      status = r.status;
+      return r.json();
+    })
+    .then((r) => {
+      setTimeout(() => {
         if (status === 200) {
-          alertMsg.current.style.display = "block";
           alertMsg.current.className = "alertSuccess";
-          alertMsg.current.innerHTML = "Senha alterada com sucesso!";
-          setTimeout(() => window.location.href = "/login", 2000);
-        } else {
-          alertMsg.current.style.display = "block";
+          setStep(4);
+          setTimeout(() => window.location.href = "/login", 5000);
+        } 
+        else {
           alertMsg.current.className = "alertError";
-          alertMsg.current.innerHTML = r.msg;
         }
-      });
+
+        alertMsg.current.style.display = "block";
+        alertMsg.current.innerHTML = r.msg;
+      }, 100);
+      
+    });
   };
 
   return (
@@ -98,13 +113,13 @@ export default function RecuperarSenhaPage() {
 
         {step === 1 && (
           <form onSubmit={handleUsuarioSubmit}>
-            <label>Nome de Usuário
+            <label>E-mail
               <input
-                type="text"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                type="email"
+                value={usuEmail}
+                onChange={(e) => setUsuEmail(e.target.value)}
                 required
-                placeholder="Digite seu nome de usuário"
+                placeholder="Digite seu e-mail"
                 style={{marginTop: '0.5vw'}}
               />
             </label>
@@ -152,6 +167,10 @@ export default function RecuperarSenhaPage() {
             </label>
             <button style={{marginTop: '1vw'}} type="submit">Salvar Nova Senha</button>
           </form>
+        )}
+
+        {step === 4 && (
+          <form></form>
         )}
 
         <div style={{marginTop: '2vw'}} className="links">

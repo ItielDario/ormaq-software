@@ -20,8 +20,13 @@ router.post('/buscar', (req, res) => {
 });
 
 router.post('/validar-codigo', (req, res) => {
-    // #swagger.summary = "Buscar email pelo nome de usuário"
+    // #swagger.summary = "Valida o código enviado no email"
     ctrl.validarCodigo(req, res);
+});
+
+router.post('/redefinir-senha', (req, res) => {
+    // #swagger.summary = "Redefine a senha do usuário"
+    ctrl.redefinirSenha(req, res);
 });
 
 export default router;

@@ -108,10 +108,12 @@ export default function ExibirMaquina({ params: { id } }) {
             <section className="container-princial">
                 <section className="imagens-equipamento">
                     {/* Exibe a imagem principal */}
-                    {imagemPrincipal && (
+                    {imagemPrincipal ? (
                         <article className="imagem-principal">
                             <img src={imagemPrincipal.imgUrl} alt={`Imagem principal da máquina`} />
                         </article>
+                    ) : (
+                        <p className="carregando">Carregando imagens...</p>
                     )}
 
                     {/* Exibe todas as outras imagens */}
@@ -201,8 +203,6 @@ export default function ExibirMaquina({ params: { id } }) {
                 </article>
             </section>
         </section>
-
-        
 
         <article className="footer">
             <p>© 2024 ORMAQ. Todos os direitos reservados.</p>

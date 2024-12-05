@@ -1832,7 +1832,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "usuNome": {
+                  "usuEmail": {
                     "example": "any"
                   },
                   "usuSenha": {
@@ -1889,7 +1889,7 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "username": {
+                  "usuEmail": {
                     "example": "any"
                   }
                 }
@@ -1904,7 +1904,7 @@
         "tags": [
           "Login"
         ],
-        "summary": "Buscar email pelo nome de usuário",
+        "summary": "Valida o código enviado no email",
         "description": "",
         "responses": {
           "200": {
@@ -1930,6 +1930,46 @@
                     "example": "any"
                   },
                   "codigo": {
+                    "example": "any"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/login/redefinir-senha": {
+      "post": {
+        "tags": [
+          "Login"
+        ],
+        "summary": "Redefine a senha do usuário",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "usuId": {
+                    "example": "any"
+                  },
+                  "novaSenha": {
                     "example": "any"
                   }
                 }

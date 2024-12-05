@@ -6,11 +6,11 @@ export default class LoginController {
 
     async autenticar(req, res) {
         try{
-            if(req.body) {
+            let { usuEmail, usuSenha } = req.body;
 
-                let { usuNome, usuSenha} = req.body;
+            if(usuEmail != "" || usuSenha != "") {
 
-                let usuario = new LoginModel(usuNome, usuSenha)
+                let usuario = new LoginModel(usuEmail, usuSenha)
                 let usuarioExiste = await usuario.autenticar()
 
                 if(usuarioExiste) {
@@ -24,11 +24,11 @@ export default class LoginController {
                     res.status(200).json({tokenAcesso: token, usuario: usuario});
                 }
                 else {
-                    res.status(404).json({msg: "Usuário/senha inválidos"});
+                    res.status(404).json({msg: "E-mail ou senha inválidos"});
                 }
             }
             else {
-                res.status(400).json({msg: "Usuário e senha não informados"});
+                res.status(400).json({msg: "E-mail ou senha não informados"});
             } 
         }
         catch(ex) {
@@ -52,21 +52,20 @@ export default class LoginController {
 
     async buscarEmail(req, res) {
         try{
-            if(req.body) {
+            let { usuEmail } = req.body;
 
-                let { username } = req.body;
+            if(usuEmail != "") {             
                 
-                let usuario = new LoginModel(username)
+                let usuario = new LoginModel(usuEmail)
                 let usuarioExiste = await usuario.buscarEmail()
 
                 if(usuarioExiste) {
                     const codigo = Math.floor(1000 + Math.random() * 9000); 
                     const result = await usuario.gravarRecuperacaoSenha(usuarioExiste.usuId, codigo, new Date())
 
-                    const usuEmail = usuarioExiste.usuEmail
                     const corpoHtml = `
                                         <h1>Recuperação de Senha</h1>
-                                        <p>Olá <strong>${username}</strong>,</p>
+                                        <p>Olá <strong>${usuarioExiste.usuNome}</strong>,</p>
                                         <p>Recebemos uma solicitação para redefinir a senha da sua conta em nosso sistema.</p>
                                         <h2>Seu código de verificação:</h2>
                                         <h1>[ ${codigo} ]</h1>
@@ -104,11 +103,11 @@ export default class LoginController {
                     res.status(200).json({usuId: usuarioExiste.usuId});
                 }
                 else {
-                    res.status(404).json({msg: "Usuário inválido"});
+                    res.status(404).json({msg: "E-mail inválido"});
                 }
             }
             else {
-                res.status(400).json({msg: "Usuário não informado"});
+                res.status(400).json({msg: "E-mail não informado"});
             } 
         }
         catch(ex) {
@@ -119,9 +118,9 @@ export default class LoginController {
 
     async validarCodigo(req, res) {
         try{
-            if(req.body) {
+            let { usuId, codigo } = req.body;
 
-                let { usuId, codigo } = req.body;
+            if(usuId != "" || codigo != "") {
 
                 let usuario = new LoginModel()
                 let result = await usuario.validarCodigo(usuId)
@@ -136,11 +135,38 @@ export default class LoginController {
                     } 
                 }
                 else {
-                    res.status(404).json({msg: "Usuário inválido!"});
+                    res.status(404).json({msg: "E-mail inválido!"});
                 }
             }
             else {
-                res.status(400).json({msg: "Erro desconhecido"});
+                res.status(400).json({msg: "Erro desconhecido!"});
+            } 
+        }
+        catch(ex) {
+            console.log(ex)
+            res.status(500).json({msg: "Erro interno de servidor"});
+        }
+    }
+
+    async redefinirSenha(req, res) {
+        try{
+            let { usuId, novaSenha } = req.body;
+
+            if(usuId != "" && novaSenha != "") {
+
+                let usuario = new LoginModel()
+                let resultSenha = await usuario.atualizarSenha(novaSenha, usuId)
+                let resultDataExpiracao = await usuario.atualizarDataExpiracao(new Date(), usuId)
+
+                if(resultSenha && resultDataExpiracao) {
+                    res.status(200).json({msg: "Senha alterada com sucesso!"});  
+                }
+                else {
+                    res.status(404).json({msg: "Erro ao redefinir senha!"});
+                }
+            }
+            else {
+                res.status(400).json({msg: "Erro desconhecido!"});
             } 
         }
         catch(ex) {

@@ -8,7 +8,7 @@ import UserContext from "./../context/userContext.js";
 
 export default function LoginPage() {
   let router = useRouter();
-  const usuNome = useRef(null);
+  const usuEmail = useRef(null);
   const usuSenha = useRef(null);
   const alertMsg = useRef(null);
 
@@ -20,7 +20,7 @@ export default function LoginPage() {
     let status = 0;
 
     let dados = {
-      usuNome: usuNome.current.value,
+      usuEmail: usuEmail.current.value,
       usuSenha: usuSenha.current.value
     };
 
@@ -35,7 +35,8 @@ export default function LoginPage() {
           router.push("/admin");
           setUser(r.usuario);
           localStorage.setItem("usuario", JSON.stringify(r.usuario));
-        } else {
+        } 
+        else {
           alertMsg.current.style.display = 'block';
           alertMsg.current.className = "alertError";
           alertMsg.current.innerHTML = r.msg;
@@ -52,7 +53,7 @@ export default function LoginPage() {
         <article ref={alertMsg}></article>
 
         <form onSubmit={validarLogin}>
-          <label>Nome de Usuário<input type="text" ref={usuNome} required /></label>
+          <label>E-mail<input type="email" ref={usuEmail} required /></label>
           <label>Senha<input type="password" ref={usuSenha} required /></label>
 
           <button type="submit">Entrar</button>

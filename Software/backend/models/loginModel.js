@@ -7,9 +7,13 @@ export default class LoginModel{
     #usuId;
     #usuNome;
     #usuSenha;
+    #usuEmail;
 
     get usuId() { return this.#usuId }
     set usuId(usuId) { this.#usuId = usuId }
+
+    get usuEmail() { return this.#usuEmail }
+    set usuEmail(usuEmail) { this.#usuEmail = usuEmail }
 
     get usuNome() { return this.#usuNome }
     set usuNome(usuNome) { this.#usuNome = usuNome }
@@ -17,27 +21,29 @@ export default class LoginModel{
     get usuSenha() { return this.#usuSenha }
     set usuSenha(usuSenha) { this.#usuSenha = usuSenha }
 
-    constructor(usuNome, usuSenha) {
-        this.#usuNome = usuNome;
+    constructor(usuEmail, usuSenha, usuNome) {
+        this.#usuEmail = usuEmail;
         this.#usuSenha = usuSenha;
+        this.#usuNome = usuNome;
     }
 
     async autenticar() {
-        let sql = "SELECT usuId, usuNome, usuEmail, usuSenha FROM Usuario WHERE usuNome = ? AND usuSenha = ?";
-        let valores = [this.#usuNome, this.#usuSenha];
+        let sql = "SELECT usuId, usuNome, usuEmail, usuSenha FROM Usuario WHERE usuEmail = ? AND usuSenha = ?";
+        let valores = [this.#usuEmail, this.#usuSenha];
 
         let rows = await bd.ExecutaComando(sql, valores);
 
         if(rows.length > 0){
             this.usuId = rows[0].usuId
+            this.usuNome = rows[0].usuNome
         }
         
         return rows.length > 0;
     }
 
     async buscarEmail() {
-        let sql = "SELECT usuId, usuEmail FROM Usuario WHERE usuNome = ?";
-        let valores = [this.#usuNome];
+        let sql = "SELECT usuId, usuNome FROM Usuario WHERE usuEmail = ?";
+        let valores = [this.#usuEmail];
 
         let rows = await bd.ExecutaComando(sql, valores); 
         return rows[0];
@@ -64,12 +70,20 @@ export default class LoginModel{
         return rows[0];
     }
 
-    async buscarEmail() {
-        let sql = "SELECT usuId, usuEmail FROM Usuario WHERE usuNome = ?";
-        let valores = [this.#usuNome];
+    async atualizarSenha(usuSenhaNova, usuId) {
+        const sql = `UPDATE Usuario u SET u.usuSenha = ? WHERE u.usuId = ?`;
+        const valores = [usuSenhaNova, usuId];
 
-        let rows = await bd.ExecutaComando(sql, valores); 
-        return rows[0];
+        let rows = await bd.ExecutaComandoNonQuery(sql, valores);        
+        return rows;
+    }
+
+    async atualizarDataExpiracao(dataExpiracao, usuId) {
+        const sql = `UPDATE RecuperacaoSenha SET recSenDataExpiracao = ? WHERE recSenIdUsuario = ?`;
+        const valores = [dataExpiracao, usuId];
+
+        let rows = await bd.ExecutaComandoNonQuery(sql, valores);        
+        return rows;
     }
 
     toJSON() {

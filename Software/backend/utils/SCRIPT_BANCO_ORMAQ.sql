@@ -90,7 +90,7 @@
     cliId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     cliNome VARCHAR(60) NOT NULL,
     cliCPF_CNPJ VARCHAR(25) NOT NULL,
-    cliTelefone VARCHAR(14) NULL,
+    cliTelefone VARCHAR(20) NULL,
     cliEmail VARCHAR(25) NULL
   );
 
@@ -103,8 +103,8 @@
     usuId INT NOT NULL PRIMARY KEY AUTO_INCREMENT,
     usuNome VARCHAR(60) NOT NULL,
     usuSenha VARCHAR(20) NOT NULL,
-    usuTelefone VARCHAR(14) NULL,
-    usuEmail VARCHAR(25) NULL,
+    usuTelefone VARCHAR(20) NULL,
+    usuEmail VARCHAR(25) NOT NULL,
     usuPerfil INT NOT NULL,
     CONSTRAINT usuPerfil
       FOREIGN KEY (usuPerfil)

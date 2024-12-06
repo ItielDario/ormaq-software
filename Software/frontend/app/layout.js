@@ -35,6 +35,7 @@ export default function RootLayout({ children }) {
           <link rel="stylesheet" href="/css/login.css"/>
           <link rel="stylesheet" href="/css/classificados.css"/>
           <link rel="stylesheet" href="/css/exibirEquipamento.css"/>
+          <link rel="stylesheet" href="/css/ajuda.css"/>
         </head>
 
         <body className={``}>

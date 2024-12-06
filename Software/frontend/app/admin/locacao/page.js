@@ -133,6 +133,7 @@ export default function Locacao() {
         <section className="content-main-children-listar">
             <article className="title">
                 <h1>Lista de Locações</h1>
+                <a href={`/admin/locacao/ajuda`}><i className="nav-icon fas fa-question-circle"></i></a>
             </article>
 
             <article className="container-btn-cadastrar">

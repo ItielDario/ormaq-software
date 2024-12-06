@@ -172,6 +172,7 @@ export default function Implemento() {
         <section className="content-main-children-listar">
             <article className="title">
                 <h1>Lista de Implementos</h1>
+                <a href={`/admin/implemento/ajuda`}><i className="nav-icon fas fa-question-circle"></i></a>
             </article>
 
             <article className="container-btn-cadastrar">

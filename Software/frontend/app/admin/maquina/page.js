@@ -165,6 +165,7 @@ export default function Maquina() {
         <section className="content-main-children-listar">
             <article className="title">
                 <h1>Lista de Máquinas</h1>
+                <a href={`/admin/maquina/ajuda`}><i className="nav-icon fas fa-question-circle"></i></a>
             </article>
 
             <article className="container-btn-cadastrar">

@@ -225,6 +225,7 @@ export default function Manutencao() {
         <section className="content-main-children-listar">
             <article className="title">
                 <h1>Lista de Manutenções</h1>
+                <a href={`/admin/manutencao/ajuda`}><i className="nav-icon fas fa-question-circle"></i></a>
             </article>
 
             <article className="container-btn-cadastrar">

@@ -87,7 +87,7 @@ tr:hover {
     gap: 0.1vw;
 }
 
-.fa-trash, .fa-pen, .fa-clipboard-check, .fa-info-circle{
+.fa-trash, .fa-pen, .fa-clipboard-check, .fa-info-circle, .fa-question-circle{
     color: white;
     padding: 0.6vw;
     font-size: 1vw;
@@ -128,6 +128,14 @@ tr:hover {
     font-size: 1.3vw;
     cursor: pointer;
 }
+
+.fa-question-circle{
+    font-size: 2.5vw;
+    cursor: pointer;
+    color: rgb(84, 84, 84);
+    margin: 0 !important;
+}
+
 .coluna-acoes{
     text-align: center;
     font-size: 1.5vw;

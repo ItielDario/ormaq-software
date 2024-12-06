@@ -15,6 +15,13 @@ export default function Home() {
   const buscarInputRef = useRef(null);
   const precoMaiorInputRef = useRef(null);
   const precoMenorInputRef = useRef(null);
+  let selectedValueRef = useRef("Máquinas");
+
+  //Auxiliares
+  const [mostrarMensagem, setMostrarMensagem] = useState(false);
+  const [semMaquina, setSemMaquina] = useState(false);
+  const [semPeca, setSemPeca] = useState(false);
+  const [semImplemento, setSemImplemento] = useState(false);
 
   useEffect(() => {
     // Carregando os dados de máquinas, peças e implementos
@@ -26,7 +33,9 @@ export default function Home() {
           httpClient.get("/implemento/obter/exibir-classificados").then((res) => res.json()),
         ]);
 
-        console.log(maquinasData)
+        if(maquinasData.length == 0) { setSemMaquina(true) }
+        if(pecasData.length == 0) { setSemPeca(true) }
+        if(implementosData.length == 0) { setSemImplemento(true) }
 
         // Atualizando os estados
         setMaquinas(maquinasData);
@@ -43,11 +52,16 @@ export default function Home() {
   }, []);
 
   const filtrarPorTipo = (equipamentos, tipo) => {
+    console.log(tipo);
+
+    selectedValueRef.current = tipo; // Atualiza o valor dentro de .current
+    console.log(selectedValueRef.current);
+
     return equipamentos.filter((equipamento) => {
-      if (tipo === "maquinas" && equipamento.maqNome) return true;
-      if (tipo === "pecas" && equipamento.pecNome) return true;
-      if (tipo === "implementos" && equipamento.impNome) return true;
-      return false;
+        if (tipo === "Máquinas" && equipamento.maqNome) return true;
+        if (tipo === "Peças" && equipamento.pecNome) return true;
+        if (tipo === "Implementos" && equipamento.impNome) return true;
+        return false;
     });
   };
 
@@ -186,17 +200,17 @@ export default function Home() {
                 <legend>Tipo de Equipamentos</legend>
 
                 <article className="select-tipo">
-                  <input type="radio" name="tipo-equipamento" value="maquinas" onChange={handleFilterChange} defaultChecked={true} />
+                  <input type="radio" name="tipo-equipamento" value="Máquinas" onChange={handleFilterChange} defaultChecked={true} />
                   <label>Máquinas</label>
                 </article>
 
                 <article className="select-tipo">
-                  <input type="radio" name="tipo-equipamento" value="pecas" onChange={handleFilterChange} />
+                  <input type="radio" name="tipo-equipamento" value="Peças" onChange={handleFilterChange} />
                   <label>Peças</label>
                 </article>
 
                 <article className="select-tipo">
-                  <input type="radio" name="tipo-equipamento" value="implementos" onChange={handleFilterChange} />
+                  <input type="radio" name="tipo-equipamento" value="Implementos" onChange={handleFilterChange} />
                   <label>Implementos</label>
                 </article>
               </fieldset>
@@ -306,7 +320,16 @@ export default function Home() {
               })}
             </article>
           ) : (
-            <p>Nenhum equipamento encontrado.</p>
+            <section className="equipamento-nao-encontrado">
+              {(semMaquina || semPeca || semImplemento) ? (
+                <article className="nao-encontrado-conteudo">
+                  <h2>Não há {selectedValueRef.current} Disponíveis</h2>
+                  <p>Estamos sem {selectedValueRef.current} disponíveis no momento, mas logo teremos novidades!</p>
+                </article>
+              ) : (
+                <p className="carregando">Carregando...</p>
+              )}
+            </section>
           )}
         </section>
       </section>

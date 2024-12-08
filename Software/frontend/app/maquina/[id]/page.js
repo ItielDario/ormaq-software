@@ -1,6 +1,6 @@
 'use client';
 
-import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram, FaArrowLeft } from 'react-icons/fa';
+import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram, FaArrowLeft, FaBars } from 'react-icons/fa';
 import { useState, useEffect, useRef } from "react";
 import httpClient from "../../admin/utils/httpClient.js";
 import Link from "next/link";
@@ -8,41 +8,50 @@ import React from 'react';
 
 export default function ExibirMaquina({ params: { id } }) {
 
-  const [maquinaSelecionada, setMaquinaSelecionada] = useState(null);
-  const [maquinaAluguelSelecionada, setMaquinaAluguelSelecionada] = useState(null);
-  const [maquinaImagensSelecionada, setMaquinaImagensSelecionada] = useState(null);
-  const [imagemPrincipal, setImagemPrincipal] = useState(null); // Estado para imagem principal
-  const [mostrarMensagem, setMostrarMensagem] = useState(false);
+    const [maquinaSelecionada, setMaquinaSelecionada] = useState(null);
+    const [maquinaAluguelSelecionada, setMaquinaAluguelSelecionada] = useState(null);
+    const [maquinaImagensSelecionada, setMaquinaImagensSelecionada] = useState(null);
+    const [imagemPrincipal, setImagemPrincipal] = useState(null); // Estado para imagem principal
+    const [mostrarMensagem, setMostrarMensagem] = useState(false);
 
-  useEffect(() => {
-    httpClient.get(`/maquina/obter/exibir-classificados/${id}`)
-      .then(r => r.json())
-      .then(r => {
-        console.log(r)
-        r.maquina.maqDataAquisicao = new Date(r.maquina.maqDataAquisicao).toISOString().split('T')[0];
+    // Referencias de elementos para mobile
+    const [menuMobile, setMenuMobile] = useState(true);
+    const menuMobileRef = useRef(null);
 
-        if(r.imagensMaquina.length == 0){
-            r.imagensMaquina = [{
-                imgUrl: '/image/sem-imagem.jpg',
-                imgPrincipal: 1
-            }]
-        }
+    useEffect(() => {
+        httpClient.get(`/maquina/obter/exibir-classificados/${id}`)
+        .then(r => r.json())
+        .then(r => {
+            console.log(r)
+            r.maquina.maqDataAquisicao = new Date(r.maquina.maqDataAquisicao).toISOString().split('T')[0];
 
-        setMaquinaSelecionada(r.maquina);
-        setMaquinaImagensSelecionada(r.imagensMaquina);
-        setMaquinaAluguelSelecionada(r.maquinaAluguel);
-        setImagemPrincipal(r.imagensMaquina.find(img => img.imgPrincipal == 1)); // Define a primeira imagem como principal
-      })
-      .catch(error => {
-        console.error("Erro ao carregar os dados da máquina:", error)
-        setMostrarMensagem(true);
-    });
-  }, [id]);
+            if(r.imagensMaquina.length == 0){
+                r.imagensMaquina = [{
+                    imgUrl: '/image/sem-imagem.jpg',
+                    imgPrincipal: 1
+                }]
+            }
 
-  // Função para alterar a imagem principal ao clicar em uma das imagens
-  const alterarImagemPrincipal = (imagem) => {
-    setImagemPrincipal(imagem); // Atualiza a imagem principal com a imagem clicada
-  };
+            setMaquinaSelecionada(r.maquina);
+            setMaquinaImagensSelecionada(r.imagensMaquina);
+            setMaquinaAluguelSelecionada(r.maquinaAluguel);
+            setImagemPrincipal(r.imagensMaquina.find(img => img.imgPrincipal == 1)); // Define a primeira imagem como principal
+        })
+        .catch(error => {
+            console.error("Erro ao carregar os dados da máquina:", error)
+            setMostrarMensagem(true);
+        });
+    }, [id]);
+
+    // Função para alterar a imagem principal ao clicar em uma das imagens
+    const alterarImagemPrincipal = (imagem) => {
+        setImagemPrincipal(imagem); // Atualiza a imagem principal com a imagem clicada
+    };
+
+    const exibirMenu = () => {
+        setMenuMobile(!menuMobile)
+        menuMobile == true ? menuMobileRef.current.style.display = 'flex' : menuMobileRef.current.style.display = 'none'
+    }
 
   return (
     <section className="content-main-children">
@@ -54,51 +63,83 @@ export default function ExibirMaquina({ params: { id } }) {
 
             <article className="info">
                 <article className="whatsapp">
-                <FaWhatsapp style={{ color: '#69b74e', fontSize: '2vw', marginRight: '0.5vw' }} />
+                <FaWhatsapp className='faWhatsapp' style={{ color: '#69b74e' }} />
                 <p>(18) 99694-6604</p>
                 </article>
 
                 <article className="telefone">
-                <FaPhone style={{ color: '#4697c8', fontSize: '1.8vw', marginRight: '0.5vw' }} />
+                <FaPhone className='faPhone' style={{ color: '#4697c8' }} />
                 <p>(18) 3928-6606</p>
                 </article>
 
                 <section className="endereco-container">
-                    <article className="endereco">
-                        <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.8vw', marginRight: '0.5vw' }} />
-                        <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP, 19061-145</p>
-                    </article>
+                <article className="endereco">
+                    <FaMapMarkerAlt className='faMapMarkerAlt' style={{ color: '#c85446' }} />
+                    <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP, 19061-145</p>
+                </article>
 
-                    {/* <article className="endereco">
-                        <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.8vw', marginRight: '0.5vw' }} />
-                        <p>Rua Amazonas, 461 - Parque Paulistano, Bauru - SP, 17030-570</p>
-                    </article> */}
+                {/* <article className="endereco">
+                    <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.8vw', marginRight: '0.5vw' }} />
+                    <p>Rua Amazonas, 461 - Parque Paulistano, Bauru - SP, 17030-570</p>
+                </article> */}
                 </section>
             </article>
             </section>
 
-            <section>
+            <section className='links-classificados-desktop'>
             <nav className="links-classificados">
                 <ul className="menu">
-                <li><Link href="https://ormaq.com.br/">INÍCIO</Link></li>
-                <li><Link href="/">CLASSIFICADOS</Link></li>
-                <li><Link href="https://ormaq.com.br/sobre-nos/">SOBRE NÓS</Link></li>
-                <li><Link href="https://ormaq.com.br/servicos/">SERVIÇOS</Link></li>
-                <li><Link href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
-                <li><Link href="https://ormaq.com.br/contato/">CONTATO</Link></li>
+                    <li><Link href="https://ormaq.com.br/">INÍCIO</Link></li>
+                    <li><Link href="/">CLASSIFICADOS</Link></li>
+                    <li><Link href="https://ormaq.com.br/sobre-nos/">SOBRE NÓS</Link></li>
+                    <li><Link href="https://ormaq.com.br/servicos/">SERVIÇOS</Link></li>
+                    <li><Link href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
+                    <li><Link href="https://ormaq.com.br/contato/">CONTATO</Link></li>
                 </ul>
+                
                 <div className="social-icons">
-                <Link href="https://www.facebook.com/ormaq.oficial?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
-                    <FaFacebook style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
-                </Link>
-                <Link href="https://www.instagram.com/ormaq.oficial/ " target="_blank" rel="noopener noreferrer">
-                    <FaInstagram style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
-                </Link>
-                <Link href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
-                    <FaWhatsapp style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
-                </Link>
+                    <Link href="https://www.facebook.com/ormaq.oficial?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
+                        <FaFacebook className='faFacebook' style={{ color: '#f1f1f1' }} />
+                    </Link>
+                    <Link href="https://www.instagram.com/ormaq.oficial/ " target="_blank" rel="noopener noreferrer">
+                        <FaInstagram className='faInstagram' style={{ color: '#f1f1f1' }} />
+                    </Link>
+                    <Link href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+                        <FaWhatsapp className='faWhatsapp' style={{ color: '#f1f1f1' }} />
+                    </Link>
                 </div>
             </nav>
+            </section> 
+
+            <section className='links-classificados-mobile'>
+                <nav className="links-classificados-box-mobile">
+                    <article>
+                        <div className="social-icons-mobile">
+                            <Link href="https://www.facebook.com/ormaq.oficial?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
+                                <FaFacebook className='faFacebook' style={{ color: '#f1f1f1' }} />
+                            </Link>
+                            <Link href="https://www.instagram.com/ormaq.oficial/ " target="_blank" rel="noopener noreferrer">
+                                <FaInstagram className='faInstagram' style={{ color: '#f1f1f1' }} />
+                            </Link>
+                            <Link href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+                                <FaWhatsapp className='faWhatsapp' style={{ color: '#f1f1f1' }} />
+                            </Link>
+                        </div>
+
+                        <aside onClick={exibirMenu}>
+                            <FaBars className='faBars' style={{ color: 'whaite' }} />
+                        </aside>
+                    </article>
+                    
+                    <ul ref={menuMobileRef} className="menu-mobile">
+                        <li><Link className="link-menu" href="https://ormaq.com.br/">INÍCIO</Link></li>
+                        <li><Link className="link-menu" href="/">CLASSIFICADOS</Link></li>
+                        <li><Link className="link-menu" href="https://ormaq.com.br/sobre-nos/">SOBRE NÓS</Link></li>
+                        <li><Link className="link-menu" href="https://ormaq.com.br/servicos/">SERVIÇOS</Link></li>
+                        <li><Link className="link-menu" href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
+                        <li><Link className="link-menu" href="https://ormaq.com.br/contato/">CONTATO</Link></li>
+                    </ul>
+                </nav>
             </section>
         </header>
 
@@ -109,7 +150,7 @@ export default function ExibirMaquina({ params: { id } }) {
             </article>
 
             <article>
-                <Link href={'/'}><FaArrowLeft style={{ color: '#646464', fontSize: '1.8vw', marginRight: '0.5vw', cursor: 'pointer' }}/></Link>
+                <Link href={'/'}><FaArrowLeft className='faArrowLeft' style={{ color: '#646464' }}/></Link>
             </article>
         </section>
 
@@ -186,7 +227,7 @@ export default function ExibirMaquina({ params: { id } }) {
                                     </tr>
                                     <tr>
                                         <td colSpan="2" style={{ textAlign: 'center' }}>
-                                            <p style={{ marginTop: '0', textAlign: 'center', fontStyle: 'italic', color: '#939393', fontSize: '1vw' }}>
+                                            <p className='table-footer'>
                                                 * Valores sujeitos à negociação
                                             </p>
                                         </td>
@@ -197,7 +238,7 @@ export default function ExibirMaquina({ params: { id } }) {
 
                         <section>
                             <Link className='btn-whats' href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
-                                <p><FaWhatsapp style={{ color: 'white', fontSize: '2vw', margin: '0 0.5vw' }} /></p>
+                                <p style={{ height: 'auto' }}><FaWhatsapp className='faWhatsapp' style={{ color: 'white', height: 'auto'}} /></p>
                                 <p>ENVIAR MENSAGEM</p>
                             </Link>
                         </section>
@@ -218,7 +259,7 @@ export default function ExibirMaquina({ params: { id } }) {
 
                 <section className="mapa">
                     <article className="mapa-endereco">
-                        <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.5vw', marginRight: '0.5vw' }} />
+                        <FaMapMarkerAlt className='faMapMarkerAltMobile' style={{ color: '#c85446' }} />
                         <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP, 19061-145</p>
                     </article>
 

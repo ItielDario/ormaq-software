@@ -215,7 +215,6 @@ export default function Home() {
               <li><Link className="link-menu" href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
               <li><Link className="link-menu" href="https://ormaq.com.br/contato/">CONTATO</Link></li>
             </ul>
-            
           </nav>
         </section>
       </header>

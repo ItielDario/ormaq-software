@@ -142,6 +142,14 @@
     color: #272727 !important;
 }
 
+.table-footer{
+    margin-top: 0; 
+    text-align: center; 
+    font-style: italic; 
+    color: #939393; 
+    font-size: 1vw;
+}
+
 .btn-whats{
     background-color: rgb(36, 177, 36);
     padding: 1vw;
@@ -180,6 +188,7 @@
     font-size: 1.2vw;
     line-height: 1.8vw;
     color: #333;
+    text-align: justify;
 }
 
 /* Para títulos (strong dentro de p ou solo) */
@@ -244,6 +253,7 @@
     font-size: 1.2vw;
     color: #333;
     background-color: white !important;
+    width: 100% !important;
 }
 
 .title-descricao figure.table th,
@@ -327,12 +337,6 @@
     width: 100%;
 }
 
-.nao-encontrado-imagem {
-    width: 20vw;
-    height: auto;
-    margin-bottom: 2vw;
-}
-
 .equipamento-nao-encontrado h2 {
     font-size: 2.5vw;
     color: #c85446;
@@ -344,4 +348,462 @@
     color: #555;
     margin-bottom: 2vw;
     line-height: 2vw;
+}
+
+.mapa-mobile{
+    display: none;
+}
+
+@media only screen and (max-width: 1024px) {
+    .detalhes-equipamento > h4{
+        font-size: 2.2vw;
+        margin-bottom: 0.5vw;
+    }
+    
+    .detalhes-equipamento h5{
+        font-size: 1.8vw !important;
+        margin-bottom: 1.5vw !important;
+    }
+    
+    .preco-venda-equipamento{
+        font-size: 2.5vw; 
+    }
+      
+    .aluguel-equipamento > h4 {
+        font-size: 1.5vw;
+    }
+    
+    .info-lista {
+        font-size: 1.2vw;
+    }
+    
+    .tabela-aluguel > thead > tr > th{
+        font-size: 1.2vw !important;
+        padding: 0.5vw !important;
+    }
+    
+    .tabela-aluguel > tbody > tr > td{
+        font-size: 1.2vw !important;
+    }
+
+    .table-footer{
+        font-size: 1.2vw;
+    }
+    
+    .btn-whats{
+        border-radius: 0.5vw;
+        width: 100%;
+        letter-spacing: 0.2vw;
+        font-size: 1.5vw;
+    }
+
+    .title-descricao > h4{
+        font-size: 2vw;
+        margin-bottom: 3vw;
+    }
+
+    /* Para o parágrafo */
+    .title-descricao p {
+        margin: 0vw;
+        font-size: 1.5vw;
+    }
+
+    /* Para títulos (strong dentro de p ou solo) */
+    .title-descricao strong {
+        font-size: 1.5vw;
+    }
+
+    /* Para links */
+    .title-descricao a {
+        font-size: 1.5vw;
+    }
+
+    /* Para listas não ordenadas */
+    .title-descricao ul {
+        font-size: 1.5vw;
+    }
+
+    /* Para listas ordenadas */
+    .title-descricao ol {
+        margin-left: 3vw;
+        font-size: 1.5vw;
+    }
+
+    /* Para blocos de citação */
+    .title-descricao blockquote {
+        font-size: 1.5vw;
+    }
+
+    /* Para tabelas */
+    .title-descricao figure.table {
+        font-size: 1.5vw;
+    }
+
+    .title-descricao figure.table th,
+    .title-descricao figure.table td {
+        font-size: 1.5vw;
+    }
+
+    .ck-table-resized{
+        margin-bottom: -0.2vw !important;
+    }
+
+    /* Para imagens */
+    .title-descricao img {
+        margin: 2.5vw auto;
+    }
+
+    .carregando{
+        color: #161616;
+        font-size: 1.5vw;
+    }
+
+    .mapa-endereco p{
+        font-size: 1.2vw;
+        letter-spacing: 0.02vw;
+    }
+
+    .equipamento-nao-encontrado{
+        max-width: 70vw;
+        height: 57vh;
+        align-items: center;
+    }
+    
+    .nao-encontrado-conteudo {
+        width: 100%;
+    }
+
+    .equipamento-nao-encontrado h2 {
+        font-size: 2.8vw;
+        margin-bottom: 1.7vw;
+    }
+    
+    .equipamento-nao-encontrado p {
+        font-size: 1.9vw;
+    }
+
+    .btn-voltar-classificados{
+        padding: 2vw !important;
+    }
+    
+}
+
+@media only screen and (max-width: 768px) {
+    .container-princial{
+        flex-direction: column;
+        height: auto;
+    }
+
+    .imagem-principal > img {
+        height: 70vw; 
+    }
+    
+    .imagens-equipamento{
+        width: 100%;
+        gap: 2vw;
+    }
+    
+    .container-todas-imagens{
+        width: 100%;
+        height: 8%;
+        gap: 2vw;
+    }
+    
+    .container-todas-imagens > .imagem{
+        width: 20%; 
+        height: 100%;
+    }
+    
+    .container-todas-imagens > .imagem > img {
+        height: 10vw; 
+    }
+
+    .imagem-destaque {
+        border: none !important;
+    }
+    
+    .imagem-destaque > img{
+        border: 0.2vw solid #292929 !important;
+    }
+
+    .separacao{
+        display: none !important;
+        padding: 100vw;
+        background-color: red;
+    }
+
+    .informações-equipamento{
+        width: 100%;
+    }
+
+    .detalhes-equipamento > h4{
+        font-size: 3.5vw;
+        margin-bottom: 1vw;
+    }
+    
+    .detalhes-equipamento h5{
+        font-size: 2.8vw !important;
+        margin-bottom: 2.5vw !important;
+    }
+    
+    .preco-venda-equipamento{
+        font-size: 5vw; 
+        margin: 2.5vw 0;
+    }
+      
+    .aluguel-equipamento > h4 {
+        font-size: 2.5vw;
+        margin-bottom: 1.5vw !important;
+    }
+    
+    .info-lista {
+        font-size: 2.5vw;
+    }
+    
+    .tabela-aluguel > thead > tr > th{
+        font-size: 2.5vw !important;
+        padding: 1vw 2vw !important;
+    }
+    
+    .tabela-aluguel > tbody > tr > td{
+        font-size: 2.5vw !important;
+        padding: 1vw 2vw !important;
+    }
+
+    .table-footer{
+        font-size: 2vw;
+    }
+    
+    .btn-whats{
+        margin-top: 1.5vw !important;
+        border-radius: 0.7vw;
+        width: 100%;
+        letter-spacing: 0.3vw;
+        font-size: 3vw;
+        margin: auto;
+    }
+
+    .title-descricao > h4{
+        font-size: 3vw;
+    }
+
+    /* Para o parágrafo */
+    .title-descricao p {
+        margin: 0vw;
+        font-size: 2.5vw;
+        line-height: 4vw;
+    }
+
+    /* Para títulos (strong dentro de p ou solo) */
+    .title-descricao strong {
+        font-size: 2.5vw;
+    }
+
+    /* Para links */
+    .title-descricao a {
+        font-size: 2.5vw;
+    }
+
+    /* Para listas não ordenadas */
+    .title-descricao ul {
+        font-size: 2.5vw;
+    }
+
+    /* Para listas ordenadas */
+    .title-descricao ol {
+        margin-left: 3vw;
+        font-size: 2.5vw;
+    }
+
+    /* Para blocos de citação */
+    .title-descricao blockquote {
+        font-size: 2.5vw;
+    }
+
+    /* Para tabelas */
+    .title-descricao figure.table {
+        font-size: 2.5vw;
+    }
+
+    .title-descricao figure.table th,
+    .title-descricao figure.table td {
+        font-size: 2.5vw;
+    }
+
+    .carregando{
+        font-size: 2.5vw;
+    }
+
+    .mapa-display{
+        display: none !important;
+    }
+
+    .mapa-mobile{
+        display: block;
+        margin-top: 4vw;
+    }
+
+    .mapa-endereco p{
+        font-size: 2vw;
+        letter-spacing: 0.02vw;
+        margin-left: 0.7vw;
+    }
+
+    .equipamento-nao-encontrado{
+        width: 100vw;
+        height: 38vh;
+    }
+    
+    .equipamento-nao-encontrado h2 {
+        font-size: 3vw;
+        margin-bottom: 2vw;
+    }
+    
+    .equipamento-nao-encontrado p {
+        font-size: 2.1vw;
+    }
+
+    .btn-voltar-classificados{
+        padding: 2vw !important;
+    }
+}
+
+@media only screen and (max-width: 450px) {
+
+    .main-container-implemento{
+        padding: 0 9.5vw 0 7vw !important;
+    }
+
+    .detalhes-equipamento > h4{
+        font-size: 5vw;
+    }
+    
+    .detalhes-equipamento h5{
+        font-size: 4vw !important;
+        margin-bottom: 4vw !important;
+    }
+    
+    .preco-venda-equipamento{
+        font-size: 8vw; 
+        margin: 4vw 0;
+    }
+      
+    .aluguel-equipamento > h4 {
+        font-size: 3.5vw;
+        margin-bottom: 1.5vw !important;
+    }
+    
+    .info-lista {
+        font-size: 3.5vw;
+    }
+    
+    .tabela-aluguel > thead > tr > th{
+        font-size: 3.5vw !important;
+        padding: 1vw 2vw !important;
+    }
+    
+    .tabela-aluguel > tbody > tr > td{
+        font-size: 3.5vw !important;
+        padding: 1vw 2vw !important;
+    }
+
+    .table-footer{
+        font-size: 2.5vw;
+    }
+    
+    .btn-whats{
+        margin-top: 2.5vw !important;
+        border-radius: 1vw;
+        padding: 2vw;
+        font-size: 4vw;
+    }
+
+    .title-descricao > h4{
+        font-size: 4.5vw;
+    }
+
+    /* Para o parágrafo */
+    .title-descricao p {
+        margin: 0vw;
+        font-size: 3.8vw;
+        line-height: 5vw;
+    }
+
+    /* Para títulos (strong dentro de p ou solo) */
+    .title-descricao strong {
+        font-size: 3.8vw;
+    }
+
+    /* Para links */
+    .title-descricao a {
+        font-size: 3.8vw;
+    }
+
+    /* Para listas não ordenadas */
+    .title-descricao ul {
+        font-size: 3.8vw;
+    }
+
+    /* Para listas ordenadas */
+    .title-descricao ol {
+        margin-left: 3vw;
+        font-size: 3.8vw;
+    }
+
+    /* Para blocos de citação */
+    .title-descricao blockquote {
+        font-size: 3.8vw;
+    }
+
+    /* Para tabelas */
+    .title-descricao figure.table {
+        font-size: 3.8vw;
+    }
+
+    .title-descricao figure.table th,
+    .title-descricao figure.table td {
+        font-size: 3.8vw;
+    }
+
+    .ck-table-resized{
+        margin-bottom: -0.4vw !important;
+    }
+
+    /* Para imagens */
+    .title-descricao img {
+        margin: 2.5vw auto;
+    }
+
+    .carregando{
+        color: #161616;
+        font-size: 3.8vw;
+    }
+
+    .mapa{
+        margin-top: 4vw;
+    }
+
+    .mapa-endereco p{
+        font-size: 2.6vw;
+        letter-spacing: 0.03vw;
+        margin-left: 1vw;
+    }
+    
+    .nao-encontrado-conteudo {
+        width: 100%;
+    }
+
+    .equipamento-nao-encontrado h2 {
+        font-size: 6vw;
+        margin-bottom: 1.7vw;
+    }
+    
+    .equipamento-nao-encontrado p {
+        font-size: 3.5vw;
+        line-height: 4vw;
+    }
+
+    .btn-voltar-classificados{
+        padding: 3.5vw !important;
+    }    
 }

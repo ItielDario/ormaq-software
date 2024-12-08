@@ -1,7 +1,7 @@
 'use client';
 
-import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram, FaArrowLeft } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram, FaArrowLeft, FaBars } from 'react-icons/fa';
+import { useState, useEffect, useRef } from 'react';
 import httpClient from '../../admin/utils/httpClient.js';
 import Link from 'next/link';
 import React from 'react';
@@ -11,6 +11,10 @@ export default function ExibirImplemento({ params: { id } }) {
     const [implementoImagens, setImplementoImagens] = useState(null);
     const [imagemPrincipal, setImagemPrincipal] = useState(null);
     const [mostrarMensagem, setMostrarMensagem] = useState(false);
+
+    // Referencias de elementos para mobile
+    const [menuMobile, setMenuMobile] = useState(true);
+    const menuMobileRef = useRef(null);
 
     useEffect(() => {
         httpClient.get(`/implemento/obter/exibir-classificados/${id}`)
@@ -39,36 +43,45 @@ export default function ExibirImplemento({ params: { id } }) {
         setImagemPrincipal(imagem);
     };
 
+    const exibirMenu = () => {
+        setMenuMobile(!menuMobile)
+        menuMobile == true ? menuMobileRef.current.style.display = 'flex' : menuMobileRef.current.style.display = 'none'
+    }
+
     return (
         <section className="content-main-children">
-            <header className="header-classificados" style={{ position: 'static', height: 'auto' }}>
-                {/* Cabeçalho da página */}
+            <header className="header-classificados" style={{position: 'static', height: 'auto'}}>
                 <section className="info-classificados">
                     <article className="img-logo">
                         <img src="/image/logo-ormaq-amarela.png" alt="Logo Ormaq" />
                     </article>
-                    
+
                     <article className="info">
                         <article className="whatsapp">
-                            <FaWhatsapp style={{ color: '#69b74e', fontSize: '2vw', marginRight: '0.5vw' }} />
-                            <p>(18) 99694-6604</p>
+                        <FaWhatsapp className='faWhatsapp' style={{ color: '#69b74e' }} />
+                        <p>(18) 99694-6604</p>
                         </article>
 
                         <article className="telefone">
-                            <FaPhone style={{ color: '#4697c8', fontSize: '1.8vw', marginRight: '0.5vw' }} />
-                            <p>(18) 3928-6606</p>
+                        <FaPhone className='faPhone' style={{ color: '#4697c8' }} />
+                        <p>(18) 3928-6606</p>
                         </article>
 
                         <section className="endereco-container">
-                            <article className="endereco">
-                                <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.8vw', marginRight: '0.5vw' }} />
-                                <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP, 19061-145</p>
-                            </article>
+                        <article className="endereco">
+                            <FaMapMarkerAlt className='faMapMarkerAlt' style={{ color: '#c85446' }} />
+                            <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP, 19061-145</p>
+                        </article>
+
+                        {/* <article className="endereco">
+                            <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.8vw', marginRight: '0.5vw' }} />
+                            <p>Rua Amazonas, 461 - Parque Paulistano, Bauru - SP, 17030-570</p>
+                        </article> */}
                         </section>
                     </article>
                 </section>
 
-                <section>
+                <section className='links-classificados-desktop'>
                     <nav className="links-classificados">
                         <ul className="menu">
                             <li><Link href="https://ormaq.com.br/">INÍCIO</Link></li>
@@ -78,17 +91,49 @@ export default function ExibirImplemento({ params: { id } }) {
                             <li><Link href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
                             <li><Link href="https://ormaq.com.br/contato/">CONTATO</Link></li>
                         </ul>
+
                         <div className="social-icons">
                             <Link href="https://www.facebook.com/ormaq.oficial?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
-                                <FaFacebook style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
+                                <FaFacebook className='faFacebook' style={{ color: '#f1f1f1' }} />
                             </Link>
-                            <Link href="https://www.instagram.com/ormaq.oficial/" target="_blank" rel="noopener noreferrer">
-                                <FaInstagram style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
+                            <Link href="https://www.instagram.com/ormaq.oficial/ " target="_blank" rel="noopener noreferrer">
+                                <FaInstagram className='faInstagram' style={{ color: '#f1f1f1' }} />
                             </Link>
                             <Link href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
-                                <FaWhatsapp style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
+                                <FaWhatsapp className='faWhatsapp' style={{ color: '#f1f1f1' }} />
                             </Link>
                         </div>
+                    </nav>
+                </section> 
+
+                <section className='links-classificados-mobile'>
+                    <nav className="links-classificados-box-mobile">
+                        <article>
+                            <div className="social-icons-mobile">
+                                <Link href="https://www.facebook.com/ormaq.oficial?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
+                                    <FaFacebook className='faFacebook' style={{ color: '#f1f1f1' }} />
+                                </Link>
+                                <Link href="https://www.instagram.com/ormaq.oficial/ " target="_blank" rel="noopener noreferrer">
+                                    <FaInstagram className='faInstagram' style={{ color: '#f1f1f1' }} />
+                                </Link>
+                                <Link href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+                                    <FaWhatsapp className='faWhatsapp' style={{ color: '#f1f1f1' }} />
+                                </Link>
+                            </div>
+
+                            <aside onClick={exibirMenu}>
+                                <FaBars className='faBars' style={{ color: 'white' }} />
+                            </aside>
+                        </article>
+                        
+                        <ul ref={menuMobileRef} className="menu-mobile">
+                            <li><Link className="link-menu" href="https://ormaq.com.br/">INÍCIO</Link></li>
+                            <li><Link className="link-menu" href="/">CLASSIFICADOS</Link></li>
+                            <li><Link className="link-menu" href="https://ormaq.com.br/sobre-nos/">SOBRE NÓS</Link></li>
+                            <li><Link className="link-menu" href="https://ormaq.com.br/servicos/">SERVIÇOS</Link></li>
+                            <li><Link className="link-menu" href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
+                            <li><Link className="link-menu" href="https://ormaq.com.br/contato/">CONTATO</Link></li>
+                        </ul>
                     </nav>
                 </section>
             </header>
@@ -100,12 +145,12 @@ export default function ExibirImplemento({ params: { id } }) {
                 </article>
 
                 <article>
-                    <Link href={'/'}><FaArrowLeft style={{ color: '#646464', fontSize: '1.8vw', marginRight: '0.5vw', cursor: 'pointer' }}/></Link>
+                    <Link href={'/'}><FaArrowLeft className='faArrowLeft' style={{ color: '#646464' }}/></Link>
                 </article>
             </section>
 
             {implementoSelecionado ? (
-                <section className="main-container main-container-equipamento">
+                <section className="main-container main-container-equipamento main-container-implemento">
                     <section className="container-princial">
                         <section className="imagens-equipamento">
                             {imagemPrincipal ? (
@@ -145,14 +190,14 @@ export default function ExibirImplemento({ params: { id } }) {
 
                             <section>
                                 <Link className='btn-whats' href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
-                                    <p><FaWhatsapp style={{ color: 'white', fontSize: '2vw', margin: '0 0.5vw' }} /></p>
+                                    <p><FaWhatsapp className='faWhatsapp' style={{ color: 'white' }} /></p>
                                     <p>ENVIAR MENSAGEM</p>
                                 </Link>
                             </section>
 
-                            <section className="mapa">
+                            <section className="mapa mapa-display">
                                 <article style={{marginTop: '0vw'}} className="mapa-endereco">
-                                    <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.5vw', marginRight: '0.5vw' }} />
+                                    <FaMapMarkerAlt className='faMapMarkerAltMobile' style={{ color: '#c85446' }} />
                                     <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP</p>
                                 </article>
 
@@ -165,7 +210,7 @@ export default function ExibirImplemento({ params: { id } }) {
                         </section>
                     </section>
 
-                    <section className='descricao-equipemanto'>
+                    <section className='descricao-equipemanto descricao-implemento'>
                         <article className='title-descricao'>
                             <h4>Detalhes do Implemento</h4>
                         </article>
@@ -175,6 +220,19 @@ export default function ExibirImplemento({ params: { id } }) {
                                 <article className='decricao-dados' dangerouslySetInnerHTML={{ __html: implementoSelecionado.impDescricao }} />
                             )}
                         </article>
+                    </section>
+
+                    <section className="mapa-mobile">
+                        <article style={{marginTop: '0vw'}} className="mapa-endereco">
+                            <FaMapMarkerAlt className='faMapMarkerAltMobile' style={{ color: '#c85446' }} />
+                            <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP</p>
+                        </article>
+
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3695.922373789556!2d-51.427536925479025!3d-22.12893521053385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1733405447301!5m2!1spt-BR!2sbr&q=Av.+Luis+Cez%C3%A1rio,+4908"
+                            className="mapa-peca-equipamento" 
+                        >
+                        </iframe>
                     </section>
                 </section>
             ) : (

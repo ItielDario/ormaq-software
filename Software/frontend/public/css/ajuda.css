@@ -4,14 +4,14 @@
     box-sizing: border-box;
 }
 
-.title-ajuda{
-    padding: 2vw 0 0 2vw;
+.content-main-children-ajuda{
+    padding: 2vw 2.5vw;
 }
 
-.img-ajuda{
+.img-ajuda, .img-ajuda-status{
     width: 100%;
     height: 100%;
-    padding: 2vw;
+    cursor: not-allowed;
 }
 
 .img-ajuda > img{
@@ -20,10 +20,20 @@
     border: 0.2vw solid rgb(63, 63, 63);
     padding: 2vw;
     border-radius: 0.6vw;
+    box-shadow: 0 0.5vw 0.7vw rgba(0, 0, 0, 0.300);
+}
+
+.img-ajuda-status > img{
+    width: 30%;
+    height: 100%;
+    border: 0.2vw solid rgb(63, 63, 63);
+    padding: 1vw;
+    border-radius: 0.6vw;
+    box-shadow: 0 0.5vw 0.7vw rgba(0, 0, 0, 0.300);
 }
 
 .texto-ajuda{
-    padding: 0 2vw 2vw 2vw;
+    margin-bottom: 2vw;
     color: #1d1d1d;
 }
 
@@ -58,3 +68,6 @@
     margin-bottom: 0.5vw;
 }
   
+.separador {
+    padding: 1vw 0vw 3vw 0vw;
+}

@@ -134,8 +134,6 @@ export default class locacaoController {
             let itemLocacao = new ItensLocacaoModel();
             let itemLocacaoLista = await itemLocacao.obter(id);
 
-            console.log(itemLocacaoLista);
-
             let itemLocacaoResult = await itemLocacao.excluir(id);
 
             let locacao = new LocacaoModel();

@@ -190,13 +190,19 @@ input::placeholder{
     color: #1d1d1d;
 }
 
-.content-main-children-cadastrar .container-btn{
+.content-main-children-cadastrar .container-btn,
+.container-btn-ajuda{
     display: flex;
     justify-content: end;
     margin: 2vw 0;
 }
 
-.content-main-children-cadastrar .btn-cadastrar, .btn-voltar, .btn-alterar, .btn-add    {
+.content-main-children-cadastrar 
+.btn-cadastrar, 
+.btn-voltar, 
+.btn-alterar, 
+.btn-add, 
+.container-btn-ajuda > .btn-voltar{
     padding: 0.8vw 2vw;
     font-weight: 500;
     border-radius: 0.5vw;
@@ -205,23 +211,27 @@ input::placeholder{
     cursor: pointer;
 }
 
-.content-main-children-cadastrar .btn-cadastrar, .btn-alterar{
+.content-main-children-cadastrar .btn-cadastrar, 
+.btn-alterar{
     background-color: rgb(0, 110, 255);
     color: white;
     border: 0.1vw solid rgb(26, 118, 238);
 }
 
-.content-main-children-cadastrar .btn-cadastrar:hover, .btn-alterar:hover{   
+.content-main-children-cadastrar .btn-cadastrar:hover, 
+.btn-alterar:hover{   
     background-color: rgb(32, 129, 255);
 }
 
-.content-main-children-cadastrar .btn-voltar{
+.content-main-children-cadastrar .btn-voltar, 
+.container-btn-ajuda > .btn-voltar{
     background-color: rgb(219, 219, 219);
     color: rgb(54, 54, 54);
     border: 0.1vw solid rgb(199, 199, 199);
 }
 
-.content-main-children-cadastrar .btn-voltar:hover{   
+.content-main-children-cadastrar .btn-voltar:hover, 
+.container-btn-ajuda > .btn-voltar:hover{   
     background-color: rgb(206, 206, 206);
 }
 

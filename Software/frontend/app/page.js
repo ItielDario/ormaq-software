@@ -18,7 +18,6 @@ export default function Home() {
   let selectedValueRef = useRef("Máquinas");
 
   //Auxiliares
-  const [mostrarMensagem, setMostrarMensagem] = useState(false);
   const [semMaquina, setSemMaquina] = useState(false);
   const [semPeca, setSemPeca] = useState(false);
   const [semImplemento, setSemImplemento] = useState(false);
@@ -52,10 +51,7 @@ export default function Home() {
   }, []);
 
   const filtrarPorTipo = (equipamentos, tipo) => {
-    console.log(tipo);
-
     selectedValueRef.current = tipo; // Atualiza o valor dentro de .current
-    console.log(selectedValueRef.current);
 
     return equipamentos.filter((equipamento) => {
         if (tipo === "Máquinas" && equipamento.maqNome) return true;
@@ -123,10 +119,7 @@ export default function Home() {
     setEquipamentos(equipamentosFiltrados);
   };
 
-  // Efeito para acompanhar mudanças no estado de equipamentos (se necessário para lógica adicional)
-  useEffect(() => {
-    console.log("Equipamentos atualizados:", equipamentos);
-  }, [equipamentos]);
+  useEffect(() => {  }, [equipamentos]);
 
   return (
     <section className="content-main-children">

@@ -1,8 +1,7 @@
 'use client';
 export const dynamic = "force-dynamic";
 import CriarBotao from "../../components/criarBotao.js"; 
-//import CustomEditor from "../../components/custom-editor.js";
-import httpClient from "../../utils/httpClient.js";
+import CustomEditor from "../../components/custom-editor.js";
 import { useRef, useState } from "react";
 
 export default function CadastrarPeca() {
@@ -26,7 +25,6 @@ export default function CadastrarPeca() {
       pecaPrecoVenda: pecPrecoVendaRef.current.value, 
       pecaPrecoHora: pecPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
-      pecaDescricao: pecDescricao,
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {
@@ -170,15 +168,17 @@ export default function CadastrarPeca() {
           <section>
             <label htmlFor="pecInativo">Exibir nos classificados</label>
             <select id="pecInativo" ref={pecaExibirCatalogoRef}>
-              <option value="0">Sim</option>
-              <option value="1">Não</option>
+              <option value="1">Sim</option>
+              <option value="0">Não</option>
             </select>
           </section>
         </section>
 
         <section>
           <label htmlFor="pecDescricao">Descrição da Peça</label>
-
+          <CustomEditor 
+            onChange={handleCustomEditorChange} 
+          />
         </section>
 
         <section className="image-upload">

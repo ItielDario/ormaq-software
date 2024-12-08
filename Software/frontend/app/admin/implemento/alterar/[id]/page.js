@@ -61,7 +61,6 @@ export default function AlterarImplemento({ params: { id } }) {
       impId: id,
       impNome: impNomeRef.current.value,
       impDataAquisicao: impDataAquisicaoRef.current.value,
-      impDescricao: impDescricao,
       impPrecoVenda: impPrecoVendaRef.current.value,
       impPrecoHora: impPrecoHoraRef.current.value,
       impExibirCatalogo: impExibirCatalogoRef.current.value,
@@ -265,8 +264,8 @@ export default function AlterarImplemento({ params: { id } }) {
                     ref={impExibirCatalogoRef} 
                     required
                   >
-                    <option value="0">Sim</option>
-                    <option value="1">Não</option>
+                    <option value="1">Sim</option>
+                    <option value="0">Não</option>
                   </select>
                 </section>
               </section>

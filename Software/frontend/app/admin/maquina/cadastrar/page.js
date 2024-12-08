@@ -1,7 +1,7 @@
 'use client';
 export const dynamic = "force-dynamic";
 import CriarBotao from "../../components/criarBotao.js";
-//import CustomEditor from "../../components/custom-editor.js";
+import CustomEditor from "../../components/custom-editor.js";
 import { useRef, useState } from "react";
 
 export default function CadastrarMaquina() {
@@ -41,7 +41,6 @@ export default function CadastrarMaquina() {
       maqPrecoAluguelQuinzenal: maqPrecoAluguelQuinzenalRef.current.value, 
       maqPrecoAluguelMensal: maqPrecoAluguelMensalRef.current.value, 
       maqExibirCatalogo: maqExibirCatalogoRef.current.value,
-      maqDescricao: maquinaDescricao,
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {
@@ -79,7 +78,7 @@ export default function CadastrarMaquina() {
       formData.append("maqPrecoAluguelQuinzenal", maqPrecoAluguelQuinzenalRef.current.value);
       formData.append("maqPrecoAluguelMensal", maqPrecoAluguelMensalRef.current.value);
       formData.append("maqExibirCatalogo", maqExibirCatalogoRef.current.value);
-      formData.append("maqDescricao", maquinaDescricao);
+      formData.append("maqDescricao", maquinaDescricao || '');
       formData.append("nomeImagemPrincipal", nomeImagemPrincipal);
 
       // Adicione as imagens
@@ -256,6 +255,9 @@ export default function CadastrarMaquina() {
 
         <section>
           <label htmlFor="maqDescricao">Descrição da Máquina</label>
+          <CustomEditor
+            onChange={handleCustomEditorChange}
+          />
         </section>
 
         <section className="image-upload">

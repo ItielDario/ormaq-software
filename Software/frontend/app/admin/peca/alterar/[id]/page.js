@@ -63,7 +63,6 @@ export default function AlterarPeca({ params: { id } }) {
       pecaPrecoHora: pecaPrecoHoraRef.current.value,
       pecaExibirCatalogo: pecaExibirCatalogoRef.current.value,
       pecaStatus: pecaStatusRef.current ? pecaStatusRef.current.value : pecaSelecionada.pecStatus,
-      pecaDescricao: pecaDescricao,
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {
@@ -262,8 +261,8 @@ export default function AlterarPeca({ params: { id } }) {
                     ref={pecaExibirCatalogoRef} 
                     required
                   >
-                    <option value="0">Sim</option>
-                    <option value="1">Não</option>
+                    <option value="1">Sim</option>
+                    <option value="0">Não</option>
                   </select>
                 </section>
               </section>

@@ -2,7 +2,7 @@
 'use client';
 export const dynamic = "force-dynamic";
 import CriarBotao from "../../components/criarBotao.js"; 
-//import CustomEditor from "../../components/custom-editor.js";
+import CustomEditor from "../../components/custom-editor.js";
 import { useRef, useState } from "react";
 
 export default function CadastrarImplemento() {
@@ -26,7 +26,6 @@ export default function CadastrarImplemento() {
       impPrecoVenda: impPrecoVendaRef.current.value, 
       impPrecoHora: impPrecoHoraRef.current.value,
       impExibirCatalogo: impExibirCatalogoRef.current.value,
-      impDescricao: impDescricao,
     };
 
     if (imagens.length > 0 && imagemPrincipal == null) {
@@ -171,14 +170,17 @@ export default function CadastrarImplemento() {
           <section>
             <label htmlFor="impExibirCatalogo">Exibir nos classificados</label>
             <select id="impExibirCatalogo" ref={impExibirCatalogoRef}>
-              <option value="0">Sim</option>
-              <option value="1">Não</option>
+              <option value="1">Sim</option>
+              <option value="0">Não</option>
             </select>
           </section>
         </section>
 
         <section>
           <label htmlFor="impDescricao">Descrição do Implemento</label>
+          <CustomEditor 
+            onChange={handleCustomEditorChange} 
+          />
         </section>
 
         <section className="image-upload">

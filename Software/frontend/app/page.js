@@ -1,6 +1,6 @@
 "use client";
 
-import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram } from 'react-icons/fa';
+import { FaWhatsapp, FaPhone, FaMapMarkerAlt, FaFacebook, FaInstagram, FaBars } from 'react-icons/fa';
 import { useState, useEffect, useRef } from "react";
 import httpClient from "./admin/utils/httpClient.js";
 import Link from "next/link";
@@ -16,11 +16,15 @@ export default function Home() {
   const precoMaiorInputRef = useRef(null);
   const precoMenorInputRef = useRef(null);
   let selectedValueRef = useRef("Máquinas");
-
+  
   //Auxiliares
   const [semMaquina, setSemMaquina] = useState(false);
   const [semPeca, setSemPeca] = useState(false);
   const [semImplemento, setSemImplemento] = useState(false);
+  
+  // Referencias de elementos para mobile
+  const [menuMobile, setMenuMobile] = useState(true);
+  const menuMobileRef = useRef(null);
 
   useEffect(() => {
     // Carregando os dados de máquinas, peças e implementos
@@ -119,6 +123,11 @@ export default function Home() {
     setEquipamentos(equipamentosFiltrados);
   };
 
+  const exibirMenu = () => {
+    setMenuMobile(!menuMobile)
+    menuMobile == true ? menuMobileRef.current.style.display = 'flex' : menuMobileRef.current.style.display = 'none'
+  }
+
   useEffect(() => {  }, [equipamentos]);
 
   return (
@@ -131,18 +140,18 @@ export default function Home() {
 
           <article className="info">
             <article className="whatsapp">
-              <FaWhatsapp style={{ color: '#69b74e', fontSize: '2vw', marginRight: '0.5vw' }} />
+              <FaWhatsapp className='faWhatsapp' style={{ color: '#69b74e' }} />
               <p>(18) 99694-6604</p>
             </article>
 
             <article className="telefone">
-              <FaPhone style={{ color: '#4697c8', fontSize: '1.8vw', marginRight: '0.5vw' }} />
+              <FaPhone className='faPhone' style={{ color: '#4697c8' }} />
               <p>(18) 3928-6606</p>
             </article>
 
             <section className="endereco-container">
               <article className="endereco">
-                <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.8vw', marginRight: '0.5vw' }} />
+                <FaMapMarkerAlt className='faMapMarkerAlt' style={{ color: '#c85446' }} />
                 <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP, 19061-145</p>
               </article>
 
@@ -154,7 +163,7 @@ export default function Home() {
           </article>
         </section>
 
-        <section>
+        <section className='links-classificados-desktop'>
           <nav className="links-classificados">
             <ul className="menu">
               <li><Link href="https://ormaq.com.br/">INÍCIO</Link></li>
@@ -166,15 +175,47 @@ export default function Home() {
             </ul>
             <div className="social-icons">
               <Link href="https://www.facebook.com/ormaq.oficial?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
-                <FaFacebook style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
+                <FaFacebook className='faFacebook' style={{ color: '#f1f1f1' }} />
               </Link>
               <Link href="https://www.instagram.com/ormaq.oficial/ " target="_blank" rel="noopener noreferrer">
-                <FaInstagram style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
+                <FaInstagram className='faInstagram' style={{ color: '#f1f1f1' }} />
               </Link>
               <Link href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
-                <FaWhatsapp style={{ color: '#f1f1f1', fontSize: '2vw', margin: '0 0.5vw' }} />
+                <FaWhatsapp className='faWhatsapp' style={{ color: '#f1f1f1' }} />
               </Link>
             </div>
+          </nav>
+        </section> 
+
+        <section className='links-classificados-mobile'>
+          <nav className="links-classificados-box-mobile">
+            <article>
+              <div className="social-icons-mobile">
+                <Link href="https://www.facebook.com/ormaq.oficial?mibextid=ZbWKwL" target="_blank" rel="noopener noreferrer">
+                  <FaFacebook className='faFacebook' style={{ color: '#f1f1f1' }} />
+                </Link>
+                <Link href="https://www.instagram.com/ormaq.oficial/ " target="_blank" rel="noopener noreferrer">
+                  <FaInstagram className='faInstagram' style={{ color: '#f1f1f1' }} />
+                </Link>
+                <Link href="https://api.whatsapp.com/send/?phone=5518996946604&text&type=phone_number&app_absent=0" target="_blank" rel="noopener noreferrer">
+                  <FaWhatsapp className='faWhatsapp' style={{ color: '#f1f1f1' }} />
+                </Link>
+              </div>
+
+              <aside onClick={exibirMenu}>
+                  <FaBars className='faBars' style={{ color: 'whaite' }} />
+              </aside>
+            </article>
+            
+            <ul ref={menuMobileRef} className="menu-mobile">
+              <li><Link className="link-menu" href="https://ormaq.com.br/">INÍCIO</Link></li>
+              <li><Link className="link-menu" href="/">CLASSIFICADOS</Link></li>
+              <li><Link className="link-menu" href="https://ormaq.com.br/sobre-nos/">SOBRE NÓS</Link></li>
+              <li><Link className="link-menu" href="https://ormaq.com.br/servicos/">SERVIÇOS</Link></li>
+              <li><Link className="link-menu" href="https://ormaq.com.br/noticias/">NOTÍCIAS</Link></li>
+              <li><Link className="link-menu" href="https://ormaq.com.br/contato/">CONTATO</Link></li>
+            </ul>
+            
           </nav>
         </section>
       </header>
@@ -193,17 +234,17 @@ export default function Home() {
                 <legend>Tipo de Equipamentos</legend>
 
                 <article className="select-tipo">
-                  <input type="radio" name="tipo-equipamento" value="Máquinas" onChange={handleFilterChange} defaultChecked={true} />
+                  <input className="custom-radio" type="radio" name="tipo-equipamento" value="Máquinas" onChange={handleFilterChange} defaultChecked={true} />
                   <label>Máquinas</label>
                 </article>
 
                 <article className="select-tipo">
-                  <input type="radio" name="tipo-equipamento" value="Peças" onChange={handleFilterChange} />
+                  <input className="custom-radio" type="radio" name="tipo-equipamento" value="Peças" onChange={handleFilterChange} />
                   <label>Peças</label>
                 </article>
 
                 <article className="select-tipo">
-                  <input type="radio" name="tipo-equipamento" value="Implementos" onChange={handleFilterChange} />
+                  <input className="custom-radio" type="radio" name="tipo-equipamento" value="Implementos" onChange={handleFilterChange} />
                   <label>Implementos</label>
                 </article>
               </fieldset>
@@ -211,7 +252,7 @@ export default function Home() {
               {/* Ordenação */}
               <label className="legend">
                 Listar por:
-                <select name="ordenar" onChange={handleFilterChange}>
+                <select className='select-input' name="ordenar" onChange={handleFilterChange}>
                   <option value="novidades">Novidades</option>
                   <option value="menor_preco">Menor Preço</option>
                   <option value="maior_preco">Maior Preço</option>
@@ -325,6 +366,19 @@ export default function Home() {
             </section>
           )}
         </section>
+      </section>
+
+      <section className="mapa-classificados">
+        <article className="mapa-endereco">
+            <FaMapMarkerAlt className='faMapMarkerAltMobile' style={{ color: '#c85446'}} />
+            <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP, 19061-145</p>
+        </article>
+
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3695.922373789556!2d-51.427536925479025!3d-22.12893521053385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1733405447301!5m2!1spt-BR!2sbr&q=Av.+Luis+Cez%C3%A1rio,+4908"
+            className="mapa-maquina" 
+        >
+        </iframe>
       </section>
       
       <article className="footer">

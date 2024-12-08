@@ -55,6 +55,10 @@
     letter-spacing: 0.01vw;
 }
 
+.links-classificados-mobile{
+    display: none;
+}
+
 .links-classificados{
     display: flex;
     justify-content: space-between;
@@ -86,6 +90,19 @@
     cursor: pointer;
 }
 
+.faWhatsapp, 
+.faFacebook,
+.faInstagram{
+    font-size: 2vw;
+    margin: 0 0.5vw;
+} 
+
+.faPhone,
+.faMapMarkerAlt{
+    font-size: 1.8vw;
+    margin: 0 0.5vw;
+}
+
 .title-page{
     margin: 4vw 9vw 3vw 7vw;
     border-bottom: 0.2vw solid #7e7e7e;
@@ -103,8 +120,7 @@
     padding-bottom:  1vw;
     font-weight: 300;
     font-size: 1vw;
-    color: #353535;
-    
+    color: #353535; 
 }
 
 .link-voltar:hover{
@@ -137,7 +153,7 @@
 
 .card-equipamento {
     width: 30%;
-    height: 27vw;
+    height: auto;
     display: flex;
     flex-direction: column;
     border-radius: 0.3vw;
@@ -154,7 +170,7 @@
   
 .img-equipamento{
     width: 100%;
-    height: 70%;
+    height: auto;
 }
 
 .img-equipamento img {
@@ -169,6 +185,10 @@
 .dados-equipamentos{
     padding: 1vw;
     text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    height: 100%;
 }
 
 .dados-peca-implemento > h4, .dados-maquinas > h4{
@@ -269,4 +289,364 @@
 
 .input-50{
     width: 45%;
+}
+
+.mapa-classificados{
+    padding: 0vw 7vw;
+    margin-bottom: 5vw;
+}
+
+@media only screen and (max-width: 1024px) {
+
+    .info-classificados{
+        padding: 2vw;
+    }
+
+    .endereco p, .telefone p, .whatsapp p{
+        font-size: 1.5vw;
+        letter-spacing: 0vw;
+    }
+
+    .links-classificados{
+        padding: 0 2vw; 
+    }
+
+    .menu{
+        letter-spacing: 0vw;
+        font-size: 1.8vw;
+    }
+
+    .faWhatsapp, 
+    .faFacebook,
+    .faInstagram,
+    .faBars{
+        font-size: 2.5vw;
+        cursor: pointer;
+    } 
+
+    .faPhone,
+    .faMapMarkerAlt{
+        font-size: 2.25vw;
+    }
+
+    .title-page h3{
+        font-size: 4vw;
+    }
+    
+    .title-page p{
+        margin-top: 0.5vw;
+        padding-bottom:  1.5vw;
+        font-size: 2vw;
+    }
+
+    .main-container {
+        padding: 0 7vw;
+        margin-bottom: 5vw;
+    }
+
+    .equipamentos {
+        width: 73%;
+    }
+  
+    .card-equipamento {
+        width: 45%;
+        height: auto;
+        border-radius: 1vw;
+        margin: 0 1.5vw 3vw 1.5vw;
+        border: 0.2vw solid rgba(0, 0, 0, 0.161);
+        box-shadow: 0 0.2vw 0.5vw rgba(0, 0, 0, 0.080), 0 6px 16px rgba(0, 0, 0, 0.080); /* Efeito de sombra suave */
+
+    }
+
+    .img-equipamento img {
+        width: 100%;
+        height: 21vw;
+        border-radius: 1vw 1vw 0 0;
+    }
+
+    .dados-peca-implemento > h4, .dados-maquinas > h4{
+        font-size: 1.8vw;
+    }
+    
+    .dados-peca-implemento > h5, .dados-maquinas > h5{
+        font-size: 1.5vw;
+        margin-top: 0.9vw;
+    }
+    
+    .dados-equipamentos p, .btn-voltar-classificados{
+        font-size: 1.7vw;
+        margin-top: 1.3vw;
+        letter-spacing: 0.16vw;
+        border-radius: 0.5vw;
+    }
+
+    .filtros {  
+        width: 25%;
+        padding: 1.3vw;
+        border-radius: 1vw;
+        border: 0.2vw solid rgb(231, 231, 231);
+    }
+
+    .filtros legend, .legend {
+        margin-bottom: 2vw;
+        font-size: 1.4vw;
+    }
+      
+    .filtros label {
+        font-size: 1.5vw;
+        margin-bottom: 1vw;
+    }
+      
+    .filtros input[type="text"],
+    .filtros input[type="number"],
+    .filtros input[type="radio"]{
+        padding: 0.8vw;
+        border: 0.1vw solid #ccc;
+        border-radius: 0.5vw;
+        font-size: 1.5vw;
+    }
+
+    .filtros input[type="text"]::placeholder,
+    .filtros input[type="number"]::placeholder{
+        font-size: 1.5vw;
+    }
+
+    .mapa-classificados > .mapa-endereco {
+        margin-bottom: 1vw;
+    }
+
+    .faMapMarkerAltMobile{
+        font-size: 1.8vw
+    } 
+
+    .mapa-classificados > .mapa-endereco > p{
+        font-size: 1.5vw;
+        margin-left: 0.7vw;
+    }
+}
+
+@media only screen and (max-width: 768px) {
+
+    .info-classificados{
+        padding: 2vw 5vw;
+    }
+
+    .img-logo img{
+        width: 8vw;
+    }
+
+    .telefone p, .whatsapp p{
+        font-size: 2.5vw;
+    }
+
+    .faWhatsapp, 
+    .faFacebook,
+    .faInstagram,
+    .faBars{
+        font-size: 3.5vw;
+        cursor: pointer;
+    } 
+
+    .faPhone{
+        font-size: 3vw;
+    }
+
+    .endereco-container{
+        display: none;
+    }
+
+    .links-classificados-mobile{
+        display: flex;
+    }
+
+    .links-classificados-desktop{
+        display: none;
+    }
+
+    .links-classificados-box-mobile > article{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: rgb(232, 167, 17);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.080), 0 6px 16px rgba(0, 0, 0, 0.080); /* Efeito de sombra suave */
+        margin-top: -0.2vw;
+        padding: 1.5vw 5vw; 
+       
+    }
+    
+    .menu-mobile{
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: start;
+        list-style: none;
+        letter-spacing: 0.2vw;
+        padding: 2vw 5vw;
+        font-weight: bold;
+        font-size: 2vw;
+        color: rgb(47, 47, 47);
+        background-color: rgb(232, 167, 17);
+        border-top: 0.3vw solid rgba(0, 0, 0, 0.177);
+    }
+
+    .menu-mobile{
+        display: none;
+    }
+    
+    .menu-mobile > li{
+        padding: 1.5vw 0;
+        text-decoration: underline;
+
+    }
+
+    .menu-mobile > li > .link-menu{
+        padding: 1.5vw;
+    }
+    
+    .menu-mobile > li:hover{
+        background-color: rgb(50, 50, 50);
+        color: white;
+        cursor: pointer;
+    }
+}
+ 
+
+@media only screen and (max-width: 450px) {
+
+    .info-classificados{
+        padding: 2vw 7vw;
+    }
+
+    .img-logo img{
+        width: 13vw;
+    }
+
+    .telefone p, .whatsapp p{
+        font-size: 3vw;
+    }
+
+    .faWhatsapp, 
+    .faFacebook,
+    .faInstagram,
+    .faBars{
+        font-size: 5vw;
+    } 
+
+    .faPhone{
+        font-size: 4.5vw;
+    }
+
+    .links-classificados-box-mobile > article{
+        box-shadow: 0 0.2vw 0.4vw rgba(0, 0, 0, 0.080), 0 6px 16px rgba(0, 0, 0, 0.080); /* Efeito de sombra suave */
+        padding: 2vw 7vw; 
+       
+    }
+    
+    .menu-mobile{
+        letter-spacing: 0.3vw;
+        padding: 2.5vw 7vw;
+        font-size: 3.5vw;
+    }
+    
+    .menu-mobile > li{
+        padding: 2vw 0;
+    }
+
+    .title-page h3{
+        margin-top: 6vw;
+        font-size: 5vw;
+    }
+    
+    .title-page p{
+        margin-top: 0.7vw;
+        padding-bottom:  1.7vw;
+        font-size: 3vw;
+    }
+
+    .container-equipamentos{
+        margin-top: 3vw;
+    }
+
+    .equipamentos {
+        width: 63%;
+    }
+  
+    .card-equipamento {
+        width: 100%;
+        border: 0.2vw solid rgba(0, 0, 0, 0.161);
+        box-shadow: 0 0.1vw 0.35vw rgba(0, 0, 0, 0.080), 0 6px 16px rgba(0, 0, 0, 0.080); /* Efeito de sombra suave */
+    }
+
+    .card-equipamento:hover {
+        box-shadow: 0 0.3vw 1vw rgba(0, 0, 0, 0.186), 0 6px 16px rgba(0, 0, 0, 0.080); /* Efeito de sombra suave */
+    }
+
+    .img-equipamento img {
+        height: 40vw;
+    }
+
+    .dados-equipamentos{
+        padding: 3vw;
+    }
+
+    .dados-peca-implemento > h4, .dados-maquinas > h4{
+        font-size: 2.5vw;
+    }
+    
+    .dados-peca-implemento > h5, .dados-maquinas > h5{
+        font-size: 2.3vw;
+        margin-top: 0.9vw;
+    }
+    
+    .dados-equipamentos p, .btn-voltar-classificados{
+        font-size: 2.8vw;
+        margin-top: 2vw;
+        letter-spacing: 0.3vw;
+        border-radius: 0.7vw;
+    }
+
+    .filtros {  
+        width: 35%;
+        padding: 2vw;
+    }
+
+    .filtros legend, .legend {
+        margin-bottom: 2vw;
+        font-size: 2.5vw;
+    }
+      
+    .filtros label {
+        font-size: 2.5vw;
+        margin-bottom: 1.5vw;
+    }
+      
+    .filtros input[type="text"],
+    .filtros input[type="number"],
+    .filtros input[type="radio"],
+    .filtros input[type="select"],
+    .select-input{
+        padding: 0.8vw;
+        border: 0.2vw solid #ccc;
+        border-radius: 0.5vw;
+        font-size: 2.8vw;
+    }
+
+    .filtros input[type="text"]::placeholder,
+    .filtros input[type="number"]::placeholder,
+    .filtros input[type="select"]::placeholder{
+        font-size: 2.8vw;
+    }
+
+    .mapa-classificados > .mapa-endereco {
+        margin-bottom: 2vw;
+    }
+
+    .faMapMarkerAltMobile{
+        font-size: 2.3vw
+    } 
+
+    .mapa-classificados > .mapa-endereco > p{
+        font-size: 2.5vw;
+        margin-left: 1vw;
+    }
 }

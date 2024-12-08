@@ -150,7 +150,7 @@ export default function ExibirImplemento({ params: { id } }) {
                                 </Link>
                             </section>
 
-                            <section class="mapa">
+                            <section className="mapa">
                                 <article style={{marginTop: '0vw'}} className="mapa-endereco">
                                     <FaMapMarkerAlt style={{ color: '#c85446', fontSize: '1.5vw', marginRight: '0.5vw' }} />
                                     <p>Av. Luis Cezário, 4908 - Vila Euclides, Pres. Prudente - SP</p>
@@ -158,7 +158,7 @@ export default function ExibirImplemento({ params: { id } }) {
 
                                 <iframe 
                                     src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d3695.922373789556!2d-51.427536925479025!3d-22.12893521053385!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e0!3m2!1spt-BR!2sbr!4v1733405447301!5m2!1spt-BR!2sbr&q=Av.+Luis+Cez%C3%A1rio,+4908"
-                                    class="mapa-peca-equipamento" 
+                                    className="mapa-peca-equipamento" 
                                 >
                                 </iframe>
                             </section>

@@ -1,7 +1,12 @@
 'use client';
-export const dynamic = "force-dynamic";
-import CriarBotao from "../../components/criarBotao.js"; 
-import CustomEditor from "../../components/custom-editor.js";
+
+export const forceDynamic = "force-dynamic"; // ou qualquer nome que você preferir
+import dynamic from 'next/dynamic';
+
+// Importação dinâmica com ssr: false para carregar apenas no cliente
+const CriarBotao = dynamic(() => import("../../components/criarBotao.js"), { ssr: false });
+const CustomEditor = dynamic(() => import("../../components/custom-editor.js"), { ssr: false });
+
 import { useRef, useState } from "react";
 
 export default function CadastrarPeca() {

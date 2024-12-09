@@ -112,7 +112,8 @@ export default function AlterarImplemento({ params: { id } }) {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
       
-      fetch("http://localhost:5000/api/implemento", {
+      fetch("http://129.146.3.119/api/implemento", {
+      // fetch("http://localhost:5000/api/implemento", {
         method: "PUT",
         body: formData,
         credentials: 'include',

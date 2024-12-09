@@ -106,6 +106,10 @@ export default function RecuperarSenhaPage() {
 
   return (
     <main className="login-container">
+      <article className="img-logo-login">
+        <img src="/image/logo-ormaq-preta.png"  alt="Logo ORMAQ preta"/>
+      </article>
+
       <section className="login-box">
         <h1>Recuperar Senha</h1>
 

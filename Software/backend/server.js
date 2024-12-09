@@ -16,14 +16,15 @@ import UsuarioRoute from './routes/usuarioRoute.js';
 import LoginRoute from './routes/loginRoute.js';
 
 const app = express();
-app.listen(5000, () => {
-    console.log('Server is running on http://localhost:5000');
+app.listen(5000, '0.0.0.0', () => {
+    console.log('Server is running on');
 });
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(outputJson));
-app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+app.use(cors({ origin: 'http://129.146.3.119', credentials: true }));
+// app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 app.use(cookieParser());
 
 app.use('/api/maquina', 

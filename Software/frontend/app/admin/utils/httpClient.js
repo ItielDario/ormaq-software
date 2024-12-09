@@ -1,5 +1,6 @@
 'use client'
-const baseUrl = "http://localhost:5000/api";
+const baseUrl = "http://129.146.3.119/api";
+// const baseUrl = "http://localhost:5000/api";
 
 const httpClient = {
     get: (endpoint) => {

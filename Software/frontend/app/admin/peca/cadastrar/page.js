@@ -68,7 +68,8 @@ export default function CadastrarPeca() {
 
       console.log(nomeImagemPrincipal)
       
-      fetch("http://localhost:5000/api/peca/cadastrar", {
+      fetch("http://129.146.3.119/api/peca/cadastrar", {
+      // fetch("http://localhost:5000/api/peca/cadastrar", {
         method: "POST",
         body: formData,
         credentials: 'include',

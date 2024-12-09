@@ -91,7 +91,8 @@ export default function CadastrarMaquina() {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
 
-      fetch("http://localhost:5000/api/maquina/cadastrar", {
+      fetch("http://129.146.3.119/api/maquina/cadastrar", {
+      // fetch("http://localhost:5000/api/maquina/cadastrar", {
         method: "POST",
         body: formData,
         credentials: 'include',

@@ -68,7 +68,8 @@ export default function CadastrarImplemento() {
 
       console.log(nomeImagemPrincipal)
       
-      fetch("http://localhost:5000/api/implemento/cadastrar", {
+      fetch("http://129.146.3.119/api/implemento/cadastrar", {
+      // fetch("http://localhost:5000/api/implemento/cadastrar", {
         method: "POST",
         body: formData,
         credentials: 'include',

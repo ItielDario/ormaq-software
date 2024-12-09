@@ -110,7 +110,8 @@ export default function AlterarPeca({ params: { id } }) {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
       
-      fetch("http://localhost:5000/api/peca", {
+      fetch("http://129.146.3.119/api/peca", {
+      // fetch("http://localhost:5000/api/peca", {
         method: "PUT",
         body: formData,
         credentials: 'include',

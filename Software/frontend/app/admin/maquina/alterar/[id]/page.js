@@ -140,7 +140,8 @@ export default function AlterarMaquina({ params: { id } }) {
         formData.append("imagens", imagem.file); // `imagem.file` contém o arquivo real
       });
 
-      fetch(`http://localhost:5000/api/maquina`, {
+      fetch(`http://129.146.3.119/api/maquina`, {
+      // fetch(`http://localhost:5000/api/maquina`, {
         method: "PUT",
         body: formData,
         credentials: 'include',

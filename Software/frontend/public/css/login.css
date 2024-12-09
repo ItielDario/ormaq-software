@@ -17,6 +17,14 @@
     font-family: "Roboto", sans-serif;
 }
 
+.img-logo-login{
+    margin-bottom: 2vw;
+}
+
+.img-logo-login > img{
+    width: 7vw;
+}
+
 .login-box {
     background: rgba(255, 255, 255, 0.9);
     max-width: 50vw;

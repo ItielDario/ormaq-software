@@ -656,7 +656,7 @@
     }
 
     .mapa-classificados{
-        margin-right: 3vw;
+        margin-right: 5vw !important;
         background-color: white;
         margin-top: 1vw;
     }   

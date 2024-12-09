@@ -671,7 +671,7 @@
 @media only screen and (max-width: 450px) {
 
     .main-container-implemento{
-        padding: 0 9.5vw 0 7vw !important;
+        padding: 0 12vw 0 7vw !important;
     }
 
     .detalhes-equipamento > h4{
@@ -781,6 +781,8 @@
 
     .mapa{
         margin-top: 4vw;
+        background-color: white;
+        border: none;
     }
 
     .mapa-endereco p{
@@ -805,5 +807,5 @@
 
     .btn-voltar-classificados{
         padding: 3.5vw !important;
-    }    
+    }   
 }

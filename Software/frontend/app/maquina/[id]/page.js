@@ -155,7 +155,7 @@ export default function ExibirMaquina({ params: { id } }) {
         </section>
 
         {maquinaSelecionada ? (
-            <section className="main-container main-container-equipamento">
+            <section className="main-container main-container-equipamento main-container-implemento">
                 <section className="container-princial">
                     <section className="imagens-equipamento">
                         {/* Exibe a imagem principal */}

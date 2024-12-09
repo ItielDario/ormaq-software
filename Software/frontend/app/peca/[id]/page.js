@@ -153,7 +153,7 @@ export default function ExibirPeca({ params: { id } }) {
             </section>
 
             {pecaSelecionada ? (
-                <section className="main-container main-container-equipamento">
+                <section className="main-container main-container-equipamento main-container-implemento">
                     <section className="container-princial">
                         <section className="imagens-equipamento">
 

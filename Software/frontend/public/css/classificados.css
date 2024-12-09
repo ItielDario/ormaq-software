@@ -105,7 +105,7 @@
 }
 
 .title-page{
-    margin: 4vw 9vw 3vw 7vw;
+    margin: 4vw 7vw 3vw 7vw;
     border-bottom: 0.2vw solid #7e7e7e;
 }
 
@@ -524,6 +524,11 @@
 
 @media only screen and (max-width: 450px) {
 
+    .title-page{
+        margin: 4vw 12.5vw 3vw 7vw;
+        border-bottom: 0.2vw solid #7e7e7e;
+    }
+
     .info-classificados{
         padding: 2vw 7vw;
     }
@@ -649,6 +654,12 @@
     .filtros input[type="select"]::placeholder{
         font-size: 2.8vw;
     }
+
+    .mapa-classificados{
+        margin-right: 3vw;
+        background-color: white;
+        margin-top: 1vw;
+    }   
 
     .mapa-classificados > .mapa-endereco {
         margin-bottom: 2vw;

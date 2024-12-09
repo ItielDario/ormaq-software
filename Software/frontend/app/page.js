@@ -224,7 +224,7 @@ export default function Home() {
         <p>Ínicio  &gt;  Classificados</p>
       </section>
 
-      <section className="main-container">
+      <section className="main-container main-container-implemento">
         <section className="container-equipamentos">
           <aside className="filtros">
             <form style={{ width: 'auto', height: 'auto', margin: '0' }}>
